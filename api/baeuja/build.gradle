@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.0'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
 
 group = 'we-are-crack'
@@ -26,12 +27,43 @@ repositories {
 dependencies {
 //	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	testImplementation 'org.springframework.restdocs:spring-restdocs-core'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
+	testImplementation 'io.rest-assured:rest-assured:5.4.0'
+
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+ext {
+	snippetsDir = file('build/generated-snippets')
+	snippetsJarDir = file("src/docs/asciidoc/snippets")
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.register('copySnippets', Copy) {
+	from snippetsDir
+	into snippetsJarDir
+}
+
+asciidoctor {
+	inputs.dir snippetsDir
+	dependsOn test
+	attributes 'snippets': snippetsDir
+}
+
+bootJar {
+	dependsOn asciidoctor
+	from("${asciidoctor.outputDir}") {
+		into 'static/docs'
+	}
+}
+
