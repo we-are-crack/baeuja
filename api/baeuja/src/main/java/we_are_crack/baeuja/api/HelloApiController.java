@@ -3,6 +3,7 @@ package we_are_crack.baeuja.api;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,20 @@ public class HelloApiController {
     public ResponseResult<HelloData> hello(@RequestParam String name) {
         HelloData helloData = new HelloData(name);
         return new ResponseResult<>(helloData);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping
+    public ResponseResult<HelloData> helloV2(@RequestBody HelloRequest request) {
+        HelloData helloData = new HelloData(request.getName());
+        return new ResponseResult<>(helloData);
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    static class HelloRequest {
+        private String name;
     }
 
     @Data

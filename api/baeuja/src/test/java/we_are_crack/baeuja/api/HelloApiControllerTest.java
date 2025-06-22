@@ -44,8 +44,6 @@ class HelloApiControllerTest {
     private RequestSpecification createSpecWithDocs(RestDocumentationFilter snippetFilter) {
         return new RequestSpecBuilder()
                 .setPort(port)
-                .setContentType(ContentType.JSON)
-                .setAccept(ContentType.JSON)
                 .addFilter(restDocsConfig)
                 .addFilter(snippetFilter) // 문서화용 필터만 테스트마다 다르게 주입
                 .build();
@@ -68,16 +66,56 @@ class HelloApiControllerTest {
         );
     }
 
+    private RestDocumentationFilter createHelloV2DocFilter(String identifier) {
+        return document(identifier,
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                        fieldWithPath("name").description("이름")
+                ),
+                responseFields(
+                        fieldWithPath("data.name").description("요청한 이름"),
+                        fieldWithPath("data.greeting").description("인사말")
+                )
+        );
+    }
+
     @Test
     @DisplayName("GET /hello API - name 파라미터를 받아서 응답을 반환한다.")
     void 문서화테스트() {
-        RequestSpecification spec = createSpecWithDocs(createHelloDocFilter("hello"));
+        RequestSpecification spec = createSpecWithDocs(createHelloDocFilter("hello-get"));
 
         Response response = RestAssured
                 .given(spec)
                 .queryParam("name", "crack")
                 .when()
                 .get("/hello");
+
+        assertThat(response.getStatusCode()).isEqualTo(200);
+        String name = response.jsonPath().getString("data.name");
+        String greeting = response.jsonPath().getString("data.greeting");
+
+        assertThat(name).isEqualTo("crack");
+        assertThat(greeting).isEqualTo("Hello, crack");
+    }
+
+    @Test
+    @DisplayName("GET /hello API - request body 에 name 필드를 받아서 응답한다.")
+    void 문서화테스트_V2() {
+        RequestSpecification spec = createSpecWithDocs(createHelloV2DocFilter("hello-post"));
+
+        String requestBody = """
+                {
+                    "name" : "crack"
+                }
+                """;
+
+        Response response = RestAssured
+                .given(spec)
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post("/hello");
 
         assertThat(response.getStatusCode()).isEqualTo(200);
         String name = response.jsonPath().getString("data.name");

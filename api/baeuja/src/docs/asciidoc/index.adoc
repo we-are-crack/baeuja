@@ -4,18 +4,38 @@
 :source-highlighter: highlightjs
 :snippets: {projectdir}/build/generated-snippets
 
-== GET /hello
+== GET /hello (쿼리 파라미터)
 
-이 API는 `name` 파라미터를 받아 인사 응답을 반환합니다.
+=== 요청
 
-=== 요청 예시
-include::{snippets}/hello/http-request.adoc[]
+include::{snippets}/hello-get/http-request.adoc[]
 
-=== 응답 예시
-include::{snippets}/hello/http-response.adoc[]
+=== 응답
+
+include::{snippets}/hello-get/http-response.adoc[]
 
 === 요청 파라미터
-include::{snippets}/hello/query-parameters.adoc[]
+
+include::{snippets}/hello-get/query-parameters.adoc[]
 
 === 응답 필드
-include::{snippets}/hello/response-fields.adoc[]
+
+include::{snippets}/hello-get/response-fields.adoc[]
+
+== POST /hello (JSON Request Body)
+
+=== 요청
+
+include::{snippets}/hello-post/http-request.adoc[]
+
+=== 응답
+
+include::{snippets}/hello-post/http-response.adoc[]
+
+=== 요청 필드
+
+include::{snippets}/hello-post/request-fields.adoc[]
+
+=== 응답 필드
+
+include::{snippets}/hello-post/response-fields.adoc[]
