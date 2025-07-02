@@ -13,7 +13,7 @@ fun AppNavigation() {
 
     NavHost(navController = navController, startDestination = "splash") {
         composable("splash") { SplashScreen(navController) }
-        composable("login") { LoginScreen() }
+        composable("login") { LoginScreen(navController) }
     }
 }
 

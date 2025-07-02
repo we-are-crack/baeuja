@@ -1,19 +1,140 @@
 package com.eello.bauja.ui.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavController
+import com.eello.bauja.R
+import com.eello.bauja.ui.theme.BaujaTheme
+import com.eello.bauja.ui.theme.NotoSansKrFamily
+import com.eello.bauja.ui.theme.RobotoFamily
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavController) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text("로그인 화면입니다 🎉", style = MaterialTheme.typography.headlineMedium)
+        LoginScreenContent()
+    }
+}
+
+@Composable
+fun LoginScreenContent() {
+    ConstraintLayout {
+        val (logo,
+            txt1,
+            txt2,
+            googleLoginRow,
+            txt3
+            ) = createRefs()
+
+        val textStartGuideline = createGuidelineFromStart(30.dp)
+        val loginBtnStartGuideline = createGuidelineFromStart(0.138f)
+        val loginBtnEndGuideline = createGuidelineFromEnd(0.138f)
+        val loginBtnBottomGuideline = createGuidelineFromBottom(0.16f)
+
+        Image(
+            painter = painterResource(id = R.drawable.default_logo),
+            contentDescription = stringResource(R.string.app_logo_description),
+            modifier = Modifier
+                .constrainAs(logo) {
+                    start.linkTo(parent.start, 30.dp)
+                    top.linkTo(parent.top, 148.5.dp)
+                }
+                .size(43.1.dp, 39.5.dp)
+        )
+
+        Text(
+            buildAnnotatedString {
+                withStyle(style = SpanStyle(
+                    fontWeight = FontWeight.Medium,
+                    color = colorResource(R.color.login_text),
+                )) {
+                    append("The most fun way\nto learn Korean,\n")
+                }
+
+                withStyle(style = SpanStyle(
+                    fontWeight = FontWeight.Bold,
+                    color = colorResource(R.color.login_baeuja)
+               )) {
+                    append("BAEUJA")
+                }
+            },
+            modifier = Modifier.constrainAs(txt1) {
+                start.linkTo(textStartGuideline)
+                top.linkTo(logo.bottom, 14.dp)
+            },
+            fontFamily = NotoSansKrFamily,
+            fontSize = 24.sp,
+            lineHeight = 34.sp
+        )
+
+        Text(
+            text = "Learning Korean with K-Contents",
+            modifier = Modifier.constrainAs(txt2) {
+                start.linkTo(textStartGuideline)
+                top.linkTo(txt1.bottom, 20.dp)
+                bottom.linkTo(parent.bottom, 552.dp)
+            },
+            fontSize = 16.sp,
+            fontFamily = RobotoFamily,
+            fontWeight = FontWeight.Normal,
+            color = colorResource(R.color.login_baeuja),
+            lineHeight = 22.sp
+        )
+
+        Image(
+            painter = painterResource(R.drawable.google_signin),
+            contentDescription = "signin with google",
+            modifier = Modifier.constrainAs(googleLoginRow) {
+                start.linkTo(loginBtnStartGuideline)
+                end.linkTo(loginBtnEndGuideline)
+                bottom.linkTo(loginBtnBottomGuideline)
+            }.size(300.dp, 48.dp)
+        )
+        
+        Text(
+            text = "Don't have an account?\nUse in guest mode",
+            textDecoration = TextDecoration.Underline,
+            modifier = Modifier.constrainAs(txt3) {
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                top.linkTo(loginBtnBottomGuideline, 32.dp)
+            },
+            fontSize = 15.sp,
+            lineHeight = 22.sp,
+            textAlign = TextAlign.Center,
+            color = Color(0xFF8f86d7),
+
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewLoginScreen() {
+    BaujaTheme {
+        LoginScreenContent()
     }
 }

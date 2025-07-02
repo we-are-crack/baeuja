@@ -64,6 +64,11 @@ dependencies {
     // default splashscreen
     implementation("androidx.core:core-splashscreen:1.0.1")
 
+    val credentialsVer = "1.5.0"
+    implementation ("androidx.credentials:credentials:${credentialsVer}")
+    implementation ("androidx.credentials:credentials-play-services-auth:${credentialsVer}")
+    implementation ("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
     // androidx.navigation 추가
     val nav_version = "2.9.0"
     // Jetpack Compose integration
