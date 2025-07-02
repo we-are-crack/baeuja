@@ -1,4 +1,4 @@
-package com.eello.bauja.retrofit
+package com.eello.baeuja.retrofit
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

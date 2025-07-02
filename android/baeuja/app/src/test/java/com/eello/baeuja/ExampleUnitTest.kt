@@ -1,4 +1,4 @@
-package com.eello.bauja
+package com.eello.baeuja
 
 import org.junit.Test
 

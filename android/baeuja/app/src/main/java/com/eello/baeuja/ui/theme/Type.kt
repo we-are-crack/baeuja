@@ -1,4 +1,4 @@
-package com.eello.bauja.ui.theme
+package com.eello.baeuja.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

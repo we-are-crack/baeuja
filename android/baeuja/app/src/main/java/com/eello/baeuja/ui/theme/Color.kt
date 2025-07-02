@@ -1,4 +1,4 @@
-package com.eello.bauja.ui.theme
+package com.eello.baeuja.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

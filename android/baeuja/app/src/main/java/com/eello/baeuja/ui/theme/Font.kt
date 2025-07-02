@@ -1,9 +1,9 @@
-package com.eello.bauja.ui.theme
+package com.eello.baeuja.ui.theme
 
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import com.eello.bauja.R
+import com.eello.baeuja.R
 
 val NotoSansKrFamily = FontFamily(
     Font(R.font.notosanskr_medium, FontWeight.Medium),

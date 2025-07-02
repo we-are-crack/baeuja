@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.eello.bauja"
+    namespace = "com.eello.baeuja"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.eello.bauja"
+        applicationId = "com.eello.baeuja"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

@@ -1,10 +1,9 @@
-package com.eello.bauja.ui.screen
+package com.eello.baeuja.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,10 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
-import com.eello.bauja.R
-import com.eello.bauja.ui.theme.BaujaTheme
-import com.eello.bauja.ui.theme.NotoSansKrFamily
-import com.eello.bauja.ui.theme.RobotoFamily
+import com.eello.baeuja.R
+import com.eello.baeuja.ui.theme.BaujaTheme
+import com.eello.baeuja.ui.theme.NotoSansKrFamily
+import com.eello.baeuja.ui.theme.RobotoFamily
 
 @Composable
 fun LoginScreen(navController: NavController) {

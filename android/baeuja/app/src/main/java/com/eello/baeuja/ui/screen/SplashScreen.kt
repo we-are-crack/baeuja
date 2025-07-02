@@ -1,4 +1,4 @@
-package com.eello.bauja.ui.screen
+package com.eello.baeuja.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
-import com.eello.bauja.R
-import com.eello.bauja.ui.theme.BaujaTheme
+import com.eello.baeuja.R
+import com.eello.baeuja.ui.theme.BaujaTheme
 import kotlinx.coroutines.delay
 
 private val guidelineStartRatio = 0.396f
