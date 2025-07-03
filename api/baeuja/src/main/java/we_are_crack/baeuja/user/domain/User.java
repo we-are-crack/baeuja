@@ -20,7 +20,7 @@ public class User extends BaseEntity {
     @Column(length = 100, unique = true)
     private String email;
 
-    @Column(length = 30, nullable = false, unique = true)
+    @Column(length = 20, nullable = false, unique = true)
     private String nickname;
 
     @Column(nullable = false)
@@ -43,7 +43,7 @@ public class User extends BaseEntity {
     /**
      * 구글 계정으로 전환
      */
-    private void convertToGoogleAccount(String email) {
+    public void convertToGoogleAccount(String email) {
         this.loginType = LoginType.GOOGLE;
         this.email = email;
     }

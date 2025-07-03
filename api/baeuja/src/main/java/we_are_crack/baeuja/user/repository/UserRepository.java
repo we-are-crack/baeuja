@@ -19,4 +19,16 @@ public class UserRepository {
     public User findOne(Long id) {
         return em.find(User.class, id);
     }
+
+    public User findByEmail(String email) {
+        return em.createQuery("select u from User u where u.email = :email", User.class)
+                .setParameter("email", email)
+                .getSingleResult();
+    }
+
+    public User findByNickname(String nickname) {
+        return em.createQuery("select u from User u where u.nickname = :nickname", User.class)
+                .setParameter("nickname", nickname)
+                .getSingleResult();
+    }
 }
