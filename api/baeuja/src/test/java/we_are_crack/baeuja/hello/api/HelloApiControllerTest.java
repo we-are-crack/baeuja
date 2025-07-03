@@ -1,4 +1,4 @@
-package we_are_crack.baeuja.api;
+package we_are_crack.baeuja.hello.api;
 
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
@@ -30,12 +30,12 @@ class HelloApiControllerTest {
     @LocalServerPort
     private int port;
 
-    private Filter restDocsConfig; // 공통 config 필터
+    private Filter configFilter; // 공통 config 필터
 
     @BeforeEach
-    void setUp(RestDocumentationContextProvider restDocs) {
+    void setUp(RestDocumentationContextProvider provider) {
         // 공통 config 필터 (snippets 경로 등 설정)
-        this.restDocsConfig = RestAssuredRestDocumentation.documentationConfiguration(restDocs);
+        this.configFilter = RestAssuredRestDocumentation.documentationConfiguration(provider);
     }
 
     /**
@@ -44,7 +44,7 @@ class HelloApiControllerTest {
     private RequestSpecification createSpecWithDocs(RestDocumentationFilter snippetFilter) {
         return new RequestSpecBuilder()
                 .setPort(port)
-                .addFilter(restDocsConfig)
+                .addFilter(configFilter)
                 .addFilter(snippetFilter) // 문서화용 필터만 테스트마다 다르게 주입
                 .build();
     }
@@ -87,9 +87,10 @@ class HelloApiControllerTest {
 
         Response response = RestAssured
                 .given(spec)
-                .queryParam("name", "crack")
+                    .header("Host", "api.baeuja.xyz")
+                    .queryParam("name", "crack")
                 .when()
-                .get("/hello");
+                    .get("/hello");
 
         assertThat(response.getStatusCode()).isEqualTo(200);
         String name = response.jsonPath().getString("data.name");
@@ -112,10 +113,11 @@ class HelloApiControllerTest {
 
         Response response = RestAssured
                 .given(spec)
-                .contentType(ContentType.JSON)
-                .body(requestBody)
+                    .header("Host", "api.baeuja.xyz")
+                    .contentType(ContentType.JSON)
+                    .body(requestBody)
                 .when()
-                .post("/hello");
+                    .post("/hello");
 
         assertThat(response.getStatusCode()).isEqualTo(200);
         String name = response.jsonPath().getString("data.name");

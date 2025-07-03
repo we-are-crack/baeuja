@@ -1,4 +1,4 @@
-package we_are_crack.baeuja.api;
+package we_are_crack.baeuja.hello.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
