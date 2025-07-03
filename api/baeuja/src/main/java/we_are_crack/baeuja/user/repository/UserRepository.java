@@ -20,15 +20,19 @@ public class UserRepository {
         return em.find(User.class, id);
     }
 
-    public User findByEmail(String email) {
-        return em.createQuery("select u from User u where u.email = :email", User.class)
+    public boolean existsByEmail(String email) {
+        Long count = em.createQuery("select count(u) from User u where u.email = :email", Long.class)
                 .setParameter("email", email)
                 .getSingleResult();
+
+        return count > 0;
     }
 
-    public User findByNickname(String nickname) {
-        return em.createQuery("select u from User u where u.nickname = :nickname", User.class)
+    public boolean existsByNickname(String nickname) {
+        Long count =  em.createQuery("select count(u) from User u where u.nickname = :nickname", Long.class)
                 .setParameter("nickname", nickname)
                 .getSingleResult();
+
+        return count > 0;
     }
 }

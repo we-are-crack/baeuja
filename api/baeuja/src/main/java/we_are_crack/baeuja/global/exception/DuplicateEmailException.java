@@ -2,6 +2,8 @@ package we_are_crack.baeuja.global.exception;
 
 public class DuplicateEmailException extends RuntimeException {
 
+    public static final String CODE = "DUPLICATE_EMAIL";
+
     public DuplicateEmailException() {
         super("이미 사용 중인 이메일입니다.");
     }
