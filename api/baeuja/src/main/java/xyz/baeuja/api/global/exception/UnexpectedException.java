@@ -1,4 +1,4 @@
-package xyz.baeuja.api.global.exception;
+package xyz.baeuja.api.global.exception.global;
 
 public class UnexpectedException extends RuntimeException {
 

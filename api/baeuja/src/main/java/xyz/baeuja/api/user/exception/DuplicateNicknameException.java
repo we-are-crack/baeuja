@@ -1,4 +1,4 @@
-package xyz.baeuja.api.global.exception;
+package xyz.baeuja.api.global.exception.user;
 
 public class DuplicateNicknameException extends InvalidNicknameException {
 
