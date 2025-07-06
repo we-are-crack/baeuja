@@ -1,6 +1,8 @@
-package xyz.baeuja.api.global.exception.user;
+package xyz.baeuja.api.user.exception;
 
-public class InvalidNicknameException extends RuntimeException {
+import xyz.baeuja.api.global.exception.BaseException;
+
+public class InvalidNicknameException extends BaseException {
 
     public static final String CODE = "INVALID_NICKNAME";
 

@@ -1,6 +1,8 @@
-package xyz.baeuja.api.global.exception.user;
+package xyz.baeuja.api.user.exception;
 
-public class DuplicateEmailException extends RuntimeException {
+import xyz.baeuja.api.global.exception.BaseException;
+
+public class DuplicateEmailException extends BaseException {
 
     public static final String CODE = "DUPLICATE_EMAIL";
 

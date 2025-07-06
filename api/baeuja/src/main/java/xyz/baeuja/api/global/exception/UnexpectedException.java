@@ -1,6 +1,6 @@
-package xyz.baeuja.api.global.exception.global;
+package xyz.baeuja.api.global.exception;
 
-public class UnexpectedException extends RuntimeException {
+public class UnexpectedException extends BaseException {
 
     public static final String CODE = "INTERNAL_ERROR";
 

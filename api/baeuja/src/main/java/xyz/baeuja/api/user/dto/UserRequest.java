@@ -2,13 +2,11 @@ package xyz.baeuja.api.user.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import xyz.baeuja.api.user.domain.LoginType;
 import xyz.baeuja.api.user.domain.User;
 
 @Getter
-@AllArgsConstructor
 public class UserRequest {
 
     private String email;
@@ -16,13 +14,13 @@ public class UserRequest {
     @NotBlank(message = "닉네임은 필수입니다.")
     private String nickname;
 
-    @NotNull
+    @NotNull(message = "locale 은 필수입니다.")
     private String locale;
 
-    @NotNull
+    @NotNull(message = "timezone 은 필수입니다.")
     private String timezone;
 
-    @NotNull
+    @NotNull(message = "loginType 은 필수입니다.")
     private LoginType loginType;
 
     public User toEntity() {

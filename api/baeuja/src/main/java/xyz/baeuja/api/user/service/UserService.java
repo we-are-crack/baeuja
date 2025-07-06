@@ -3,9 +3,10 @@ package xyz.baeuja.api.user.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import xyz.baeuja.api.global.exception.DuplicateEmailException;
-import xyz.baeuja.api.global.exception.DuplicateNicknameException;
-import xyz.baeuja.api.global.exception.InvalidNicknameException;
+import xyz.baeuja.api.user.domain.LoginType;
+import xyz.baeuja.api.user.exception.DuplicateEmailException;
+import xyz.baeuja.api.user.exception.DuplicateNicknameException;
+import xyz.baeuja.api.user.exception.InvalidNicknameException;
 import xyz.baeuja.api.user.domain.User;
 import xyz.baeuja.api.user.dto.UserRequest;
 import xyz.baeuja.api.user.repository.UserRepository;
@@ -24,7 +25,7 @@ public class UserService {
     public Long singUp(UserRequest request) {
         User user = request.toEntity();
 
-        if (request.getEmail() != null) {
+        if (request.getLoginType() == LoginType.GOOGLE && request.getEmail() != null) {
             validateDuplicateEmail(request.getEmail());
             user.convertToGoogleAccount(request.getEmail());
         }

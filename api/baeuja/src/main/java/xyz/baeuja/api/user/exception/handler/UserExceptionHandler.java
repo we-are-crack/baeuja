@@ -1,4 +1,4 @@
-package xyz.baeuja.api.global.exception.handler;
+package xyz.baeuja.api.user.exception.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,0 +1,23 @@
+spring:
+  jackson:
+    time-zone: Asia/Seoul
+
+  datasource:
+    url: jdbc:postgresql://baeuja-postgres-free.c9asg204e8u9.ap-northeast-2.rds.amazonaws.com:5432/postgres
+    username: postgres
+    password: baeuja0029
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+#    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug           # SQL 출력 (이전 버전에서는 이것만 있어도 됨)
+    org.hibernate.sql.exec: debug      # SQL 실행 로그 (Hibernate 6 버전부터 필요)
+    org.hibernate.orm.jdbc.bind: trace # 파라미터 바인딩 로그
