@@ -1,6 +1,10 @@
 package com.eello.baeuja.ui.screen
 
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -11,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -24,11 +29,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.eello.baeuja.R
 import com.eello.baeuja.ui.theme.BaujaTheme
 import com.eello.baeuja.ui.theme.NotoSansKrFamily
 import com.eello.baeuja.ui.theme.RobotoFamily
+import com.eello.baeuja.utils.auth.getGoogleSignInClient
+import com.eello.baeuja.utils.auth.handleGoogleSignInResult
+import com.eello.baeuja.viewmodel.LoginViewModel
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -43,12 +52,13 @@ fun LoginScreen(navController: NavController) {
 @Composable
 fun LoginScreenContent() {
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-        val (logo,
-            txt1,
-            txt2,
-            googleLoginRow,
-            txt3
-            ) = createRefs()
+        val (
+            appLogoRef,
+            headlineTextRef,
+            subtitleTextRef,
+            googleSignInButtonRef,
+            guestModeTextRef
+        ) = createRefs()
 
         val textStartGuideline = createGuidelineFromStart(30.dp)
         val loginBtnStartGuideline = createGuidelineFromStart(0.138f)
@@ -59,7 +69,7 @@ fun LoginScreenContent() {
             painter = painterResource(id = R.drawable.baeuja_logo),
             contentDescription = stringResource(R.string.app_logo_description),
             modifier = Modifier
-                .constrainAs(logo) {
+                .constrainAs(appLogoRef) {
                     start.linkTo(parent.start, 30.dp)
                     top.linkTo(parent.top, 148.5.dp)
                 }
@@ -68,23 +78,27 @@ fun LoginScreenContent() {
 
         Text(
             buildAnnotatedString {
-                withStyle(style = SpanStyle(
-                    fontWeight = FontWeight.Medium,
-                    color = colorResource(R.color.login_text),
-                )) {
+                withStyle(
+                    style = SpanStyle(
+                        fontWeight = FontWeight.Medium,
+                        color = colorResource(R.color.login_text),
+                    )
+                ) {
                     append("The most fun way\nto learn Korean,\n")
                 }
 
-                withStyle(style = SpanStyle(
-                    fontWeight = FontWeight.Bold,
-                    color = colorResource(R.color.login_baeuja)
-               )) {
+                withStyle(
+                    style = SpanStyle(
+                        fontWeight = FontWeight.Bold,
+                        color = colorResource(R.color.login_baeuja)
+                    )
+                ) {
                     append("BAEUJA")
                 }
             },
-            modifier = Modifier.constrainAs(txt1) {
+            modifier = Modifier.constrainAs(headlineTextRef) {
                 start.linkTo(textStartGuideline)
-                top.linkTo(logo.bottom, 14.dp)
+                top.linkTo(appLogoRef.bottom, 14.dp)
             },
             fontFamily = NotoSansKrFamily,
             fontSize = 24.sp,
@@ -93,9 +107,9 @@ fun LoginScreenContent() {
 
         Text(
             text = "Learning Korean with K-Contents",
-            modifier = Modifier.constrainAs(txt2) {
+            modifier = Modifier.constrainAs(subtitleTextRef) {
                 start.linkTo(textStartGuideline)
-                top.linkTo(txt1.bottom, 20.dp)
+                top.linkTo(headlineTextRef.bottom, 20.dp)
             },
             fontSize = 16.sp,
             fontFamily = RobotoFamily,
@@ -104,22 +118,19 @@ fun LoginScreenContent() {
             lineHeight = 22.sp
         )
 
-        Image(
-            painter = painterResource(R.drawable.google_android_light_rd_ctn),
-            contentDescription = "signin with google",
-            modifier = Modifier
-                .constrainAs(googleLoginRow) {
+        GoogleLoginButton(
+            Modifier
+                .constrainAs(googleSignInButtonRef) {
                     start.linkTo(loginBtnStartGuideline)
                     end.linkTo(loginBtnEndGuideline)
                     bottom.linkTo(loginBtnBottomGuideline)
                 }
-                .clip(RoundedCornerShape(20.dp))
         )
 
         Text(
             text = "Don't have an account?\nUse in guest mode",
             textDecoration = TextDecoration.Underline,
-            modifier = Modifier.constrainAs(txt3) {
+            modifier = Modifier.constrainAs(guestModeTextRef) {
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
                 top.linkTo(loginBtnBottomGuideline, 32.dp)
@@ -130,6 +141,43 @@ fun LoginScreenContent() {
             color = Color(0xFF8f86d7),
         )
     }
+}
+
+@Composable
+fun GoogleLoginButton(modifier: Modifier) {
+    val context = LocalContext.current
+    val loginViewModel: LoginViewModel = viewModel()
+
+    val googleSignInClient = getGoogleSignInClient(context)
+    val signInLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            handleGoogleSignInResult(
+                data = result.data,
+                onSuccess = { account ->
+                    loginViewModel.onGoogleSignInSuccess(account)
+
+                    // TODO: 로그인 기능 개발 완료 이후 Toast 메시지 삭제(토스트 메시지는 개발 단계에서 확인용)
+                    Toast.makeText(
+                        context,
+                        "Login: ${loginViewModel.userInfo.value}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                },
+                onError = { errorCode ->
+                    Toast.makeText(context, "Login failed: $errorCode", Toast.LENGTH_SHORT).show()
+                }
+            )
+        }
+
+    Image(
+        painter = painterResource(R.drawable.google_android_light_rd_ctn),
+        contentDescription = "signin with google",
+        modifier = modifier
+            .clip(RoundedCornerShape(20.dp))
+            .clickable(
+                enabled = true,
+                onClick = { signInLauncher.launch(googleSignInClient.signInIntent) })
+    )
 }
 
 @Preview(showBackground = true)
