@@ -47,8 +47,8 @@ public class UserService {
 
         if (userRepository.existsByNickname(nickname)) {
             throw new DuplicateNicknameException();
-    }
         }
+    }
 
     /**
      * 이메일 중복 검사
