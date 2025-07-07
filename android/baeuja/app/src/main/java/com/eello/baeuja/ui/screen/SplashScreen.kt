@@ -48,7 +48,7 @@ private fun SplashScreenContent() {
         val (logo, appName) = createRefs()
 
         Image(
-            painter = painterResource(id = R.drawable.default_logo),
+            painter = painterResource(id = R.drawable.baeuja_logo),
             contentDescription = stringResource(R.string.app_logo_description),
             modifier = Modifier
                 .constrainAs(logo) {

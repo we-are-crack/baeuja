@@ -4,10 +4,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -40,7 +42,7 @@ fun LoginScreen(navController: NavController) {
 
 @Composable
 fun LoginScreenContent() {
-    ConstraintLayout {
+    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (logo,
             txt1,
             txt2,
@@ -54,7 +56,7 @@ fun LoginScreenContent() {
         val loginBtnBottomGuideline = createGuidelineFromBottom(0.16f)
 
         Image(
-            painter = painterResource(id = R.drawable.default_logo),
+            painter = painterResource(id = R.drawable.baeuja_logo),
             contentDescription = stringResource(R.string.app_logo_description),
             modifier = Modifier
                 .constrainAs(logo) {
@@ -94,7 +96,6 @@ fun LoginScreenContent() {
             modifier = Modifier.constrainAs(txt2) {
                 start.linkTo(textStartGuideline)
                 top.linkTo(txt1.bottom, 20.dp)
-                bottom.linkTo(parent.bottom, 552.dp)
             },
             fontSize = 16.sp,
             fontFamily = RobotoFamily,
@@ -104,15 +105,17 @@ fun LoginScreenContent() {
         )
 
         Image(
-            painter = painterResource(R.drawable.google_signin),
+            painter = painterResource(R.drawable.google_android_light_rd_ctn),
             contentDescription = "signin with google",
-            modifier = Modifier.constrainAs(googleLoginRow) {
-                start.linkTo(loginBtnStartGuideline)
-                end.linkTo(loginBtnEndGuideline)
-                bottom.linkTo(loginBtnBottomGuideline)
-            }.size(300.dp, 48.dp)
+            modifier = Modifier
+                .constrainAs(googleLoginRow) {
+                    start.linkTo(loginBtnStartGuideline)
+                    end.linkTo(loginBtnEndGuideline)
+                    bottom.linkTo(loginBtnBottomGuideline)
+                }
+                .clip(RoundedCornerShape(20.dp))
         )
-        
+
         Text(
             text = "Don't have an account?\nUse in guest mode",
             textDecoration = TextDecoration.Underline,
@@ -125,7 +128,6 @@ fun LoginScreenContent() {
             lineHeight = 22.sp,
             textAlign = TextAlign.Center,
             color = Color(0xFF8f86d7),
-
         )
     }
 }
