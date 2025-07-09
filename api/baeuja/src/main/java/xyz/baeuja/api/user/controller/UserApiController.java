@@ -1,9 +1,9 @@
 package xyz.baeuja.api.user.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import xyz.baeuja.api.global.response.Result;
 import xyz.baeuja.api.user.dto.UserRequest;
@@ -21,7 +21,7 @@ public class UserApiController {
      * 회원 가입
      */
     @PostMapping
-    public ResponseEntity<Result<?>> saveUser(@Validated @RequestBody UserRequest request) {
+    public ResponseEntity<Result<?>> saveUser(@RequestBody @Valid UserRequest request) {
         Long savedId = userService.singUp(request);
 
         UserResponse response = new UserResponse(savedId, request.getEmail(), request.getNickname(), request.getLoginType());

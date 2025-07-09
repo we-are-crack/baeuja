@@ -78,7 +78,7 @@ class UserApiControllerTest {
 
     @Test
     @DisplayName("회원가입 실패 - 중복 이메일")
-    void saveUser_fail() {
+    void saveUser_fail_duplicate() {
         String email = "test@test.com";
         helper.saveGoogleUser(email, nickname, language, timezone);
 
@@ -93,6 +93,23 @@ class UserApiControllerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT.value());
         assertThat(response.jsonPath().getString("code")).isEqualTo(DuplicateEmailException.CODE);
+    }
+
+    @Test
+    @DisplayName("회원가입 실패 - language 값이 없음")
+    void saveUser_fail_null() {
+        String email = "test@test.com";
+        String requestBody = getRequestBodyJson(email, nickname, "", timezone, LoginType.GOOGLE);
+
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post("/api/users");
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.jsonPath().getString("code")).isEqualTo("BAD_REQUEST");
     }
 
 //    @Test

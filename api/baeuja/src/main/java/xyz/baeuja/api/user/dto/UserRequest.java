@@ -14,10 +14,10 @@ public class UserRequest {
     @NotBlank(message = "닉네임은 필수입니다.")
     private String nickname;
 
-    @NotNull(message = "language 는 필수입니다.")
+    @NotBlank(message = "language 는 필수입니다.")
     private String language;
 
-    @NotNull(message = "timezone 은 필수입니다.")
+    @NotBlank(message = "timezone 은 필수입니다.")
     private String timezone;
 
     @NotNull(message = "loginType 은 필수입니다.")
