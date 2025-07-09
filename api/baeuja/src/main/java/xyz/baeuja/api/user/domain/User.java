@@ -33,11 +33,16 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private LoginType loginType;
 
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
     public User(String nickname, String language, String timezone, LoginType loginType) {
         this.nickname = nickname;
         this.language = language;
         this.timezone = timezone;
         this.loginType = loginType;
+        this.role = Role.GUEST;
     }
 
     /**
@@ -45,6 +50,7 @@ public class User extends BaseEntity {
      */
     public void convertToGoogleAccount(String email) {
         this.loginType = LoginType.GOOGLE;
+        this.role = Role.MEMBER;
         this.email = email;
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.baeuja.api.user.domain.LoginType;
+import xyz.baeuja.api.user.domain.Role;
 import xyz.baeuja.api.user.domain.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,6 +31,7 @@ class UserRepositoryTest {
 
         // then
         assertThat(guest.getId()).isEqualTo(savedId);
+        assertThat(guest.getRole()).isEqualTo(Role.GUEST);
     }
 
     @Test
