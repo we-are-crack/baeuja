@@ -10,5 +10,5 @@
     <color name="main">#8984BE</color>
 
     <color name="login_text">#555555</color>
-    <color name="login_baeuja">#9388e8</color>
+    <color name="content_text_main_color">#9388e8</color>
 </resources>

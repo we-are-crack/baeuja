@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -51,7 +52,7 @@ fun LoginScreen(navController: NavController) {
 
 @Composable
 fun LoginScreenContent() {
-    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+    ConstraintLayout(modifier = Modifier.fillMaxSize().background(Color(0xFFfafafa))) {
         val (
             appLogoRef,
             headlineTextRef,
@@ -90,7 +91,7 @@ fun LoginScreenContent() {
                 withStyle(
                     style = SpanStyle(
                         fontWeight = FontWeight.Bold,
-                        color = colorResource(R.color.login_baeuja)
+                        color = colorResource(R.color.content_text_main_color)
                     )
                 ) {
                     append("BAEUJA")
@@ -114,7 +115,7 @@ fun LoginScreenContent() {
             fontSize = 16.sp,
             fontFamily = RobotoFamily,
             fontWeight = FontWeight.Normal,
-            color = colorResource(R.color.login_baeuja),
+            color = colorResource(R.color.content_text_main_color),
             lineHeight = 22.sp
         )
 

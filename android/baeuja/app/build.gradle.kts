@@ -66,6 +66,8 @@ dependencies {
 
     implementation("com.google.android.gms:play-services-auth:21.3.0")
 
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
+
     // androidx.navigation 추가
     val nav_version = "2.9.0"
     // Jetpack Compose integration

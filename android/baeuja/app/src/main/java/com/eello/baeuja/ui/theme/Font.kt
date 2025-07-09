@@ -7,7 +7,8 @@ import com.eello.baeuja.R
 
 val NotoSansKrFamily = FontFamily(
     Font(R.font.notosanskr_medium, FontWeight.Medium),
-    Font(R.font.notosanskr_bold, FontWeight.Bold)
+    Font(R.font.notosanskr_bold, FontWeight.Bold),
+    Font(R.font.notosanskr_regular, FontWeight.Normal)
 )
 
 val RobotoFamily = FontFamily(
