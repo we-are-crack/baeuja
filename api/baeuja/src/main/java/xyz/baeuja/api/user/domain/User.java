@@ -24,7 +24,7 @@ public class User extends BaseEntity {
     private String nickname;
 
     @Column(nullable = false)
-    private String locale;
+    private String language;
 
     @Column(nullable = false)
     private String timezone;
@@ -33,9 +33,9 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private LoginType loginType;
 
-    public User(String nickname, String locale, String timezone, LoginType loginType) {
+    public User(String nickname, String language, String timezone, LoginType loginType) {
         this.nickname = nickname;
-        this.locale = locale;
+        this.language = language;
         this.timezone = timezone;
         this.loginType = loginType;
     }

@@ -17,7 +17,6 @@ import xyz.baeuja.api.user.exception.DuplicateNicknameException;
 import xyz.baeuja.api.user.exception.InvalidNicknameException;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserApiControllerTest {
@@ -35,14 +34,14 @@ class UserApiControllerTest {
     }
 
     String nickname = "닉네임";
-    String locale = "ko-KR";
+    String language = "ko";
     String timezone = "Asia/Seoul";
 
     @Test
     @DisplayName("게스트 회원가입 성공")
     void saveUser_guest() {
         LoginType loginType = LoginType.GUEST;
-        String requestBody = getRequestBodyJson(nickname, locale, timezone, loginType);
+        String requestBody = getRequestBodyJson(nickname, language, timezone, loginType);
 
         Response response = RestAssured
                 .given()
@@ -63,7 +62,7 @@ class UserApiControllerTest {
     void saveUser_google() {
         String email = "test@test.com";
         LoginType loginType = LoginType.GOOGLE;
-        String requestBody = getRequestBodyJson(email, nickname, locale, timezone, loginType);
+        String requestBody = getRequestBodyJson(email, nickname, language, timezone, loginType);
 
         Response response = RestAssured
                 .given()
@@ -81,9 +80,9 @@ class UserApiControllerTest {
     @DisplayName("회원가입 실패 - 중복 이메일")
     void saveUser_fail() {
         String email = "test@test.com";
-        helper.saveGoogleUser(email, nickname, locale, timezone);
+        helper.saveGoogleUser(email, nickname, language, timezone);
 
-        String requestBody = getRequestBodyJson(email, nickname, locale, timezone, LoginType.GOOGLE);
+        String requestBody = getRequestBodyJson(email, nickname, language, timezone, LoginType.GOOGLE);
 
         Response response = RestAssured
                 .given()
@@ -115,7 +114,7 @@ class UserApiControllerTest {
     @Test
     @DisplayName("닉네임 유효성 검사 실패 - 중복 닉네임")
     void checkNickname_duplicate_nickname() {
-        helper.saveGuestUser(nickname, locale, timezone);
+        helper.saveGuestUser(nickname, language, timezone);
 
         Response response = RestAssured
                 .given()
@@ -145,26 +144,26 @@ class UserApiControllerTest {
 
 
 
-    private String getRequestBodyJson(String nickname, String locale, String timezone, LoginType loginType) {
+    private String getRequestBodyJson(String nickname, String language, String timezone, LoginType loginType) {
         return String.format("""
             {
               "nickname": "%s",
-              "locale": "%s",
+              "language": "%s",
               "timezone": "%s",
               "loginType": "%s"
             }
-            """, nickname, locale, timezone, loginType.name());
+            """, nickname, language, timezone, loginType.name());
     }
 
-    private String getRequestBodyJson(String email, String nickname, String locale, String timezone, LoginType loginType) {
+    private String getRequestBodyJson(String email, String nickname, String language, String timezone, LoginType loginType) {
         return String.format("""
             {
               "email": "%s",
               "nickname": "%s",
-              "locale": "%s",
+              "language": "%s",
               "timezone": "%s",
               "loginType": "%s"
             }
-            """, email, nickname, locale, timezone, loginType.name());
+            """, email, nickname, language, timezone, loginType.name());
     }
 }

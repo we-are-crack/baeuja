@@ -14,8 +14,8 @@ public class UserRequest {
     @NotBlank(message = "닉네임은 필수입니다.")
     private String nickname;
 
-    @NotNull(message = "locale 은 필수입니다.")
-    private String locale;
+    @NotNull(message = "language 는 필수입니다.")
+    private String language;
 
     @NotNull(message = "timezone 은 필수입니다.")
     private String timezone;
@@ -24,6 +24,6 @@ public class UserRequest {
     private LoginType loginType;
 
     public User toEntity() {
-        return new User(nickname, locale, timezone, loginType);
+        return new User(nickname, language, timezone, loginType);
     }
 }

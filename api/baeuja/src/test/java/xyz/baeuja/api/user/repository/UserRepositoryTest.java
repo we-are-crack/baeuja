@@ -63,6 +63,6 @@ class UserRepositoryTest {
 
 
     private static User getGuest(String nickname) {
-        return new User(nickname, "ko_KR", "Asia/Seoul", LoginType.GUEST);
+        return new User(nickname, "ko", "Asia/Seoul", LoginType.GUEST);
     }
 }
