@@ -20,7 +20,7 @@ import com.eello.baeuja.ui.screen.ProfileInputScreen
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(
         navController = navController,
-        startDestination = "join",
+        startDestination = "splash",
         modifier = modifier
     ) {
         composable("splash") { SplashScreen(navController) }

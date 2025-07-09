@@ -34,7 +34,7 @@ fun BottomNavigationContent(
     navBackStackEntry: NavBackStackEntry?,
     onNavigate: (String) -> Unit = {}
 ) {
-    val currentRoute = navBackStackEntry?.destination?.route ?: "login"
+    val currentRoute = navBackStackEntry?.destination?.route
     NavigationBar (
         modifier = Modifier
             .shadow(16.dp, RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp), clip = false)
@@ -42,59 +42,25 @@ fun BottomNavigationContent(
         containerColor = Color.White,
         tonalElevation = 0.dp
     ) {
-        when (currentRoute) {
-            "login", "join" -> {
-                NavigationBarItem(
-                    icon = {
-                        Button(
-                            onClick = {
-
-                            },
-                            modifier = Modifier.size(370.dp, 50.dp),
-                            content = {
-                                Row {
-                                    Text(
-                                        text = "Verify",
-                                        fontFamily = RobotoFamily,
-                                        fontWeight = FontWeight.Medium,
-                                        fontSize = 16.sp,
-                                        lineHeight = 22.sp,
-                                        color = Color.White
-                                    )
-                                }
-                            },
-                            colors = ButtonDefaults.buttonColors(Color(0xFF9388e8)),
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                    },
-                    label = { Text("로그인") },
-                    selected = false,
-                    onClick = { /* 로그인 전용 동작 */ },
-                    alwaysShowLabel = false
-                )
-            }
-            else -> {
-                val items = listOf(
-                    BottomNavItem("Learning", Icons.Filled.School, "learning"),
-                    BottomNavItem("Bookmark", Icons.Filled.Bookmark, "bookmark"),
-                    BottomNavItem("Home", Icons.Filled.Home, "home"),
-                    BottomNavItem("Review", Icons.Filled.RateReview, "review"),
-                    BottomNavItem("My", Icons.Filled.Person, "my"),
-                )
-                items.forEach { item ->
-                    val selected = currentRoute == item.route
-                    NavigationBarItem(
-                        icon = { Icon(item.icon, contentDescription = item.label) },
-                        label = { Text(item.label) },
-                        selected = selected,
-                        onClick = {
-                            if (!selected) {
-                                onNavigate(item.route)
-                            }
-                        }
-                    )
+        val items = listOf(
+            BottomNavItem("Learning", Icons.Filled.School, "learning"),
+            BottomNavItem("Bookmark", Icons.Filled.Bookmark, "bookmark"),
+            BottomNavItem("Home", Icons.Filled.Home, "home"),
+            BottomNavItem("Review", Icons.Filled.RateReview, "review"),
+            BottomNavItem("My", Icons.Filled.Person, "my"),
+        )
+        items.forEach { item ->
+            val selected = currentRoute == item.route
+            NavigationBarItem(
+                icon = { Icon(item.icon, contentDescription = item.label) },
+                label = { Text(item.label) },
+                selected = selected,
+                onClick = {
+                    if (!selected) {
+                        onNavigate(item.route)
+                    }
                 }
-            }
+            )
         }
     }
 }
