@@ -23,7 +23,10 @@ public class UserRepository {
     }
 
     /**
-     * 사용자 단일 조회
+     * 사용자 조회
+     *
+     * @param id user id
+     * @return User or null
      */
     public User findOne(Long id) {
         return em.find(User.class, id);
@@ -31,6 +34,7 @@ public class UserRepository {
 
     /**
      * 이메일로 사용자 단일 조회
+     *
      * @param email String
      * @return Optional<User>
      */

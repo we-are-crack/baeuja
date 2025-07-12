@@ -3,8 +3,8 @@ package xyz.baeuja.api.global.util.jwt;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import xyz.baeuja.api.global.exception.jwt.ExpiredAccessTokenException;
-import xyz.baeuja.api.global.exception.jwt.InvalidJwtException;
+import xyz.baeuja.api.auth.security.exception.ExpiredAccessTokenException;
+import xyz.baeuja.api.auth.security.exception.InvalidJwtException;
 import xyz.baeuja.api.user.domain.Role;
 
 import static org.assertj.core.api.Assertions.*;

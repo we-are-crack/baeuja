@@ -5,8 +5,8 @@ import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import xyz.baeuja.api.global.exception.jwt.ExpiredAccessTokenException;
-import xyz.baeuja.api.global.exception.jwt.InvalidJwtException;
+import xyz.baeuja.api.auth.security.exception.ExpiredAccessTokenException;
+import xyz.baeuja.api.auth.security.exception.InvalidJwtException;
 import xyz.baeuja.api.user.domain.Role;
 
 import javax.crypto.SecretKey;
@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -68,10 +69,22 @@ public class JwtProvider {
 
         return Jwts.builder()
                 .setClaims(claims)
+                .setId(UUID.randomUUID().toString())
+                .setIssuer("api.baeuja.xyz")
                 .setIssuedAt(Date.from(now.toInstant()))
                 .setExpiration(Date.from(tokenValidity.toInstant()))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    /**
+     * 토큰 id(jti) 조회
+     *
+     * @param token jwt string
+     * @return jti string
+     */
+    public String getJti(String token) {
+        return parseClaims(token).getId();
     }
 
     /**
@@ -102,16 +115,17 @@ public class JwtProvider {
      * @throws ExpiredAccessTokenException 토큰 유효기간 만료
      * @throws InvalidJwtException         토큰 검증 실패
      */
-    public void validate(String token) throws ExpiredAccessTokenException, InvalidJwtException {
+    public boolean validate(String token) throws ExpiredAccessTokenException, InvalidJwtException {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(secretKey).build()
                     .parseClaimsJws(token);
+            return true;
         } catch (ExpiredJwtException e) {
-            throw new ExpiredAccessTokenException();
+            throw new ExpiredAccessTokenException("Access Token 유효기간이 만료되었습니다.");
         } catch (SecurityException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException e) {
             log.warn("token validate exception = {}", e.getMessage());
-            throw new InvalidJwtException();
+            throw new InvalidJwtException("유효하지 않은 토큰입니다.");
         }
     }
 

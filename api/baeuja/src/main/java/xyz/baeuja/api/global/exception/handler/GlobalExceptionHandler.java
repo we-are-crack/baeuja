@@ -9,8 +9,8 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import xyz.baeuja.api.global.exception.UnexpectedException;
-import xyz.baeuja.api.global.exception.jwt.ExpiredAccessTokenException;
-import xyz.baeuja.api.global.exception.jwt.InvalidJwtException;
+import xyz.baeuja.api.auth.security.exception.ExpiredAccessTokenException;
+import xyz.baeuja.api.auth.security.exception.InvalidJwtException;
 import xyz.baeuja.api.global.response.ResultResponse;
 
 @Slf4j
