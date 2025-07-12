@@ -12,9 +12,9 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import xyz.baeuja.api.helper.TestDataHelper;
 import xyz.baeuja.api.user.domain.LoginType;
-import xyz.baeuja.api.user.exception.DuplicateEmailException;
-import xyz.baeuja.api.user.exception.DuplicateNicknameException;
-import xyz.baeuja.api.user.exception.InvalidNicknameException;
+import xyz.baeuja.api.auth.exception.DuplicateEmailException;
+import xyz.baeuja.api.auth.exception.DuplicateNicknameException;
+import xyz.baeuja.api.auth.exception.InvalidNicknameException;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -115,49 +115,49 @@ class UserApiControllerTest {
 //    @Test
 //    @DisplayName("Guest에서 구글로 계정 전환")
 
-    @Test
-    @DisplayName("닉네임 유효성 검사 성공")
-    void checkNickname_success() {
-        Response response = RestAssured
-                .given()
-                .queryParam("nickname", nickname)
-                .when()
-                .get("/api/users/check-nickname");
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.jsonPath().getString("code")).isEqualTo("SUCCESS");
-    }
-
-    @Test
-    @DisplayName("닉네임 유효성 검사 실패 - 중복 닉네임")
-    void checkNickname_duplicate_nickname() {
-        helper.saveGuestUser(nickname, language, timezone);
-
-        Response response = RestAssured
-                .given()
-                .queryParam("nickname", nickname)
-                .when()
-                .get("/api/users/check-nickname");
-
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT.value());
-        assertThat(response.jsonPath().getString("code")).isEqualTo(DuplicateNicknameException.CODE);
-    }
-
-    @Test
-    @DisplayName("닉네임 유효성 검사 실패 - 특수문자 닉네임")
-    void checkNickname_invalid_nickname() {
-        String invalidNickname = "!@#asdasd";
-
-        Response response = RestAssured
-                .given()
-                .queryParam("nickname", invalidNickname)
-                .when()
-                .get("/api/users/check-nickname");
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(response.jsonPath().getString("code")).isEqualTo(InvalidNicknameException.CODE);
-    }
+//    @Test
+//    @DisplayName("닉네임 유효성 검사 성공")
+//    void checkNickname_success() {
+//        Response response = RestAssured
+//                .given()
+//                .queryParam("nickname", nickname)
+//                .when()
+//                .get("/api/users/check-nickname");
+//
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
+//        assertThat(response.jsonPath().getString("code")).isEqualTo("SUCCESS");
+//    }
+//
+//    @Test
+//    @DisplayName("닉네임 유효성 검사 실패 - 중복 닉네임")
+//    void checkNickname_duplicate_nickname() {
+//        helper.saveGuestUser(nickname, language, timezone);
+//
+//        Response response = RestAssured
+//                .given()
+//                .queryParam("nickname", nickname)
+//                .when()
+//                .get("/api/users/check-nickname");
+//
+//
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT.value());
+//        assertThat(response.jsonPath().getString("code")).isEqualTo(DuplicateNicknameException.CODE);
+//    }
+//
+//    @Test
+//    @DisplayName("닉네임 유효성 검사 실패 - 특수문자 닉네임")
+//    void checkNickname_invalid_nickname() {
+//        String invalidNickname = "!@#asdasd";
+//
+//        Response response = RestAssured
+//                .given()
+//                .queryParam("nickname", invalidNickname)
+//                .when()
+//                .get("/api/users/check-nickname");
+//
+//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+//        assertThat(response.jsonPath().getString("code")).isEqualTo(InvalidNicknameException.CODE);
+//    }
 
 
 

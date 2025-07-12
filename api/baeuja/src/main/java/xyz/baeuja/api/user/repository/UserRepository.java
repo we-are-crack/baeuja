@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import xyz.baeuja.api.user.domain.User;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class UserRepository {
@@ -27,6 +30,18 @@ public class UserRepository {
     }
 
     /**
+     * 이메일로 사용자 단일 조회
+     * @param email String
+     * @return Optional<User>
+     */
+    public Optional<User> findByEmail(String email) {
+        return em.createQuery("select u from User u where u.email = :email", User.class)
+                .setParameter("email", email)
+                .getResultList()
+                .stream().findAny();
+    }
+
+    /**
      * email 을 가진 사용자 존재 여부
      */
     public boolean existsByEmail(String email) {
@@ -41,7 +56,7 @@ public class UserRepository {
      * nickname 을 가진 사용자 존재 여부
      */
     public boolean existsByNickname(String nickname) {
-        Long count =  em.createQuery("select count(u) from User u where u.nickname = :nickname", Long.class)
+        Long count = em.createQuery("select count(u) from User u where u.nickname = :nickname", Long.class)
                 .setParameter("nickname", nickname)
                 .getSingleResult();
 

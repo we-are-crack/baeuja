@@ -1,4 +1,4 @@
-package xyz.baeuja.api.user.dto;
+package xyz.baeuja.api.auth.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,7 +7,7 @@ import xyz.baeuja.api.user.domain.LoginType;
 import xyz.baeuja.api.user.domain.User;
 
 @Getter
-public class UserRequest {
+public class SignUpRequest {
 
     private String email;
 

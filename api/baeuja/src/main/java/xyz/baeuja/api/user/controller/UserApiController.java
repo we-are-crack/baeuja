@@ -1,13 +1,7 @@
 package xyz.baeuja.api.user.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import xyz.baeuja.api.global.response.Result;
-import xyz.baeuja.api.user.dto.UserRequest;
-import xyz.baeuja.api.user.dto.UserResponse;
 import xyz.baeuja.api.user.service.UserService;
 
 @RestController
@@ -17,27 +11,5 @@ public class UserApiController {
 
     private final UserService userService;
 
-    /**
-     * 회원 가입
-     */
-    @PostMapping
-    public ResponseEntity<Result<?>> saveUser(@RequestBody @Valid UserRequest request) {
-        Long savedId = userService.singUp(request);
 
-        UserResponse response = new UserResponse(savedId, request.getEmail(), request.getNickname(), request.getLoginType());
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(Result.success(response));
-    }
-
-    /**
-     * 닉네임 유효성 검사
-     */
-    @GetMapping("/check-nickname")
-    public ResponseEntity<Result<Void>> checkNickname(@RequestParam String nickname) {
-        userService.validateNickname(nickname);
-
-        return ResponseEntity.ok(Result.success());
-    }
 }

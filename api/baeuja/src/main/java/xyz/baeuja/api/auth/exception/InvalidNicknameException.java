@@ -1,4 +1,4 @@
-package xyz.baeuja.api.user.exception;
+package xyz.baeuja.api.auth.exception;
 
 import xyz.baeuja.api.global.exception.BaseException;
 
