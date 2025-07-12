@@ -9,6 +9,8 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import xyz.baeuja.api.global.exception.UnexpectedException;
+import xyz.baeuja.api.global.exception.jwt.ExpiredAccessTokenException;
+import xyz.baeuja.api.global.exception.jwt.InvalidJwtException;
 import xyz.baeuja.api.global.response.ResultResponse;
 
 @Slf4j
@@ -47,5 +49,27 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ResultResponse.failure("MISSING_PARAMETER", "요청 파라미터가 누락됐습니다."));
+    }
+
+    /**
+     * access token 만료 예외 처리
+     */
+    @ExceptionHandler
+    public ResponseEntity<ResultResponse<Void>> handleExpiredAccessTokenException(ExpiredAccessTokenException exception) {
+        log.info("🚫expiredAccessTokenExceptionHandler handled: {} ", exception.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(ResultResponse.failure(ExpiredAccessTokenException.CODE, exception.getMessage()));
+    }
+
+    /**
+     * access token 검증 실패 예외 처리
+     */
+    @ExceptionHandler
+    public ResponseEntity<ResultResponse<Void>> handleInvalidJwtException(InvalidJwtException exception) {
+        log.info("🚫handleInvalidJwtException handled: {} ", exception.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(ResultResponse.failure(InvalidJwtException.CODE, exception.getMessage()));
     }
 }

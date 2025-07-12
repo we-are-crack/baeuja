@@ -16,6 +16,10 @@ spring:
       hibernate:
         format_sql: true
 
+jwt:
+  exp: 86400  # 60 * 60 * 24 (1일)
+  secret: 2f2fbab983a4d177f0e5dd6f26efee185c64aa7542fbcac45112ebe481d29a44
+
 logging:
   level:
     org.hibernate.SQL: debug           # SQL 출력 (이전 버전에서는 이것만 있어도 됨)
