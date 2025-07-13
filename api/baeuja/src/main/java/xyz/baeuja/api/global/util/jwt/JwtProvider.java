@@ -84,7 +84,7 @@ public class JwtProvider {
      * @return jti string
      */
     public String getJti(String token) {
-        return parseClaims(token).getId();
+        return parseAndValidate(token).getId();
     }
 
     /**
@@ -94,7 +94,7 @@ public class JwtProvider {
      * @return user id
      */
     public Long getUserId(String token) {
-        return parseClaims(token).get("userId", Long.class);
+        return parseAndValidate(token).get("userId", Long.class);
     }
 
     /**
@@ -104,41 +104,30 @@ public class JwtProvider {
      * @return user id
      */
     public Role getRole(String token) {
-        String roleString = parseClaims(token).get("role", String.class);
+        String roleString = parseAndValidate(token).get("role", String.class);
         return Enum.valueOf(Role.class, roleString);
     }
 
     /**
-     * 토큰 검증
+     * 토큰 파싱 및 검증
      *
      * @param token jwt string
+     * @return Claims 검증된 토큰 claims
      * @throws ExpiredAccessTokenException 토큰 유효기간 만료
      * @throws InvalidJwtException         토큰 검증 실패
      */
-    public boolean validate(String token) throws ExpiredAccessTokenException, InvalidJwtException {
+    public Claims parseAndValidate(String token) throws ExpiredAccessTokenException, InvalidJwtException {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(secretKey).build()
-                    .parseClaimsJws(token);
-            return true;
+            return Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
         } catch (ExpiredJwtException e) {
             throw new ExpiredAccessTokenException("Access Token 유효기간이 만료되었습니다.");
         } catch (SecurityException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException e) {
             log.warn("token validate exception = {}", e.getMessage());
             throw new InvalidJwtException("유효하지 않은 토큰입니다.");
         }
-    }
-
-    /**
-     * jwt claims 파싱
-     *
-     * @param token access token string
-     * @return Claims
-     */
-    private Claims parseClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(secretKey).build()
-                .parseClaimsJws(token)
-                .getBody();
     }
 }

@@ -33,14 +33,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String accessToken = authorizationHeader.substring(7);
 
-        // AuthenticationEntryPoint 구현체에서 jwtProvider.validate() 예외 처리
-        if (jwtProvider.validate(accessToken)) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(jwtProvider.getUserId(accessToken).toString());
-            UsernamePasswordAuthenticationToken authenticationToken
-                    = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(jwtProvider.getUserId(accessToken).toString());
+        UsernamePasswordAuthenticationToken authenticationToken
+                = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        }
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
         filterChain.doFilter(request, response);
     }
