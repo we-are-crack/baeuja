@@ -13,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import xyz.baeuja.api.helper.TestDataHelper;
 import xyz.baeuja.api.user.domain.LoginType;
 import xyz.baeuja.api.auth.exception.DuplicateEmailException;
-import xyz.baeuja.api.auth.exception.DuplicateNicknameException;
-import xyz.baeuja.api.auth.exception.InvalidNicknameException;
 
 import static org.assertj.core.api.Assertions.*;
 

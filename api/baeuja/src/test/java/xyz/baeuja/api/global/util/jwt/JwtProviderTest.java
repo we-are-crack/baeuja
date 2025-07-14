@@ -1,5 +1,6 @@
 package xyz.baeuja.api.global.util.jwt;
 
+import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,8 +67,11 @@ class JwtProviderTest {
         // given
         String token = jwtProvider.createAccessToken(testUser);
 
-        // when & then
-        jwtProvider.validate(token);
+        // when
+        Claims claims = jwtProvider.parseAndValidate(token);
+
+        // then
+        assertThat(claims.get("userId", Long.class)).isEqualTo(testUser.getId());
     }
 
     @Test
@@ -79,7 +83,7 @@ class JwtProviderTest {
 
         // when & then
         assertThrows(ExpiredAccessTokenException.class,
-                () -> jwtProvider.validate(expiredToken)
+                () -> jwtProvider.parseAndValidate(expiredToken)
         );
     }
 
@@ -91,7 +95,7 @@ class JwtProviderTest {
 
         // when & then
         assertThrows(InvalidJwtException.class,
-                () -> jwtProvider.validate(invalidToken)
+                () -> jwtProvider.parseAndValidate(invalidToken)
         );
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 import xyz.baeuja.api.auth.security.exception.InvalidJwtException;
 import xyz.baeuja.api.global.util.jwt.JwtProvider;
+import xyz.baeuja.api.global.util.security.SecurityWhitelist;
 
 import java.io.IOException;
 
@@ -25,6 +26,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
+
+        // 인증 필터 화이트리스트
+        if (SecurityWhitelist.isWhitelisted(request.getRequestURI())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
