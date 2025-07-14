@@ -1,0 +1,54 @@
+package com.eello.baeuja.retrofit
+
+import com.eello.baeuja.auth.AuthInterceptor
+import com.eello.baeuja.auth.TokenManager
+import com.eello.baeuja.retrofit.api.AuthAPI
+import com.google.gson.GsonBuilder
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+object RetrofitModule {
+
+    private const val BASE_URL = "https://api.baeuja.xyz/api/"
+
+    @Provides
+    @Singleton
+    fun provideAuthInterceptor(tokenManager: TokenManager): AuthInterceptor =
+        AuthInterceptor({ tokenManager.accessToken })
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient =
+        // TODO: Authenticator 추가
+        OkHttpClient.Builder()
+            .addInterceptor(authInterceptor) // 매 요청마다 토큰을 헤더에 추가하는 인터셉터
+            .build()
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+        val gsonWithAdapters = GsonBuilder()
+            .registerTypeAdapter(ApiResponseCode::class.java, ApiResponseCodeAdapter())
+            .serializeNulls()
+            .create()
+
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gsonWithAdapters))
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthAPI(retrofit: Retrofit): AuthAPI =
+        retrofit.create(AuthAPI::class.java)
+}

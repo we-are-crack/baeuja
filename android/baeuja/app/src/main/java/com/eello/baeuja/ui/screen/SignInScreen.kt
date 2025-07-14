@@ -6,13 +6,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -30,29 +32,70 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.eello.baeuja.R
+import com.eello.baeuja.auth.AuthResult
 import com.eello.baeuja.ui.theme.BaujaTheme
 import com.eello.baeuja.ui.theme.NotoSansKrFamily
 import com.eello.baeuja.ui.theme.RobotoFamily
 import com.eello.baeuja.utils.auth.getGoogleSignInClient
 import com.eello.baeuja.utils.auth.handleGoogleSignInResult
-import com.eello.baeuja.viewmodel.LoginViewModel
+import com.eello.baeuja.viewmodel.SignInViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 
 @Composable
-fun LoginScreen(navController: NavController) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        LoginScreenContent()
-    }
+fun SignInScreen(navController: NavController) {
+    val authEntry =
+        remember(navController.currentBackStackEntry) { navController.getBackStackEntry("auth") }
+    val signInViewModel: SignInViewModel = hiltViewModel(authEntry)
+
+    SignInRoute(navController, signInViewModel)
 }
 
 @Composable
-fun LoginScreenContent() {
-    ConstraintLayout(modifier = Modifier.fillMaxSize().background(Color(0xFFfafafa))) {
+fun SignInRoute(navController: NavController, signInViewModel: SignInViewModel) {
+    val signInResult by signInViewModel.signInResult.collectAsState()
+    LaunchedEffect(signInResult) {
+        when (signInResult) {
+            AuthResult.Unregistered -> {
+                navController.navigate("profile") {
+                    popUpTo("login") { inclusive = false }
+                }
+            }
+
+            AuthResult.Success -> {
+                navController.navigate("home") {
+                    popUpTo("auth") { inclusive = true }
+                }
+            }
+
+            else -> {}
+        }
+    }
+
+    val onGoogleSignInSuccess: (GoogleSignInAccount) -> Unit = { account ->
+        signInViewModel.onGoogleSignInSuccess(account)
+        signInViewModel.googleSignIn()
+    }
+
+    val onGuestSignIn: () -> Unit = {
+        signInViewModel.guestSignIn()
+    }
+
+    SignInScreenContent(onGoogleSignInSuccess, onGuestSignIn)
+}
+
+@Composable
+fun SignInScreenContent(
+    onGoogleSignInSuccess: (GoogleSignInAccount) -> Unit = {},
+    onGuestSignInClick: () -> Unit = {}
+) {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFfafafa))
+    ) {
         val (
             appLogoRef,
             headlineTextRef,
@@ -125,17 +168,20 @@ fun LoginScreenContent() {
                     start.linkTo(loginBtnStartGuideline)
                     end.linkTo(loginBtnEndGuideline)
                     bottom.linkTo(loginBtnBottomGuideline)
-                }
+                },
+            onGoogleSignInSuccess
         )
 
         Text(
             text = "Don't have an account?\nUse in guest mode",
             textDecoration = TextDecoration.Underline,
-            modifier = Modifier.constrainAs(guestModeTextRef) {
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                top.linkTo(loginBtnBottomGuideline, 32.dp)
-            },
+            modifier = Modifier
+                .constrainAs(guestModeTextRef) {
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    top.linkTo(loginBtnBottomGuideline, 32.dp)
+                }
+                .clickable { onGuestSignInClick() },
             fontSize = 15.sp,
             lineHeight = 22.sp,
             textAlign = TextAlign.Center,
@@ -145,25 +191,18 @@ fun LoginScreenContent() {
 }
 
 @Composable
-fun GoogleLoginButton(modifier: Modifier) {
+fun GoogleLoginButton(
+    modifier: Modifier,
+    onGoogleSignInSuccess: (GoogleSignInAccount) -> Unit = {},
+) {
     val context = LocalContext.current
-    val loginViewModel: LoginViewModel = viewModel()
 
     val googleSignInClient = getGoogleSignInClient(context)
     val signInLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             handleGoogleSignInResult(
                 data = result.data,
-                onSuccess = { account ->
-                    loginViewModel.onGoogleSignInSuccess(account)
-
-                    // TODO: 로그인 기능 개발 완료 이후 Toast 메시지 삭제(토스트 메시지는 개발 단계에서 확인용)
-                    Toast.makeText(
-                        context,
-                        "Login: ${loginViewModel.userInfo.value}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                },
+                onSuccess = onGoogleSignInSuccess,
                 onError = { errorCode ->
                     Toast.makeText(context, "Login failed: $errorCode", Toast.LENGTH_SHORT).show()
                 }
@@ -183,8 +222,8 @@ fun GoogleLoginButton(modifier: Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewLoginScreen() {
+fun PreviewSignInScreen() {
     BaujaTheme {
-        LoginScreenContent()
+        SignInScreenContent()
     }
 }

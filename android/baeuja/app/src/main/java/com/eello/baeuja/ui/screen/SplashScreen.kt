@@ -31,7 +31,7 @@ fun SplashScreen(navController: NavController) {
     // 2초 대기 후 home으로 이동
     LaunchedEffect(Unit) {
         delay(2000)
-        navController.navigate("login") {
+        navController.navigate("auth") {
             popUpTo("splash") { inclusive = true }
         }
     }

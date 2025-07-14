@@ -1,4 +1,3 @@
-import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -9,7 +8,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.eello.baeuja.ui.AppNavigation
 import com.eello.baeuja.ui.component.BottomNavigationContent
-import com.eello.baeuja.ui.component.OneButtonBottomBar
 
 @Composable
 fun MainScreen(navController: NavHostController) {
@@ -19,16 +17,8 @@ fun MainScreen(navController: NavHostController) {
     Scaffold(
         bottomBar = {
             when(currentRoute) {
-                "splash", "login" -> {}
+                "splash", "login", "join" -> {}
 
-                "join" -> {
-                    OneButtonBottomBar(onClick = {
-                        Toast.makeText(
-                            context, "click button",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    })
-                }
 
                 else -> {
                     BottomNavigationContent(

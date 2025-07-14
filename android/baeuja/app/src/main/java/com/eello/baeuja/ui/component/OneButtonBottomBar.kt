@@ -27,7 +27,11 @@ private val NavigationBarHeight = 107.dp
 private val NavigationBarItemHeight = 83.dp
 
 @Composable
-fun OneButtonBottomBar(buttonText: String = "Verify", onClick: () -> Unit) {
+fun OneButtonBottomBar(
+    buttonText: String = "Verify",
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -40,15 +44,20 @@ fun OneButtonBottomBar(buttonText: String = "Verify", onClick: () -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(NavigationBarItemHeight)
-                .padding(bottom = 24.dp),
+                .padding(bottom = 24.dp)
         ) {
             Button(
+                enabled = enabled,
                 onClick = onClick,
                 modifier = Modifier
                     .size(370.dp, 50.dp)
                     .align(Alignment.Center),
                 shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(Color(0xFF9388e8))
+                colors = if (enabled) {
+                    ButtonDefaults.buttonColors(containerColor = Color(0xFF9388e8))
+                } else {
+                    ButtonDefaults.buttonColors(containerColor = Color(0xFFCCCCCC)) // disabled color
+                }
             ) {
                 Text(
                     text = buttonText,
@@ -67,6 +76,6 @@ fun OneButtonBottomBar(buttonText: String = "Verify", onClick: () -> Unit) {
 @Composable
 fun PreviewOneButtonBottomBar() {
     BaujaTheme {
-        OneButtonBottomBar(onClick = {})
+        OneButtonBottomBar(enabled = false, onClick = {})
     }
 }

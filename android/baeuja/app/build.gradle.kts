@@ -4,6 +4,9 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 
     kotlin("plugin.serialization") version "2.0.21"
+
+    id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -32,6 +35,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+//        sourceCompatibility = JavaVersion.VERSION_1_8
+//        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = "11"
@@ -67,6 +72,13 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:21.3.0")
 
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
+
+    implementation("androidx.datastore:datastore-preferences:1.1.7")
+
+    // hilt
+    implementation("com.google.dagger:hilt-android:2.56.2")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    ksp("com.google.dagger:hilt-android-compiler:2.56.2")
 
     // androidx.navigation 추가
     val nav_version = "2.9.0"
