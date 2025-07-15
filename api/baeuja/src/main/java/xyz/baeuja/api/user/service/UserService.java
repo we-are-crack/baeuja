@@ -10,6 +10,7 @@ import xyz.baeuja.api.global.util.jwt.JwtUserInfo;
 import xyz.baeuja.api.user.domain.LoginType;
 import xyz.baeuja.api.user.domain.Role;
 import xyz.baeuja.api.user.domain.User;
+import xyz.baeuja.api.user.dto.UserDto;
 import xyz.baeuja.api.user.repository.UserRepository;
 
 import java.util.UUID;
@@ -28,7 +29,7 @@ public class UserService {
      *
      * @param email String
      * @return JwtUserInfo
-     * @throws UserNotFoundException
+     * @throws UserNotFoundException 토큰에서 조회한 userId 를 가진 사용자가 DB에 존재하지 않는다면
      */
     public JwtUserInfo loadUserForSignIn(String email) throws UserNotFoundException {
         User user = userRepository.findByEmail(email)
@@ -54,7 +55,7 @@ public class UserService {
         Role role;
 
         if (request.getLoginType() == LoginType.GUEST) {
-            user = request.toEntity(getGuestNickname());
+            user = request.toEntity(createGuestNickname());
             role = Role.GUEST;
         } else {
             user = request.toEntity();
@@ -69,11 +70,22 @@ public class UserService {
     }
 
     /**
+     * 사용자 정보 조회
+     *
+     * @param userId 조회하고자 하는 user id
+     * @return 조회한 User 로부터 생성한 UserDto
+     */
+    public UserDto getUserInfo(Long userId) {
+        User findUser = userRepository.findOne(userId);
+        return UserDto.from(findUser);
+    }
+
+    /**
      * 랜덤한 닉네임 생성
      *
      * @return random nickname string
      */
-    private static String getGuestNickname() {
+    private static String createGuestNickname() {
         return "G" + UUID.randomUUID().toString()
                 .replace("-", "")
                 .substring(0, 19);

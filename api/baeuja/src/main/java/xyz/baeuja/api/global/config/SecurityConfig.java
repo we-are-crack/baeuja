@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         // JwtAuthFilter를 UsernamePasswordAuthenticationFilter 앞에 추가
-        http.addFilterBefore(new JwtAuthFilter(jwtProvider, userDetailsService), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthFilter(jwtProvider, userDetailsService, authenticationEntryPoint), UsernamePasswordAuthenticationFilter.class);
 
         // 커스텀 예외 핸들러 등록
         http.exceptionHandling(exceptionHandling -> exceptionHandling

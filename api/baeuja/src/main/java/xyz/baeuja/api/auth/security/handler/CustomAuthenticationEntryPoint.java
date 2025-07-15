@@ -35,6 +35,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         if (authException instanceof ExpiredTokenException) {
             resultResponse = ResultResponse.failure(ExpiredTokenException.CODE, authException.getMessage());
         } else if (authException instanceof InvalidJwtException) {
+            System.out.println("InvalidJwtExceptionInvalidJwtExceptionInvalidJwtException");
             resultResponse = ResultResponse.failure(InvalidJwtException.CODE, authException.getMessage());
         } else {
             resultResponse = ResultResponse.failure("UNAUTHORIZED", "This request is unauthenticated.");

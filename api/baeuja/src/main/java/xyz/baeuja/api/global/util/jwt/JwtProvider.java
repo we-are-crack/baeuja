@@ -35,7 +35,7 @@ public class JwtProvider {
     }
 
     /**
-     * access token 생성 (유효기간 1시간)
+     * access token 생성 (유효기간 1일)
      *
      * @param userInfo JwtUserInfo must include (id, timezone, role)
      * @return access token string
