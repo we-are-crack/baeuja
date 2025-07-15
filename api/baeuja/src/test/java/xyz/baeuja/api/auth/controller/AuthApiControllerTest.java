@@ -10,11 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import xyz.baeuja.api.auth.exception.*;
 import xyz.baeuja.api.helper.TestDataHelper;
 import xyz.baeuja.api.user.domain.LoginType;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static xyz.baeuja.api.helper.RequestBodyBuilder.buildRequestBody;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AuthApiControllerTest {
@@ -41,7 +46,9 @@ class AuthApiControllerTest {
     void signIn_success() {
         helper.saveGoogleUser(email, nickname, language, timezone);
 
-        String requestBody = getRequestBodyJson(email);
+        Map<String, String> requestBodyParams = new HashMap<>();
+        requestBodyParams.put("email", email);
+        String requestBody = buildRequestBody(requestBodyParams);
 
         Response response = RestAssured
                 .given()
@@ -55,9 +62,31 @@ class AuthApiControllerTest {
     }
 
     @Test
+    @DisplayName("로그인 실패 - 존재하지 않는 사용자")
+    void signIn_fail() {
+        Map<String, String> requestBodyParams = new HashMap<>();
+        requestBodyParams.put("email", email);
+        String requestBody = buildRequestBody(requestBodyParams);
+
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post("/api/auth/sign-in");
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        assertThat(response.jsonPath().getString("code")).isEqualTo(UserNotFoundException.CODE);
+    }
+
+    @Test
     @DisplayName("GUEST 회원 가입 성공")
     void signUp_guest_success() {
-        String requestBody = getRequestBodyJson(nickname, language, timezone, LoginType.GUEST);
+        Map<String, String> requestBodyParams = new HashMap<>();
+        requestBodyParams.put("language", language);
+        requestBodyParams.put("timezone", timezone);
+        requestBodyParams.put("loginType", LoginType.GUEST.name());
+        String requestBody = buildRequestBody(requestBodyParams);
 
         Response response = RestAssured
                 .given()
@@ -73,7 +102,13 @@ class AuthApiControllerTest {
     @Test
     @DisplayName("GOOGLE 회원 가입 성공")
     void signUp_google_success() {
-        String requestBody = getRequestBodyJson(email, nickname, language, timezone, LoginType.GUEST);
+        Map<String, String> requestBodyParams = new HashMap<>();
+        requestBodyParams.put("email", email);
+        requestBodyParams.put("nickname", nickname);
+        requestBodyParams.put("language", language);
+        requestBodyParams.put("timezone", timezone);
+        requestBodyParams.put("loginType", LoginType.GOOGLE.name());
+        String requestBody = buildRequestBody(requestBodyParams);
 
         Response response = RestAssured
                 .given()
@@ -84,6 +119,51 @@ class AuthApiControllerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.jsonPath().getString("data.accessToken")).isNotNull();
+    }
+
+    @Test
+    @DisplayName("GOOGLE 회원 가입 실패 - 이메일 누락")
+    void signUp_google_fail_missing() {
+        Map<String, String> requestBodyParams = new HashMap<>();
+        requestBodyParams.put("nickname", nickname);
+        requestBodyParams.put("language", language);
+        requestBodyParams.put("timezone", timezone);
+        requestBodyParams.put("loginType", LoginType.GOOGLE.name());
+        String requestBody = buildRequestBody(requestBodyParams);
+
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post("/api/auth/sign-up");
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.jsonPath().getString("code")).isEqualTo(InvalidSignUpRequestException.CODE);
+    }
+
+    @Test
+    @DisplayName("GOOGLE 회원 가입 실패 - 중복 이메일")
+    void signUp_google_fail_duplicate() {
+        helper.saveGoogleUser(email, nickname, language, timezone);
+
+        Map<String, String> requestBodyParams = new HashMap<>();
+        requestBodyParams.put("email", email);
+        requestBodyParams.put("nickname", nickname);
+        requestBodyParams.put("language", language);
+        requestBodyParams.put("timezone", timezone);
+        requestBodyParams.put("loginType", LoginType.GOOGLE.name());
+        String requestBody = buildRequestBody(requestBodyParams);
+
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post("/api/auth/sign-up");
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT.value());
+        assertThat(response.jsonPath().getString("code")).isEqualTo(DuplicateEmailException.CODE);
     }
 
     @Test
@@ -110,37 +190,22 @@ class AuthApiControllerTest {
                 .when()
                 .get("/api/auth/check-nickname");
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT.value());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.jsonPath().getString("code")).isEqualTo(DuplicateNicknameException.CODE);
     }
 
-    private String getRequestBodyJson(String email) {
-        return String.format("""
-            {
-              "email": "%s"
-            }
-            """, email);
-    }
+    @Test
+    @DisplayName("닉네임 유효성 검사 실패 - 글자수 제한")
+    void checkNickname_fail_length() {
+        helper.saveGuestUser(nickname, language, timezone);
 
-    private String getRequestBodyJson(String nickname, String language, String timezone, LoginType loginType) {
-        return String.format("""
-            {
-              "nickname": "%s",
-              "language": "%s",
-              "timezone": "%s",
-              "loginType": "%s"
-            }
-            """, nickname, language, timezone, loginType.name());
-    }
+        Response response = RestAssured
+                .given()
+                .queryParam("nickname", "q")
+                .when()
+                .get("/api/auth/check-nickname");
 
-    private String getRequestBodyJson(String email, String nickname, String language, String timezone, LoginType loginType) {
-        return String.format("""
-            {
-              "email": "%s",
-              "nickname": "%s",
-              "language": "%s",
-              "timezone": "%s",
-              "loginType": "%s"
-            }
-            """, email, nickname, language, timezone, loginType.name());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.jsonPath().getString("code")).isEqualTo(InvalidNicknameException.CODE);
     }
 }

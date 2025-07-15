@@ -1,6 +1,7 @@
 package xyz.baeuja.api.user.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.baeuja.api.auth.dto.SignUpRequest;
@@ -11,6 +12,9 @@ import xyz.baeuja.api.user.domain.Role;
 import xyz.baeuja.api.user.domain.User;
 import xyz.baeuja.api.user.repository.UserRepository;
 
+import java.util.UUID;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -27,7 +31,9 @@ public class UserService {
      * @throws UserNotFoundException
      */
     public JwtUserInfo loadUserForSignIn(String email) throws UserNotFoundException {
-        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
         return new JwtUserInfo(user.getId(), user.getTimezone(), user.getRole());
     }
 
@@ -39,14 +45,19 @@ public class UserService {
      */
     @Transactional
     public JwtUserInfo signUp(SignUpRequest request) throws InvalidSignUpRequestException {
-        User user = request.toEntity();
-        Role role = Role.GUEST;
+        if (request.getLoginType() == LoginType.GUEST && request.getEmail() != null
+                || request.getLoginType() == LoginType.GOOGLE && request.getEmail() == null) {
+            throw new InvalidSignUpRequestException("Email is required when signing up for Google.");
+        }
 
-        if (request.getLoginType() == LoginType.GOOGLE) {
-            if (request.getEmail() == null) {
-                throw new InvalidSignUpRequestException("Email is required when signing up for Google.");
-            }
+        User user;
+        Role role;
 
+        if (request.getLoginType() == LoginType.GUEST) {
+            user = request.toEntity(getGuestNickname());
+            role = Role.GUEST;
+        } else {
+            user = request.toEntity();
             validateDuplicateEmail(request.getEmail());
             user.convertToGoogleAccount(request.getEmail());
             role = Role.MEMBER;
@@ -55,6 +66,17 @@ public class UserService {
         Long savedId = userRepository.save(user);
 
         return new JwtUserInfo(savedId, request.getTimezone(), role);
+    }
+
+    /**
+     * 랜덤한 닉네임 생성
+     *
+     * @return random nickname string
+     */
+    private static String getGuestNickname() {
+        return "G" + UUID.randomUUID().toString()
+                .replace("-", "")
+                .substring(0, 19);
     }
 
     /**

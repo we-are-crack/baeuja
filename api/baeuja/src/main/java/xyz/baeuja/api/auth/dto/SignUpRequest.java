@@ -11,19 +11,22 @@ public class SignUpRequest {
 
     private String email;
 
-    @NotBlank(message = "닉네임은 필수입니다.")
     private String nickname;
 
-    @NotBlank(message = "language 는 필수입니다.")
+    @NotBlank(message = "language is required")
     private String language;
 
-    @NotBlank(message = "timezone 은 필수입니다.")
+    @NotBlank(message = "timezone is required")
     private String timezone;
 
-    @NotNull(message = "loginType 은 필수입니다.")
+    @NotNull(message = "loginType is required")
     private LoginType loginType;
 
     public User toEntity() {
+        return new User(nickname, language, timezone, loginType);
+    }
+
+    public User toEntity(String nickname) {
         return new User(nickname, language, timezone, loginType);
     }
 }

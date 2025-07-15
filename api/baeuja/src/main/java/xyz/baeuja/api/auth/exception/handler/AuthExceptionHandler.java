@@ -15,6 +15,17 @@ import xyz.baeuja.api.global.response.ResultResponse;
 public class AuthExceptionHandler {
 
     /**
+     * 존재하지 않는 사용자 예외 처리
+     */
+    @ExceptionHandler
+    public ResponseEntity<ResultResponse<Void>> handleUserNotFoundException(UserNotFoundException exception) {
+        log.info("🚫userNotFoundExceptionHandler handled: {}", exception.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(ResultResponse.failure(UserNotFoundException.CODE, exception.getMessage()));
+    }
+
+    /**
      * 회원 가입 요청 본문 예외 처리
      */
     @ExceptionHandler
@@ -56,16 +67,5 @@ public class AuthExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ResultResponse.failure(InvalidNicknameException.CODE, exception.getMessage()));
-    }
-
-    /**
-     * 존재하지 않는 사용자 예외 처리
-     */
-    @ExceptionHandler
-    public ResponseEntity<ResultResponse<Void>> handleUserNotFoundException(UserNotFoundException exception) {
-        log.info("🚫userNotFoundExceptionHandler handled: {}", exception.getMessage());
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(ResultResponse.failure(UserNotFoundException.CODE, exception.getMessage()));
     }
 }

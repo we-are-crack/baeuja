@@ -8,6 +8,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class SignInRequest {
 
-    @NotBlank(message = "이메일은 필수입니다.")
+    @NotBlank(message = "Email is required.")
     private String email;
 }
