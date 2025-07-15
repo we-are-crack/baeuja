@@ -17,7 +17,8 @@ spring:
         format_sql: true
 
 jwt:
-  exp: 86400  # 60 * 60 * 24 (1일)
+  accessTokenExp: 3600  # 60 * 60 (1시간)
+  refreshTokenExp: 31536000  # 60 * 60 * 24 * 365 (1년)
   secret: 2f2fbab983a4d177f0e5dd6f26efee185c64aa7542fbcac45112ebe481d29a44
 
 logging:

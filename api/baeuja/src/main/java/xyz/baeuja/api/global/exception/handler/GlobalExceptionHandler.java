@@ -9,7 +9,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import xyz.baeuja.api.global.exception.UnexpectedException;
-import xyz.baeuja.api.auth.security.exception.ExpiredAccessTokenException;
+import xyz.baeuja.api.auth.security.exception.ExpiredTokenException;
 import xyz.baeuja.api.auth.security.exception.InvalidJwtException;
 import xyz.baeuja.api.global.response.ResultResponse;
 
@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler
     public ResponseEntity<ResultResponse<Void>> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
-        log.info("🚫methodArgumentNotValidExceptionHandler handled: {}", exception.getMessage());
+        log.info("🚫MethodArgumentNotValidExceptionHandler handled: {}", exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ResultResponse.failure("BAD_REQUEST_PARAM_OR_BODY", "The request parameter or body was invalid."));
@@ -45,29 +45,29 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler
     public ResponseEntity<ResultResponse<Void>> handleMissingServletRequestParameterException(MissingServletRequestParameterException exception) {
-        log.info("🚫missingServletRequestParameterExceptionHandler handled: {} ", exception.getMessage());
+        log.info("🚫MissingServletRequestParameterExceptionHandler handled: {} ", exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ResultResponse.failure("MISSING_PARAMETER", "The request parameter was missing."));
     }
 
     /**
-     * access token 만료 예외 처리
+     * token 만료 예외 처리
      */
     @ExceptionHandler
-    public ResponseEntity<ResultResponse<Void>> handleExpiredAccessTokenException(ExpiredAccessTokenException exception) {
-        log.info("🚫expiredAccessTokenExceptionHandler handled: {} ", exception.getMessage());
+    public ResponseEntity<ResultResponse<Void>> handleExpireTokenException(ExpiredTokenException exception) {
+        log.info("🚫ExpiredTokenExceptionHandler handled: {} ", exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body(ResultResponse.failure(ExpiredAccessTokenException.CODE, exception.getMessage()));
+                .body(ResultResponse.failure(ExpiredTokenException.CODE, exception.getMessage()));
     }
 
     /**
-     * access token 검증 실패 예외 처리
+     * token 검증 실패 예외 처리
      */
     @ExceptionHandler
     public ResponseEntity<ResultResponse<Void>> handleInvalidJwtException(InvalidJwtException exception) {
-        log.info("🚫handleInvalidJwtException handled: {} ", exception.getMessage());
+        log.info("🚫InvalidJwtExceptionHandler handled: {} ", exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(ResultResponse.failure(InvalidJwtException.CODE, exception.getMessage()));

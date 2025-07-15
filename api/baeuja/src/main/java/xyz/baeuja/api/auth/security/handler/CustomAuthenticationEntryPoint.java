@@ -11,7 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import xyz.baeuja.api.auth.security.exception.ExpiredAccessTokenException;
+import xyz.baeuja.api.auth.security.exception.ExpiredTokenException;
 import xyz.baeuja.api.auth.security.exception.InvalidJwtException;
 import xyz.baeuja.api.global.response.ResultResponse;
 
@@ -32,8 +32,8 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         ResultResponse<Void> resultResponse;
 
-        if (authException instanceof ExpiredAccessTokenException) {
-            resultResponse = ResultResponse.failure(ExpiredAccessTokenException.CODE, authException.getMessage());
+        if (authException instanceof ExpiredTokenException) {
+            resultResponse = ResultResponse.failure(ExpiredTokenException.CODE, authException.getMessage());
         } else if (authException instanceof InvalidJwtException) {
             resultResponse = ResultResponse.failure(InvalidJwtException.CODE, authException.getMessage());
         } else {

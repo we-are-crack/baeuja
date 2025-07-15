@@ -11,8 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import xyz.baeuja.api.auth.exception.*;
+import xyz.baeuja.api.global.util.jwt.JwtProvider;
+import xyz.baeuja.api.global.util.jwt.JwtUserInfo;
 import xyz.baeuja.api.helper.TestDataHelper;
 import xyz.baeuja.api.user.domain.LoginType;
+import xyz.baeuja.api.user.domain.Role;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +32,9 @@ class AuthApiControllerTest {
 
     @Autowired
     TestDataHelper helper;
+
+    @Autowired
+    JwtProvider jwtProvider;
 
     String email = "test@test.com";
     String nickname = "닉네임";
@@ -59,6 +65,7 @@ class AuthApiControllerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getString("data.accessToken")).isNotNull();
+        assertThat(response.jsonPath().getString("data.refreshToken")).isNotNull();
     }
 
     @Test
@@ -97,6 +104,7 @@ class AuthApiControllerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.jsonPath().getString("data.accessToken")).isNotNull();
+        assertThat(response.jsonPath().getString("data.refreshToken")).isNotNull();
     }
 
     @Test
@@ -119,6 +127,7 @@ class AuthApiControllerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.jsonPath().getString("data.accessToken")).isNotNull();
+        assertThat(response.jsonPath().getString("data.refreshToken")).isNotNull();
     }
 
     @Test
@@ -207,5 +216,50 @@ class AuthApiControllerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getString("code")).isEqualTo(InvalidNicknameException.CODE);
+    }
+
+    @Test
+    @DisplayName("토큰 재발급 성공")
+    void getRenewToken_success() {
+        String expiredAccessToken = jwtProvider.createAccessToken(new JwtUserInfo(1L, timezone, Role.MEMBER), -1L);
+        String refreshToken = jwtProvider.createRefreshToken(new JwtUserInfo(1L, timezone, Role.MEMBER));
+
+        Map<String, String> requestBodyParams = new HashMap<>();
+        requestBodyParams.put("accessToken", expiredAccessToken);
+        requestBodyParams.put("refreshToken", refreshToken);
+        String requestBody = buildRequestBody(requestBodyParams);
+
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post("/api/auth/token");
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.jsonPath().getString("data.accessToken")).isNotNull();
+        assertThat(response.jsonPath().getString("data.refreshToken")).isNotNull();
+    }
+
+    @Test
+    @DisplayName("토큰 재발급 실패")
+    void getRenewToken_fail() {
+        String expiredAccessToken = jwtProvider.createAccessToken(new JwtUserInfo(1L, timezone, Role.MEMBER), -1L);
+        String refreshToken = jwtProvider.createRefreshToken(new JwtUserInfo(2L, timezone, Role.MEMBER));
+
+        Map<String, String> requestBodyParams = new HashMap<>();
+        requestBodyParams.put("accessToken", expiredAccessToken);
+        requestBodyParams.put("refreshToken", refreshToken);
+        String requestBody = buildRequestBody(requestBodyParams);
+
+        Response response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post("/api/auth/token");
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        assertThat(response.jsonPath().getString("code")).isEqualTo("INVALID_TOKEN");
     }
 }

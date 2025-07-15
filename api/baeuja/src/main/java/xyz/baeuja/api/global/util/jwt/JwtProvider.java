@@ -5,7 +5,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import xyz.baeuja.api.auth.security.exception.ExpiredAccessTokenException;
+import xyz.baeuja.api.auth.security.exception.ExpiredTokenException;
 import xyz.baeuja.api.auth.security.exception.InvalidJwtException;
 import xyz.baeuja.api.user.domain.Role;
 
@@ -21,18 +21,21 @@ import java.util.UUID;
 public class JwtProvider {
 
     private final long accessTokenExp;
+    private final long refreshTokenExp;
     private final SecretKey secretKey;
 
     public JwtProvider(
             @Value("${jwt.secret}") String secret,
-            @Value("${jwt.exp}") long accessTokenExp
+            @Value("${jwt.accessTokenExp}") long accessTokenExp,
+            @Value("${jwt.refreshTokenExp}") long refreshTokenExp
     ) {
         this.accessTokenExp = accessTokenExp;
+        this.refreshTokenExp = refreshTokenExp;
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
-     * access token 생성
+     * access token 생성 (유효기간 1시간)
      *
      * @param userInfo JwtUserInfo must include (id, timezone, role)
      * @return access token string
@@ -42,11 +45,34 @@ public class JwtProvider {
     }
 
     /**
+     * access token 생성 (유효기간 지정)
+     *
      * @param userInfo JwtUserInfo must include (id, timezone, role)
      * @param exp      token expire time
      * @return access token string
      */
-    public String createAccessToken(JwtUserInfo userInfo, long exp) {
+    public String createAccessToken(JwtUserInfo userInfo, Long exp) {
+        return createToken(userInfo, exp);
+    }
+
+    /**
+     * refresh token 생성 (유효기간 1년)
+     *
+     * @param userInfo JwtUserInfo must include (id, timezone, role)
+     * @return refresh token string
+     */
+    public String createRefreshToken(JwtUserInfo userInfo) {
+        return createToken(userInfo, refreshTokenExp);
+    }
+
+    /**
+     * refresh token 생성 (유효기간 지정)
+     *
+     * @param userInfo JwtUserInfo must include (id, timezone, role)
+     * @param exp      token expire time
+     * @return refresh token string
+     */
+    public String createRefreshToken(JwtUserInfo userInfo, Long exp) {
         return createToken(userInfo, exp);
     }
 
@@ -54,16 +80,17 @@ public class JwtProvider {
      * JWT 생성
      *
      * @param userInfo UserForAuthDto must include id, timezone, role
-     * @param exp      token expire time
+     * @param exp      token expire time. exp 가 null 이면, 유효 기간이 무제한.
      * @return jwt string
      */
-    public String createToken(JwtUserInfo userInfo, long exp) {
+    public String createToken(JwtUserInfo userInfo, Long exp) {
         Claims claims = Jwts.claims();
         claims.put("userId", userInfo.getId());
+        claims.put("timezone", userInfo.getTimezone());
         claims.put("role", userInfo.getRole().name());
 
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of(userInfo.getTimezone()));
-        ZonedDateTime tokenValidity = now.plusSeconds(exp);
+        Date expiredDateTime = exp == null ? null : Date.from(now.plusSeconds(exp).toInstant());
 
         log.info("created jwt, userId = {}, expiration = {}", userInfo.getId(), exp);
 
@@ -72,7 +99,7 @@ public class JwtProvider {
                 .setId(UUID.randomUUID().toString())
                 .setIssuer("api.baeuja.xyz")
                 .setIssuedAt(Date.from(now.toInstant()))
-                .setExpiration(Date.from(tokenValidity.toInstant()))
+                .setExpiration(expiredDateTime)
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -98,6 +125,16 @@ public class JwtProvider {
     }
 
     /**
+     * 토큰에서 user timezone 조회
+     *
+     * @param token access token string
+     * @return user timezone
+     */
+    public String getUserTimezone(String token) {
+        return parseAndValidate(token).get("timezone", String.class);
+    }
+
+    /**
      * 토큰에서 user role 조회
      *
      * @param token access token string
@@ -109,14 +146,33 @@ public class JwtProvider {
     }
 
     /**
+     * refresh token 검증
+     *
+     * @param accessToken string
+     * @param refreshToken string
+     */
+    public void validateRefreshToken(String accessToken, String refreshToken) {
+        Long userId = getUserId(refreshToken);
+
+        try {
+            parseAndValidate(accessToken);
+        } catch (ExpiredTokenException e) {
+            if (!userId.equals(e.getClaims().get("userId", Long.class))) {
+                log.warn("validateRefreshToken exception. The two userIds are not the same.");
+                throw new InvalidJwtException("Invalid access token or refresh token.");
+            }
+        }
+    }
+
+    /**
      * 토큰 파싱 및 검증
      *
      * @param token jwt string
      * @return Claims 검증된 토큰 claims
-     * @throws ExpiredAccessTokenException 토큰 유효기간 만료
-     * @throws InvalidJwtException         토큰 검증 실패
+     * @throws ExpiredTokenException 토큰 유효기간 만료
+     * @throws InvalidJwtException   토큰 검증 실패
      */
-    public Claims parseAndValidate(String token) throws ExpiredAccessTokenException, InvalidJwtException {
+    public Claims parseAndValidate(String token) throws ExpiredTokenException, InvalidJwtException {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(secretKey)
@@ -124,10 +180,10 @@ public class JwtProvider {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
-            throw new ExpiredAccessTokenException("Access Token 유효기간이 만료되었습니다.");
+            throw new ExpiredTokenException(e.getClaims(), "Token was expired.");
         } catch (SecurityException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException e) {
             log.warn("token validate exception = {}", e.getMessage());
-            throw new InvalidJwtException("유효하지 않은 토큰입니다.");
+            throw new InvalidJwtException("Invalid token.");
         }
     }
 }

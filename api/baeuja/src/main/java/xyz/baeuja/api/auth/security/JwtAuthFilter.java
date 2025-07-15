@@ -36,7 +36,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw new InvalidJwtException("유효하지 않은 Authorization 헤더입니다.");
+            throw new InvalidJwtException("Invalid Authorization header.");
         }
 
         String accessToken = authorizationHeader.substring(7);

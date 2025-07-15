@@ -8,6 +8,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class SignInRequest {
 
-    @NotBlank(message = "Email is required.")
+    @NotBlank(message = "email is required.")
     private String email;
 }
