@@ -3,22 +3,23 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.eello.baeuja.ui.AppNavigation
 import com.eello.baeuja.ui.component.BottomNavigationContent
+import com.eello.baeuja.ui.navigation.AppNavigation
+import com.eello.baeuja.ui.navigation.Screen
 
 @Composable
 fun MainScreen(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val context = LocalContext.current
     Scaffold(
         bottomBar = {
-            when(currentRoute) {
-                "splash", "login", "join" -> {}
-
+            when (currentRoute) {
+                Screen.Splash.route,
+                Screen.SignIn.route,
+                Screen.ProfileInput.route -> {
+                }
 
                 else -> {
                     BottomNavigationContent(

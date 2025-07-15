@@ -1,7 +1,5 @@
 package com.eello.baeuja.ui.component
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
@@ -9,8 +7,6 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.RateReview
 import androidx.compose.material.icons.filled.School
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -21,13 +17,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavBackStackEntry
+import com.eello.baeuja.ui.navigation.Screen
 import com.eello.baeuja.ui.theme.BaujaTheme
-import com.eello.baeuja.ui.theme.RobotoFamily
 
 @Composable
 fun BottomNavigationContent(
@@ -43,11 +37,11 @@ fun BottomNavigationContent(
         tonalElevation = 0.dp
     ) {
         val items = listOf(
-            BottomNavItem("Learning", Icons.Filled.School, "learning"),
-            BottomNavItem("Bookmark", Icons.Filled.Bookmark, "bookmark"),
-            BottomNavItem("Home", Icons.Filled.Home, "home"),
-            BottomNavItem("Review", Icons.Filled.RateReview, "review"),
-            BottomNavItem("My", Icons.Filled.Person, "my"),
+            BottomNavItem("Learning", Icons.Filled.School, Screen.Learning.route),
+            BottomNavItem("Bookmark", Icons.Filled.Bookmark, Screen.Bookmark.route),
+            BottomNavItem("Home", Icons.Filled.Home, Screen.Bookmark.route),
+            BottomNavItem("Review", Icons.Filled.RateReview, Screen.Review.route),
+            BottomNavItem("My", Icons.Filled.Person, Screen.MyPage.route),
         )
         items.forEach { item ->
             val selected = currentRoute == item.route

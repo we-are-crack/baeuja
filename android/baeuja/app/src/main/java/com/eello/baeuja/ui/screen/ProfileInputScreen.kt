@@ -3,6 +3,7 @@ package com.eello.baeuja.ui.screen
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,6 +43,8 @@ import androidx.navigation.NavController
 import com.eello.baeuja.R
 import com.eello.baeuja.auth.AuthResult
 import com.eello.baeuja.ui.component.OneButtonBottomBar
+import com.eello.baeuja.ui.navigation.NavGraph
+import com.eello.baeuja.ui.navigation.Screen
 import com.eello.baeuja.ui.theme.BaujaTheme
 import com.eello.baeuja.ui.theme.NotoSansKrFamily
 import com.eello.baeuja.ui.theme.RobotoFamily
@@ -51,8 +54,9 @@ import com.eello.baeuja.viewmodel.SignUpViewModel
 
 @Composable
 fun ProfileInputScreen(navController: NavController) {
-    val authEntry =
-        remember(navController.currentBackStackEntry) { navController.getBackStackEntry("auth") }
+    val authEntry = remember(navController.currentBackStackEntry) {
+        navController.getBackStackEntry(NavGraph.Auth.route)
+    }
     val signInViewModel: SignInViewModel = hiltViewModel(authEntry)
     val signUpViewModel: SignUpViewModel = hiltViewModel()
 
@@ -68,8 +72,8 @@ fun ProfileInputRoute(
     val gui by signInViewModel.googleSignInUserInfo.collectAsState()
     LaunchedEffect(gui) {
         if (gui == null) {
-            navController.navigate("login") {
-                popUpTo("auth") { inclusive = true }
+            navController.navigate(Screen.SignIn.route) {
+                popUpTo(NavGraph.Auth.route) { inclusive = true }
             }
         }
     }
@@ -79,16 +83,18 @@ fun ProfileInputRoute(
     val signUpResult by signUpViewModel.signInResult.collectAsState()
     LaunchedEffect(signUpResult) {
         if (signUpResult == AuthResult.Success) {
-            navController.navigate("home") {
-                popUpTo("auth") { inclusive = true }
+            navController.navigate(Screen.Home.route) {
+                popUpTo(NavGraph.Auth.route) { inclusive = true }
             }
         }
     }
 
+    val goBack: () -> Unit = { navController.popBackStack() }
     val onDisplayNameChange: (String) -> Unit = { signUpViewModel.onDisplayNameChanged(it) }
     val signUp: () -> Unit = gui?.let { { signUpViewModel.signUp(gui!!) } } ?: {}
 
     ProfileInputContent(
+        goBack = goBack,
         displayName = displayName,
         isDisplayNameAvailable = isDisplayNameAvailable,
         signUp = signUp,
@@ -98,6 +104,7 @@ fun ProfileInputRoute(
 
 @Composable
 fun ProfileInputContent(
+    goBack: () -> Unit = {},
     displayName: String,
     isDisplayNameAvailable: DisplayNameAvailable,
     signUp: () -> Unit,
@@ -140,10 +147,12 @@ fun ProfileInputContent(
                 imageVector = Icons.Filled.ArrowBackIosNew,
                 contentDescription = "go back",
                 tint = Color(0xFF444444),
-                modifier = Modifier.constrainAs(backIcon) {
-                    top.linkTo(parent.top, 54.dp)
-                    end.linkTo(textStartGuideLine)
-                }
+                modifier = Modifier
+                    .constrainAs(backIcon) {
+                        top.linkTo(parent.top, 54.dp)
+                        end.linkTo(textStartGuideLine)
+                    }
+                    .clickable { goBack }
             )
 
             Text(
@@ -261,6 +270,7 @@ fun ProfileInputContent(
 fun PreviewProfileScreen() {
     BaujaTheme {
         ProfileInputContent(
+            goBack = {},
             displayName = "",
             isDisplayNameAvailable = DisplayNameAvailable.Unavailable("Nickname is not available"),
             signUp = {},

@@ -1,4 +1,4 @@
-package com.eello.baeuja.ui
+package com.eello.baeuja.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,27 +20,22 @@ import com.eello.baeuja.ui.screen.SplashScreen
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(
         navController = navController,
-        startDestination = "splash",
+        startDestination = Screen.Splash.route,
         modifier = modifier
     ) {
-        composable("splash") { SplashScreen(navController) }
+        composable(Screen.Splash.route) { SplashScreen(navController) }
         authGraph(navController)
-        composable("home") { HomeScreen() }
-        composable("profile") { ProfileInputScreen(navController) }
-        composable("learning") { LearningScreen() }
-        composable("review") { ReviewScreen() }
-        composable("bookmark") { BookmarkScreen() }
-        composable("my") { MyPageScreen() }
+        composable(Screen.Home.route) { HomeScreen() }
+        composable(Screen.Learning.route) { LearningScreen() }
+        composable(Screen.Review.route) { ReviewScreen() }
+        composable(Screen.Bookmark.route) { BookmarkScreen() }
+        composable(Screen.MyPage.route) { MyPageScreen() }
     }
 }
 
 fun NavGraphBuilder.authGraph(navController: NavHostController) {
-    navigation(startDestination = "login", route = "auth") {
-        composable("login") {
-            SignInScreen(navController)
-        }
-        composable("join") {
-            ProfileInputScreen(navController)
-        }
+    navigation(startDestination = Screen.SignIn.route, route = NavGraph.Auth.route) {
+        composable(Screen.SignIn.route) { SignInScreen(navController) }
+        composable(Screen.ProfileInput.route) { ProfileInputScreen(navController) }
     }
 }

@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.eello.baeuja.R
+import com.eello.baeuja.ui.navigation.NavGraph
+import com.eello.baeuja.ui.navigation.Screen
 import com.eello.baeuja.ui.theme.BaujaTheme
 import kotlinx.coroutines.delay
 
@@ -31,17 +33,17 @@ fun SplashScreen(navController: NavController) {
     // 2초 대기 후 home으로 이동
     LaunchedEffect(Unit) {
         delay(2000)
-        navController.navigate("auth") {
-            popUpTo("splash") { inclusive = true }
+        navController.navigate(NavGraph.Auth.route) {
+            popUpTo(Screen.Splash.route) { inclusive = true }
         }
     }
 
     // 화면 UI
-    SplashScreenContent()
+    SplashContent()
 }
 
 @Composable
-private fun SplashScreenContent() {
+private fun SplashContent() {
     ConstraintLayout {
         val startGuideline = createGuidelineFromStart(guidelineStartRatio)
         val endGuideline = createGuidelineFromEnd(guidelineEndRatio)
@@ -80,6 +82,6 @@ private fun SplashScreenContent() {
 @Composable
 fun PreviewSplashScreen() {
     BaujaTheme {
-        SplashScreenContent()
+        SplashContent()
     }
 }

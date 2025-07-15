@@ -36,6 +36,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.eello.baeuja.R
 import com.eello.baeuja.auth.AuthResult
+import com.eello.baeuja.ui.navigation.NavGraph
+import com.eello.baeuja.ui.navigation.Screen
 import com.eello.baeuja.ui.theme.BaujaTheme
 import com.eello.baeuja.ui.theme.NotoSansKrFamily
 import com.eello.baeuja.ui.theme.RobotoFamily
@@ -46,8 +48,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 
 @Composable
 fun SignInScreen(navController: NavController) {
-    val authEntry =
-        remember(navController.currentBackStackEntry) { navController.getBackStackEntry("auth") }
+    val authEntry = remember(navController.currentBackStackEntry) {
+        navController.getBackStackEntry(NavGraph.Auth.route)
+    }
+
     val signInViewModel: SignInViewModel = hiltViewModel(authEntry)
 
     SignInRoute(navController, signInViewModel)
@@ -59,14 +63,14 @@ fun SignInRoute(navController: NavController, signInViewModel: SignInViewModel) 
     LaunchedEffect(signInResult) {
         when (signInResult) {
             AuthResult.Unregistered -> {
-                navController.navigate("profile") {
-                    popUpTo("login") { inclusive = false }
+                navController.navigate(Screen.ProfileInput.route) {
+                    popUpTo(Screen.SignIn.route) { inclusive = false }
                 }
             }
 
             AuthResult.Success -> {
-                navController.navigate("home") {
-                    popUpTo("auth") { inclusive = true }
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(NavGraph.Auth.route) { inclusive = true }
                 }
             }
 
