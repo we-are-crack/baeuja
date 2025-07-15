@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
         log.error("🔥예상치 못한 예외 발생: {}", exception.getClass().getName(), exception);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ResultResponse.failure(UnexpectedException.CODE, "서버 내부 오류가 발생했습니다."));
+                .body(ResultResponse.failure(UnexpectedException.CODE, UnexpectedException.MESSAGE));
     }
 
     /**
@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
         log.info("🚫methodArgumentNotValidExceptionHandler handled: {}", exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ResultResponse.failure("BAD_REQUEST_PARAM_OR_BODY", "요청 파라미터 혹은 본문을 다시 확인해 주세요."));
+                .body(ResultResponse.failure("BAD_REQUEST_PARAM_OR_BODY", "The request parameter or body was invalid."));
     }
 
     /**
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
         log.info("🚫missingServletRequestParameterExceptionHandler handled: {} ", exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ResultResponse.failure("MISSING_PARAMETER", "요청 파라미터가 누락됐습니다."));
+                .body(ResultResponse.failure("MISSING_PARAMETER", "The request parameter was missing."));
     }
 
     /**

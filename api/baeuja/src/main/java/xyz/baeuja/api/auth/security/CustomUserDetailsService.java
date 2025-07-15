@@ -20,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         User findUser = userRepository.findOne(Long.parseLong(userId));
 
         if (findUser == null) {
-            throw new UsernameNotFoundException("토큰 사용자를 찾을 수 없습니다.");
+            throw new UsernameNotFoundException("Token user not found.");
         }
 
         return CustomUserDetails.from(JwtUserInfo.from(findUser));

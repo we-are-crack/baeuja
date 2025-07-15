@@ -7,7 +7,7 @@ public class UserNotFoundException extends BaseException {
     public static final String CODE = "USER_NOT_FOUND";
 
     public UserNotFoundException() {
-        super("등록되지 않은 사용자입니다. 회원 가입을 해주세요.");
+        super("You are not a registered user. Please sign up.");
     }
 
     public UserNotFoundException(String message) {

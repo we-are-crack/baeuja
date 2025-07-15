@@ -70,6 +70,6 @@ public class AuthApiController {
     public ResponseEntity<ResultResponse<Void>> checkNickname(@RequestParam String nickname) {
         userService.validateNickname(nickname);
 
-        return ResponseEntity.ok(ResultResponse.success("사용 가능한 닉네임입니다."));
+        return ResponseEntity.ok(ResultResponse.success("This is available nickname."));
     }
 }

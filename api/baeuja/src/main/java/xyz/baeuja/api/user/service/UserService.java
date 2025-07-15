@@ -3,7 +3,6 @@ package xyz.baeuja.api.user.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import xyz.baeuja.api.auth.dto.SignUpRequest;
 import xyz.baeuja.api.auth.exception.*;
 import xyz.baeuja.api.global.util.jwt.JwtUserInfo;
@@ -45,7 +44,7 @@ public class UserService {
 
         if (request.getLoginType() == LoginType.GOOGLE) {
             if (request.getEmail() == null) {
-                throw new InvalidSignUpRequestException("구글 회원가입 시 이메일은 필수입니다.");
+                throw new InvalidSignUpRequestException("Email is required when signing up for Google.");
             }
 
             validateDuplicateEmail(request.getEmail());
@@ -63,11 +62,11 @@ public class UserService {
      */
     public void validateNickname(String nickname) throws InvalidNicknameException, DuplicateNicknameException {
         if (nickname.length() < 2 || nickname.length() > 20) {
-            throw new InvalidNicknameException("닉네임은 2자 이상 20자 이하로 입력해주세요.");
+            throw new InvalidNicknameException("Please enter a nickname of at least 2 and no more than 20 characters.");
         }
 
         if (!nickname.matches(NICKNAME_MATCH_REGEX)) {
-            throw new InvalidNicknameException("닉네임은 한글, 영문, 숫자만 사용할 수 있습니다.");
+            throw new InvalidNicknameException("Nicknames can only use Korean, English, and numbers.");
         }
 
         if (userRepository.existsByNickname(nickname)) {

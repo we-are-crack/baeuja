@@ -30,7 +30,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
         ResultResponse<Void> resultResponse;
 
-        resultResponse = ResultResponse.failure("FORBIDDEN", "요청한 리소스에 대한 권한이 잆습니다.");
+        resultResponse = ResultResponse.failure("FORBIDDEN", "You do not have permission to access the requested resource.");
 
         String responseBody = objectMapper.writeValueAsString(resultResponse);
 

@@ -37,7 +37,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         } else if (authException instanceof InvalidJwtException) {
             resultResponse = ResultResponse.failure(InvalidJwtException.CODE, authException.getMessage());
         } else {
-            resultResponse = ResultResponse.failure("UNAUTHORIZED", "인증되지 않은 요청입니다.");
+            resultResponse = ResultResponse.failure("UNAUTHORIZED", "This request is unauthenticated.");
         }
 
         String responseBody = objectMapper.writeValueAsString(resultResponse);

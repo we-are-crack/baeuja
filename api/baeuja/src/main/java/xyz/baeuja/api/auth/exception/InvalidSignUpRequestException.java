@@ -7,7 +7,7 @@ public class InvalidSignUpRequestException extends BaseException {
     public static final String CODE = "INVALID_SIGN_UP_REQUEST";
 
     public InvalidSignUpRequestException() {
-        super("회원 가입 요청 필드를 다시 한 번 확인해 주세요.");
+        super("Please double check the membership request fields.");
     }
 
     public InvalidSignUpRequestException(String message) {

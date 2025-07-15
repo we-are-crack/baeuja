@@ -43,7 +43,7 @@ public class AuthExceptionHandler {
     public ResponseEntity<ResultResponse<Void>> handleDuplicateNicknameException(DuplicateNicknameException exception) {
         log.info("🚫DuplicateNicknameException handled: {}", exception.getMessage());
         return ResponseEntity
-                .status(HttpStatus.CONFLICT)
+                .status(HttpStatus.OK)
                 .body(ResultResponse.failure(DuplicateNicknameException.CODE, exception.getMessage()));
     }
 
@@ -54,7 +54,7 @@ public class AuthExceptionHandler {
     public ResponseEntity<ResultResponse<Void>> handleInvalidNicknameException(InvalidNicknameException exception) {
         log.info("🚫invalidNicknameExceptionHandler handled: {}", exception.getMessage());
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .status(HttpStatus.OK)
                 .body(ResultResponse.failure(InvalidNicknameException.CODE, exception.getMessage()));
     }
 
@@ -65,7 +65,7 @@ public class AuthExceptionHandler {
     public ResponseEntity<ResultResponse<Void>> handleUserNotFoundException(UserNotFoundException exception) {
         log.info("🚫userNotFoundExceptionHandler handled: {}", exception.getMessage());
         return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(ResultResponse.failure(UserNotFoundException.CODE, exception.getMessage()));
     }
 }

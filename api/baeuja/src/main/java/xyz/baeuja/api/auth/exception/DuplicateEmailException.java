@@ -7,7 +7,7 @@ public class DuplicateEmailException extends BaseException {
     public static final String CODE = "DUPLICATE_EMAIL";
 
     public DuplicateEmailException() {
-        super("이미 사용 중인 이메일입니다.");
+        super("This email is already in use.");
     }
 
     public DuplicateEmailException(String message) {
