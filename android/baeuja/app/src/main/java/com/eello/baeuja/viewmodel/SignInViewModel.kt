@@ -48,7 +48,7 @@ class SignInViewModel @Inject constructor(
                 _signInResult.value = authRepository.signIn(gui)
             } catch (e: Exception) {
                 Log.e("LoginViewModel", "Error during Google sign-in", e)
-                _signInResult.value = AuthResult.Failure
+                _signInResult.value = AuthResult.Failure()
             }
         }
     }
@@ -58,8 +58,8 @@ class SignInViewModel @Inject constructor(
             try {
                 _signInResult.value = authRepository.guestSignUp()
             } catch (e: Exception) {
-                Log.e("LoginViewModel", "Error during Google sign-in", e)
-                _signInResult.value = AuthResult.Failure
+                Log.e("LoginViewModel", "Error guest Google sign-in", e)
+                _signInResult.value = AuthResult.Failure()
             }
         }
     }

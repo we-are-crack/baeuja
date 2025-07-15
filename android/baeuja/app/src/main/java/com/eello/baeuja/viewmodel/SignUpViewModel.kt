@@ -62,7 +62,7 @@ class SignUpViewModel @Inject constructor(
                     authRepository.googleSignUp(googleSignInUserInfo, _displayName.value)
             } catch (e: Exception) {
                 Log.e("SignUpViewModel", "Error during Google sign-up", e)
-                _signInResult.value = AuthResult.Failure
+                _signInResult.value = AuthResult.Failure(message = e.message)
             }
         }
     }

@@ -1,10 +1,10 @@
 package com.eello.baeuja.retrofit.api
 
+import com.eello.baeuja.retrofit.core.ApiResponse
 import com.eello.baeuja.retrofit.dto.request.SignInRequestDto
 import com.eello.baeuja.retrofit.dto.request.SignUpRequestDto
-import com.eello.baeuja.retrofit.dto.response.CheckDisplayNameResponseDto
-import com.eello.baeuja.retrofit.dto.response.SignInResponseDto
-import com.eello.baeuja.retrofit.dto.response.SignUpResponseDto
+import com.eello.baeuja.retrofit.dto.response.SignInResponseData
+import com.eello.baeuja.retrofit.dto.response.SignUpResponseData
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -14,13 +14,14 @@ import retrofit2.http.Query
 interface AuthAPI {
 
     @POST("auth/sign-in")
-    suspend fun signIn(@Body signInRequestDto: SignInRequestDto): Response<SignInResponseDto>
+    suspend fun signIn(@Body signInRequestDto: SignInRequestDto):
+            Response<ApiResponse<SignInResponseData>>
 
     @POST("auth/sign-up")
-    suspend fun signUp(@Body signUpRequestDto: SignUpRequestDto): Response<SignUpResponseDto>
+    suspend fun signUp(@Body signUpRequestDto: SignUpRequestDto):
+            Response<ApiResponse<SignUpResponseData>>
 
     @GET("auth/check-nickname")
-    suspend fun checkDisplayNameAvailable(
-        @Query("nickname") displayName: String
-    ): Response<CheckDisplayNameResponseDto>
+    suspend fun checkDisplayNameAvailable(@Query("nickname") displayName: String):
+            Response<ApiResponse<Unit>>
 }

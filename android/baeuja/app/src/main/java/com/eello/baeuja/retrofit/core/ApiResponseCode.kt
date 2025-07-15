@@ -1,4 +1,4 @@
-package com.eello.baeuja.retrofit
+package com.eello.baeuja.retrofit.core
 
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer

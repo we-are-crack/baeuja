@@ -1,8 +1,10 @@
-package com.eello.baeuja.retrofit
+package com.eello.baeuja.retrofit.di
 
 import com.eello.baeuja.auth.AuthInterceptor
 import com.eello.baeuja.auth.TokenManager
 import com.eello.baeuja.retrofit.api.AuthAPI
+import com.eello.baeuja.retrofit.core.ApiResponseCode
+import com.eello.baeuja.retrofit.core.ApiResponseCodeAdapter
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
