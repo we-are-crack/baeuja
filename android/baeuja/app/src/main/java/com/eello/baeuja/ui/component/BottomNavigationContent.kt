@@ -57,7 +57,7 @@ fun BottomNavigationContent(
                 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedTextColor = Color(0xFF9388E8),
-                    unselectedTextColor = Color.Unspecified,
+                    unselectedTextColor = Color(0xFFCCCCCC),
                     indicatorColor = Color.Transparent
                 ),
                 selected = selected,
