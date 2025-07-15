@@ -7,6 +7,7 @@ import com.eello.baeuja.retrofit.api.AuthAPI
 import com.eello.baeuja.retrofit.dto.request.SignInRequestDto
 import com.eello.baeuja.retrofit.dto.request.SignUpRequestDto
 import com.eello.baeuja.retrofit.dto.request.SignUpRequestDto.SignUpType
+import com.eello.baeuja.retrofit.dto.response.CheckDisplayNameResponseDto
 import com.eello.baeuja.retrofit.dto.response.SignInResponseDto
 import com.eello.baeuja.retrofit.parseError
 import com.eello.baeuja.viewmodel.DisplayNameAvailable
@@ -92,14 +93,21 @@ class AuthRepository @Inject constructor(
 
     suspend fun checkDisplayNameAvailable(displayName: String): DisplayNameAvailable {
         val response = authAPI.checkDisplayNameAvailable(displayName)
-        val body = response.body() ?: throw IllegalStateException("Body is null")
-        return when (body.code) {
-            ApiResponseCode.SUCCESS -> DisplayNameAvailable.Available
+        if (response.isSuccessful) {
+            val body = response.body() ?: throw IllegalStateException("Body is null")
+            return when (body.code) {
+                ApiResponseCode.SUCCESS -> DisplayNameAvailable.Available
 
-            else -> {
-                val message = body.message
-                DisplayNameAvailable.Unavailable(message)
+                else -> {
+                    val message = body.message
+                    DisplayNameAvailable.Unavailable(message)
+                }
             }
+        } else {
+            val errorBody = parseError<CheckDisplayNameResponseDto>(response.errorBody())
+            errorBody?.let {
+                return DisplayNameAvailable.Unavailable(it.message)
+            } ?: throw IllegalStateException("Response is not successful")
         }
     }
 }

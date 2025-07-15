@@ -10,6 +10,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,8 +38,21 @@ class SignUpViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             // @OptIn(FlowPreview::class)
-            _displayName.debounce(500).collect { checkDisplayNameAvailability(it) }
+            _displayName.debounce(500)
+                .drop(1)
+                .collect {
+                    if (validateDisplayNameFormat(it)) {
+                        checkDisplayNameAvailability(it)
+                    } else {
+                        _isAvailable.value =
+                            DisplayNameAvailable.Unavailable("Use 2–20 letters or numbers.")
+                    }
+                }
         }
+    }
+
+    companion object {
+        private val DISPLAY_NAME_REGEX = Regex("^[a-zA-Z0-9가-힣]{2,20}\$")
     }
 
     fun signUp(googleSignInUserInfo: GoogleSignInUserInfo) {
@@ -57,12 +71,11 @@ class SignUpViewModel @Inject constructor(
         _displayName.value = newDisplayName
     }
 
-    private suspend fun checkDisplayNameAvailability(displayName: String) {
-        if (displayName.isBlank()) {
-            _isAvailable.value = DisplayNameAvailable.Unavailable("non blank")
-            return
-        }
+    private fun validateDisplayNameFormat(displayName: String): Boolean {
+        return DISPLAY_NAME_REGEX.matchEntire(displayName) != null
+    }
 
+    private suspend fun checkDisplayNameAvailability(displayName: String) {
         try {
             val isAvailable = authRepository.checkDisplayNameAvailable(displayName)
             _isAvailable.value = isAvailable
