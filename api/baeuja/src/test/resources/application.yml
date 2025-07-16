@@ -19,7 +19,7 @@ spring:
 jwt:
   accessTokenExp: 3600  # 60 * 60 * 24(1일)
   refreshTokenExp: 31536000  # 60 * 60 * 24 * 365 (1년)
-  secret: 2f2fbab983a4d177f0e5dd6f26efee185c64aa7542fbcac45112ebe481d29a44
+  secret: 3b784f4943b37ed6c0186635f91c84dd501c4862946ccf0c7cbbfc93f6c927b1
 
 logging:
   level:

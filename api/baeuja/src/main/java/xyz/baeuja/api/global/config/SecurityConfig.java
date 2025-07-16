@@ -25,7 +25,8 @@ public class SecurityConfig {
     private static final String[] WHITELIST = {
             "/api/auth/**",
             "/favicon.ico",
-            "/error"
+            "/error",
+            "/docs/**"
     };
 
     private final JwtProvider jwtProvider;
@@ -56,7 +57,7 @@ public class SecurityConfig {
         // http request 권한 설정
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(WHITELIST).permitAll()
-                .requestMatchers("/docs/**").hasRole(Role.ADMIN.name())
+//                .requestMatchers("/docs/**").hasRole(Role.ADMIN.name())
                 .anyRequest().authenticated()
         );
 

@@ -1,41 +1,7 @@
-= Hello API 문서
-:toc: left
-:toclevels: 2
-:source-highlighter: highlightjs
-:snippets: {projectdir}/build/generated-snippets
+:basedir: src/docs/asciidoc
 
-== GET /hello (쿼리 파라미터)
+== Baeuja API 문서
 
-=== 요청
+include::src/docs/asciidoc/auth.adoc[]
 
-include::{snippets}/hello-get/http-request.adoc[]
-
-=== 응답
-
-include::{snippets}/hello-get/http-response.adoc[]
-
-=== 요청 파라미터
-
-include::{snippets}/hello-get/query-parameters.adoc[]
-
-=== 응답 필드
-
-include::{snippets}/hello-get/response-fields.adoc[]
-
-== POST /hello (JSON Request Body)
-
-=== 요청
-
-include::{snippets}/hello-post/http-request.adoc[]
-
-=== 응답
-
-include::{snippets}/hello-post/http-response.adoc[]
-
-=== 요청 필드
-
-include::{snippets}/hello-post/request-fields.adoc[]
-
-=== 응답 필드
-
-include::{snippets}/hello-post/response-fields.adoc[]
+include::src/docs/asciidoc/user.adoc[]

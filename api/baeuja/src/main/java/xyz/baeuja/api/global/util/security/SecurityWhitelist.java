@@ -10,7 +10,8 @@ public class SecurityWhitelist {
     private static final List<String> WHITELIST_PREFIXES = List.of(
             "/api/auth",
             "/favicon.ico",
-            "/error"
+            "/error",
+            "/docs/"
     );
 
     public static boolean isWhitelisted(String path) {

@@ -3,16 +3,23 @@ package xyz.baeuja.api.auth.controller;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.restassured.RestAssuredRestDocumentation;
+import org.springframework.restdocs.restassured.RestAssuredRestDocumentationConfigurer;
 import xyz.baeuja.api.auth.exception.*;
 import xyz.baeuja.api.global.util.jwt.JwtProvider;
 import xyz.baeuja.api.global.util.jwt.JwtUserInfo;
+import xyz.baeuja.api.helper.RestDocsHelper;
 import xyz.baeuja.api.helper.TestDataHelper;
 import xyz.baeuja.api.user.domain.LoginType;
 import xyz.baeuja.api.user.domain.Role;
@@ -21,10 +28,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static xyz.baeuja.api.docs.RestDocsSnippets.*;
 import static xyz.baeuja.api.helper.RequestBodyBuilder.buildRequestBody;
+import static xyz.baeuja.api.helper.RestDocsHelper.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ExtendWith(RestDocumentationExtension.class)
 class AuthApiControllerTest {
 
     @LocalServerPort
@@ -32,9 +41,11 @@ class AuthApiControllerTest {
 
     @Autowired
     TestDataHelper helper;
-
     @Autowired
     JwtProvider jwtProvider;
+
+    RestAssuredRestDocumentationConfigurer docConfig;
+    RestDocsHelper restDocsHelper;
 
     String email = "test@test.com";
     String nickname = "닉네임";
@@ -42,9 +53,10 @@ class AuthApiControllerTest {
     String timezone = "Asia/Seoul";
 
     @BeforeEach
-    void setUp() {
+    void setUp(RestDocumentationContextProvider provider) {
         helper.clearAll();
-        RestAssured.port = port;
+        docConfig = RestAssuredRestDocumentation.documentationConfiguration(provider);
+        restDocsHelper = new RestDocsHelper(port, docConfig);
     }
 
     @Test
@@ -56,8 +68,14 @@ class AuthApiControllerTest {
         requestBodyParams.put("email", email);
         String requestBody = buildRequestBody(requestBodyParams);
 
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
+                        "auth-sign-in-success",
+                        signInRequest(),
+                        buildResultResponseField(authData()))
+        );
+
         Response response = RestAssured
-                .given()
+                .given(spec)
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
@@ -75,8 +93,14 @@ class AuthApiControllerTest {
         requestBodyParams.put("email", email);
         String requestBody = buildRequestBody(requestBodyParams);
 
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
+                "auth-sign-in-fail",
+                signInRequest(),
+                defaultResponse())
+        );
+
         Response response = RestAssured
-                .given()
+                .given(spec)
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
@@ -95,8 +119,14 @@ class AuthApiControllerTest {
         requestBodyParams.put("loginType", LoginType.GUEST.name());
         String requestBody = buildRequestBody(requestBodyParams);
 
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
+                "auth-sign-up-guest-success",
+                signUpGuestRequest(),
+                buildResultResponseField(authData()))
+        );
+
         Response response = RestAssured
-                .given()
+                .given(spec)
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
@@ -118,8 +148,14 @@ class AuthApiControllerTest {
         requestBodyParams.put("loginType", LoginType.GOOGLE.name());
         String requestBody = buildRequestBody(requestBodyParams);
 
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
+                "auth-sign-up-google-success",
+                signUpGoogleRequest(),
+                buildResultResponseField(authData()))
+        );
+
         Response response = RestAssured
-                .given()
+                .given(spec)
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
@@ -140,8 +176,14 @@ class AuthApiControllerTest {
         requestBodyParams.put("loginType", LoginType.GOOGLE.name());
         String requestBody = buildRequestBody(requestBodyParams);
 
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
+                "auth-sign-up-google-fail-missing",
+                signUpGoogleRequestWithoutEmail(),
+                defaultResponse())
+        );
+
         Response response = RestAssured
-                .given()
+                .given(spec)
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
@@ -164,8 +206,14 @@ class AuthApiControllerTest {
         requestBodyParams.put("loginType", LoginType.GOOGLE.name());
         String requestBody = buildRequestBody(requestBodyParams);
 
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
+                "auth-sign-up-google-fail-duplicate",
+                signUpGoogleRequest(),
+                defaultResponse())
+        );
+
         Response response = RestAssured
-                .given()
+                .given(spec)
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
@@ -178,8 +226,14 @@ class AuthApiControllerTest {
     @Test
     @DisplayName("닉네임 유효성 검사 성공")
     void checkNickname_success() {
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createQueryResponseSnippet(
+                "auth-check-nickname-success",
+                checkNicknameRequest(),
+                defaultResponse())
+        );
+
         Response response = RestAssured
-                .given()
+                .given(spec)
                 .queryParam("nickname", nickname)
                 .when()
                 .get("/api/auth/check-nickname");
@@ -193,8 +247,14 @@ class AuthApiControllerTest {
     void checkNickname_fail_duplicate() {
         helper.saveGuestUser(nickname, language, timezone);
 
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createQueryResponseSnippet(
+                "auth-check-nickname-fail-duplicate",
+                checkNicknameRequest(),
+                defaultResponse())
+        );
+
         Response response = RestAssured
-                .given()
+                .given(spec)
                 .queryParam("nickname", nickname)
                 .when()
                 .get("/api/auth/check-nickname");
@@ -208,8 +268,14 @@ class AuthApiControllerTest {
     void checkNickname_fail_length() {
         helper.saveGuestUser(nickname, language, timezone);
 
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createQueryResponseSnippet(
+                "auth-check-nickname-fail-length",
+                checkNicknameRequest(),
+                defaultResponse())
+        );
+
         Response response = RestAssured
-                .given()
+                .given(spec)
                 .queryParam("nickname", "q")
                 .when()
                 .get("/api/auth/check-nickname");
@@ -229,8 +295,14 @@ class AuthApiControllerTest {
         requestBodyParams.put("refreshToken", refreshToken);
         String requestBody = buildRequestBody(requestBodyParams);
 
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
+                "auth-renew-token-success",
+                authData(),
+                buildResultResponseField(authData()))
+        );
+
         Response response = RestAssured
-                .given()
+                .given(spec)
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
@@ -252,8 +324,14 @@ class AuthApiControllerTest {
         requestBodyParams.put("refreshToken", refreshToken);
         String requestBody = buildRequestBody(requestBodyParams);
 
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
+                "auth-renew-token-fail",
+                authData(),
+                defaultResponse())
+        );
+
         Response response = RestAssured
-                .given()
+                .given(spec)
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
