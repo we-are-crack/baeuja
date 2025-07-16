@@ -3,7 +3,6 @@ package com.eello.baeuja.di
 import com.eello.baeuja.auth.TokenAuthInterceptor
 import com.eello.baeuja.auth.TokenAuthenticator
 import com.eello.baeuja.auth.TokenManager
-import com.eello.baeuja.retrofit.api.AuthAPI
 import com.eello.baeuja.retrofit.core.ApiResponseCode
 import com.eello.baeuja.retrofit.core.ApiResponseCodeAdapter
 import com.google.gson.GsonBuilder
@@ -53,11 +52,6 @@ object RetrofitModule {
             .build()
     }
 
-    @Provides
-    @Singleton
-    fun provideAuthAPI(retrofit: Retrofit): AuthAPI =
-        retrofit.create(AuthAPI::class.java)
-
     // 토큰 갱신용 Authenticator 없는 Retrofit
     @Provides
     @Singleton
@@ -69,15 +63,5 @@ object RetrofitModule {
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-    }
-
-    // 토큰 갱신용 AuthAPI
-    @Provides
-    @Singleton
-    @Named("refresh")
-    fun provideRefreshAuthAPI(
-        @Named("refresh") retrofit: Retrofit
-    ): AuthAPI {
-        return retrofit.create(AuthAPI::class.java)
     }
 }

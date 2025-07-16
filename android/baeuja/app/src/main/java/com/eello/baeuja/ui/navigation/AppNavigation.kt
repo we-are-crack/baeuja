@@ -25,11 +25,7 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
     ) {
         composable(Screen.Splash.route) { SplashScreen(navController) }
         authGraph(navController)
-        composable(Screen.Home.route) { HomeScreen() }
-        composable(Screen.Learning.route) { LearningScreen() }
-        composable(Screen.Review.route) { ReviewScreen() }
-        composable(Screen.Bookmark.route) { BookmarkScreen() }
-        composable(Screen.MyPage.route) { MyPageScreen() }
+        mainGraph(navController)
     }
 }
 
@@ -37,5 +33,15 @@ fun NavGraphBuilder.authGraph(navController: NavHostController) {
     navigation(startDestination = Screen.SignIn.route, route = NavGraph.Auth.route) {
         composable(Screen.SignIn.route) { SignInScreen(navController) }
         composable(Screen.ProfileInput.route) { ProfileInputScreen(navController) }
+    }
+}
+
+fun NavGraphBuilder.mainGraph(navController: NavHostController) {
+    navigation(startDestination = Screen.Home.route, route = NavGraph.Main.route) {
+        composable(Screen.Home.route) { HomeScreen() }
+        composable(Screen.Learning.route) { LearningScreen() }
+        composable(Screen.Review.route) { ReviewScreen() }
+        composable(Screen.Bookmark.route) { BookmarkScreen() }
+        composable(Screen.MyPage.route) { MyPageScreen() }
     }
 }

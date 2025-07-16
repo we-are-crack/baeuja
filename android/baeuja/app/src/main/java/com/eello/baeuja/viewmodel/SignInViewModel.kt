@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eello.baeuja.auth.AuthResult
 import com.eello.baeuja.retrofit.repository.AuthRepository
+import com.eello.baeuja.retrofit.repository.UserRepository
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +21,8 @@ data class GoogleSignInUserInfo(
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private val authRepository: AuthRepository,
+    private val userRepository: UserRepository,
+    private val userSession: UserSession
 ) : ViewModel() {
     private val _googleSignInUserInfo = MutableStateFlow<GoogleSignInUserInfo?>(null)
     val googleSignInUserInfo: StateFlow<GoogleSignInUserInfo?> = _googleSignInUserInfo
@@ -45,7 +48,11 @@ class SignInViewModel @Inject constructor(
             }
 
             try {
-                _signInResult.value = authRepository.signIn(gui)
+                val signInResult = authRepository.signIn(gui)
+                if (signInResult == AuthResult.Success) {
+                    userSession.setUserInfo(userRepository.fetchUserInfo())
+                }
+                _signInResult.value = signInResult
             } catch (e: Exception) {
                 Log.e("LoginViewModel", "Error during Google sign-in", e)
                 _signInResult.value = AuthResult.Failure()

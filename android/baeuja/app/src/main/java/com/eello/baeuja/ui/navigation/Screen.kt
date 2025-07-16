@@ -2,11 +2,15 @@ package com.eello.baeuja.ui.navigation
 
 sealed class Screen(val route: String) {
     object Splash : Screen("splash")
+
+    // Auth Graph
     object SignIn : Screen("${NavGraph.Auth.route}/sign_in")
     object ProfileInput : Screen("${NavGraph.Auth.route}/profile_input")
-    object Home : Screen("home")
-    object Learning : Screen("learning")
-    object Review : Screen("review")
-    object Bookmark : Screen("bookmark")
-    object MyPage : Screen("my_page")
+
+    // Main Graph
+    object Home : Screen("${NavGraph.Main.route}/home")
+    object Learning : Screen("${NavGraph.Main.route}/learning")
+    object Review : Screen("${NavGraph.Main.route}/review")
+    object Bookmark : Screen("${NavGraph.Main.route}/bookmark")
+    object MyPage : Screen("${NavGraph.Main.route}/my_page")
 }

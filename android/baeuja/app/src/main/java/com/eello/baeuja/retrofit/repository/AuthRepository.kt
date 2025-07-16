@@ -8,9 +8,9 @@ import com.eello.baeuja.retrofit.core.apiCall
 import com.eello.baeuja.retrofit.core.handle
 import com.eello.baeuja.retrofit.dto.request.SignInRequestDto
 import com.eello.baeuja.retrofit.dto.request.SignUpRequestDto
-import com.eello.baeuja.retrofit.dto.request.SignUpRequestDto.SignUpType
 import com.eello.baeuja.viewmodel.DisplayNameAvailable
 import com.eello.baeuja.viewmodel.GoogleSignInUserInfo
+import com.eello.baeuja.viewmodel.SignInType
 import javax.inject.Inject
 
 interface AuthRepository {
@@ -54,7 +54,7 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun guestSignUp(): AuthResult {
-        val signUpRequestDto = SignUpRequestDto(loginType = SignUpType.GUEST)
+        val signUpRequestDto = SignUpRequestDto(loginType = SignInType.GUEST)
         return signUp(signUpRequestDto)
     }
 
@@ -65,7 +65,7 @@ class AuthRepositoryImpl @Inject constructor(
         val signUpRequestDto = SignUpRequestDto(
             email = googleSignInUserInfo.email,
             nickname = displayName,
-            loginType = SignUpType.GOOGLE
+            loginType = SignInType.GOOGLE
         )
 
         return signUp(signUpRequestDto)

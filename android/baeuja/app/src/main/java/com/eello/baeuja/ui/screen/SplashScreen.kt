@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -15,11 +17,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.eello.baeuja.R
-import com.eello.baeuja.ui.navigation.NavGraph
 import com.eello.baeuja.ui.navigation.Screen
 import com.eello.baeuja.ui.theme.BaujaTheme
+import com.eello.baeuja.viewmodel.SplashViewModel
 import kotlinx.coroutines.delay
 
 private val guidelineStartRatio = 0.396f
@@ -29,16 +32,42 @@ private val appNameTopMargin = 378.7.dp
 private val bottomMargin = 60.dp
 
 @Composable
-fun SplashScreen(navController: NavController) {
-    // 2초 대기 후 home으로 이동
+fun SplashScreen(
+    navController: NavController,
+) {
+    val splashViewModel: SplashViewModel = hiltViewModel()
+
+    SplashRoute(navController, splashViewModel)
+}
+
+@Composable
+private fun SplashRoute(
+    navController: NavController,
+    splashViewModel: SplashViewModel
+) {
+    val isSignedIn by splashViewModel.isSignedIn.collectAsState()
+    val isCheckCompleted by splashViewModel.isCheckCompleted.collectAsState()
+
     LaunchedEffect(Unit) {
-        delay(2000)
-        navController.navigate(NavGraph.Auth.route) {
-            popUpTo(Screen.Splash.route) { inclusive = true }
+        splashViewModel.checkSignInStatus()
+    }
+
+    LaunchedEffect(isCheckCompleted) {
+        if (isCheckCompleted) {
+            delay(2000L)
+
+            if (isSignedIn) {
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Splash.route) { inclusive = true }
+                }
+            } else {
+                navController.navigate(Screen.SignIn.route) {
+                    popUpTo(Screen.Splash.route) { inclusive = true }
+                }
+            }
         }
     }
 
-    // 화면 UI
     SplashContent()
 }
 
