@@ -13,19 +13,32 @@ import com.eello.baeuja.viewmodel.DisplayNameAvailable
 import com.eello.baeuja.viewmodel.GoogleSignInUserInfo
 import javax.inject.Inject
 
-class AuthRepository @Inject constructor(
+interface AuthRepository {
+
+    suspend fun signIn(googleSignInUserInfo: GoogleSignInUserInfo): AuthResult
+    suspend fun guestSignUp(): AuthResult
+    suspend fun googleSignUp(
+        googleSignInUserInfo: GoogleSignInUserInfo,
+        displayName: String
+    ): AuthResult
+
+    suspend fun checkDisplayNameAvailable(displayName: String): DisplayNameAvailable
+}
+
+class AuthRepositoryImpl @Inject constructor(
     private val authAPI: AuthAPI,
     private val tokenManager: TokenManager
-) {
-    suspend fun signIn(googleSignInUserInfo: GoogleSignInUserInfo): AuthResult {
+) : AuthRepository {
+    override suspend fun signIn(googleSignInUserInfo: GoogleSignInUserInfo): AuthResult {
         val requestDto = SignInRequestDto.from(googleSignInUserInfo)
         val apiResult = apiCall { authAPI.signIn(requestDto) }
         return apiResult.handle(
             onSuccess = { body ->
                 when (body.code) {
                     ApiResponseCode.SUCCESS -> {
-                        val token = body.data?.accessToken ?: error("No token")
-                        tokenManager.saveAccessToken(token)
+                        val accessToken = body.data?.accessToken ?: error("No token")
+                        val refreshToken = body.data.refreshToken
+                        tokenManager.saveTokens(accessToken, refreshToken)
                         AuthResult.Success
                     }
 
@@ -40,12 +53,12 @@ class AuthRepository @Inject constructor(
         )
     }
 
-    suspend fun guestSignUp(): AuthResult {
+    override suspend fun guestSignUp(): AuthResult {
         val signUpRequestDto = SignUpRequestDto(loginType = SignUpType.GUEST)
         return signUp(signUpRequestDto)
     }
 
-    suspend fun googleSignUp(
+    override suspend fun googleSignUp(
         googleSignInUserInfo: GoogleSignInUserInfo,
         displayName: String
     ): AuthResult {
@@ -80,7 +93,7 @@ class AuthRepository @Inject constructor(
         )
     }
 
-    suspend fun checkDisplayNameAvailable(displayName: String): DisplayNameAvailable {
+    override suspend fun checkDisplayNameAvailable(displayName: String): DisplayNameAvailable {
         val apiResult = apiCall { authAPI.checkDisplayNameAvailable(displayName) }
         return apiResult.handle(
             onSuccess = { body ->

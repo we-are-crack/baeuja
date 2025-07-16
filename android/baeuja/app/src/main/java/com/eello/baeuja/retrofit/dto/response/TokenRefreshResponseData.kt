@@ -1,6 +1,6 @@
 package com.eello.baeuja.retrofit.dto.response
 
-data class SignInResponseData(
+data class TokenRefreshResponseData(
     val accessToken: String,
     val refreshToken: String
 )

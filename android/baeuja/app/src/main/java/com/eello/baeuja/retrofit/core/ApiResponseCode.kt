@@ -12,6 +12,7 @@ enum class ApiResponseCode {
     DUPLICATE_EMAIL,
     INVALID_NICKNAME,
     MISSING_PARAMETER,
+    INVALID_TOKEN,
 
     UNKNOWN;
 

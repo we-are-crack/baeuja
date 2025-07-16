@@ -3,7 +3,7 @@ package com.eello.baeuja.auth
 import okhttp3.Interceptor
 import okhttp3.Response
 
-class AuthInterceptor(
+class TokenAuthInterceptor(
     private val tokenProvider: () -> String?
 ) : Interceptor {
 

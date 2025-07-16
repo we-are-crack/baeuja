@@ -66,6 +66,9 @@ dependencies {
     // Retrofit with Gson Converter
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
+    // https://mvnrepository.com/artifact/com.squareup.okhttp3/mockwebserver
+    testImplementation("com.squareup.okhttp3:mockwebserver:3.14.9")
+
     // default splashscreen
     implementation("androidx.core:core-splashscreen:1.0.1")
 
