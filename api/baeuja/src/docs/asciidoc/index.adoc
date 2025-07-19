@@ -1,4 +1,7 @@
 :basedir: src/docs/asciidoc
+:toc: left
+:toclevels: 2
+:source-highlighter: highlightjs
 
 == Baeuja API 문서
 
