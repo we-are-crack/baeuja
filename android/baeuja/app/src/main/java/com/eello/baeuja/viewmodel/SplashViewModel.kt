@@ -29,6 +29,7 @@ class SplashViewModel @Inject constructor(
         viewModelScope.launch {
             if (tokenManager.refreshToken == null) {
                 _isCheckCompleted.value = true
+                Log.i("SplashViewModel", "유저 인증 실패: 토큰 없음")
                 return@launch
             }
 
