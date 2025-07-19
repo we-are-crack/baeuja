@@ -2,6 +2,8 @@ package com.eello.baeuja.retrofit.repository
 
 import com.eello.baeuja.auth.AuthResult
 import com.eello.baeuja.auth.TokenManager
+import com.eello.baeuja.exception.AppError
+import com.eello.baeuja.exception.AppException
 import com.eello.baeuja.retrofit.api.AuthAPI
 import com.eello.baeuja.retrofit.core.ApiResponseCode
 import com.eello.baeuja.retrofit.core.apiCall
@@ -46,9 +48,10 @@ class AuthRepositoryImpl @Inject constructor(
                     else -> AuthResult.Failure()
                 }
             },
-            onFailure = {
-                if (it.code == ApiResponseCode.USER_NOT_FOUND) AuthResult.Unregistered
-                else AuthResult.Failure(message = it.message)
+            onFailure = { reason ->
+                if (reason is AppError.Api.Unauthorized) {
+                    AuthResult.Unregistered
+                } else AuthResult.Failure(message = reason.message)
             }
         )
     }
@@ -75,9 +78,10 @@ class AuthRepositoryImpl @Inject constructor(
         val apiResult = apiCall { authAPI.signUp(signUpRequestDto) }
         return apiResult.handle(
             onSuccess = { body ->
-                return when (body.code) {
+                when (body.code) {
                     ApiResponseCode.SUCCESS -> {
-                        val token = body.data?.accessToken ?: error("No token")
+                        val token = body.data?.accessToken
+                            ?: throw AppException(AppError.Api.EmptyResponse())
                         tokenManager.saveAccessToken(token)
                         AuthResult.Success
                     }
@@ -87,8 +91,8 @@ class AuthRepositoryImpl @Inject constructor(
                     }
                 }
             },
-            onFailure = {
-                AuthResult.Failure(message = it.message)
+            onFailure = { reason ->
+                AuthResult.Failure(message = reason.message)
             }
         )
     }
@@ -102,8 +106,8 @@ class AuthRepositoryImpl @Inject constructor(
                     else -> DisplayNameAvailable.Unavailable(body.message)
                 }
             },
-            onFailure = {
-                DisplayNameAvailable.Unavailable(it.message)
+            onFailure = { reason ->
+                DisplayNameAvailable.Unavailable(reason.message)
             }
         )
     }

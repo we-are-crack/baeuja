@@ -1,5 +1,6 @@
 package com.eello.baeuja.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
@@ -57,10 +58,12 @@ private fun SplashRoute(
             delay(2000L)
 
             if (isSignedIn) {
+                Log.i("SplashRoute", "유저 인증 성공: Splash -> Home")
                 navController.navigate(Screen.Home.route) {
                     popUpTo(Screen.Splash.route) { inclusive = true }
                 }
             } else {
+                Log.i("SplashRoute", "유저 인증 실패: Splash -> SignIn")
                 navController.navigate(Screen.SignIn.route) {
                     popUpTo(Screen.Splash.route) { inclusive = true }
                 }

@@ -30,7 +30,7 @@ class UserSession @Inject constructor() {
     val userInfo: StateFlow<UserInfo?> = _userInfo
 
     fun setUserInfo(userInfo: UserInfo) {
-        Log.d("UserSession", "setUserInfo: $userInfo")
+        Log.d("UserSession", "유저 정보 저장: $userInfo")
         _userInfo.value = userInfo
     }
 }

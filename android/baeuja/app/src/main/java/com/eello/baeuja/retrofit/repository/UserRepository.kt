@@ -1,5 +1,7 @@
 package com.eello.baeuja.retrofit.repository
 
+import com.eello.baeuja.exception.AppError
+import com.eello.baeuja.exception.AppException
 import com.eello.baeuja.retrofit.api.UserAPI
 import com.eello.baeuja.retrofit.core.apiCall
 import com.eello.baeuja.retrofit.core.handle
@@ -17,11 +19,11 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun fetchUserInfo(): UserInfo {
         val apiResult = apiCall { userAPI.fetchUserInfo() }
         return apiResult.handle(
-            onSuccess = {
-                it.data?.toUserInfo() ?: throw Exception("User data is null")
+            onSuccess = { body ->
+                body.data?.toUserInfo() ?: throw AppException(AppError.Api.EmptyResponse())
             },
-            onFailure = {
-                throw Exception("Unauthorized")
+            onFailure = { reason ->
+                throw AppException(reason)
             }
         )
     }

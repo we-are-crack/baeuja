@@ -1,5 +1,6 @@
 package com.eello.baeuja.auth
 
+import android.util.Log
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
@@ -18,11 +19,23 @@ class TokenAuthenticator @Inject constructor(
             return null
         }
 
+        val requestUrl = response.request().url().toString()
+        if (requestUrl.contains("/auth", ignoreCase = true)) {
+            Log.i("TokenAuthenticator", "Auth 요청이므로 토큰 재발급 건너뜀: $requestUrl")
+            return null
+        }
+
         val newAccessToken = runBlocking {
             // 동기적으로 토큰 재발급 요청
             val accessToken = tokenManager.accessToken ?: return@runBlocking null
             val refreshToken = tokenManager.refreshToken ?: return@runBlocking null
-            tokenRefresher.refreshAccessToken(accessToken, refreshToken)
+
+            try {
+                tokenRefresher.refreshAccessToken(accessToken, refreshToken)
+            } catch (e: Exception) {
+                Log.i("TokenAuthenticator", "토큰 재발급 실패: ${e.message}")
+                null
+            }
         }
 
         return newAccessToken?.let {

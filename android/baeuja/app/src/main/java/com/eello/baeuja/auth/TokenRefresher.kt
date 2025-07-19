@@ -1,5 +1,7 @@
 package com.eello.baeuja.auth
 
+import com.eello.baeuja.exception.AppError
+import com.eello.baeuja.exception.AppException
 import com.eello.baeuja.retrofit.api.AuthAPI
 import com.eello.baeuja.retrofit.core.apiCall
 import com.eello.baeuja.retrofit.core.handle
@@ -19,17 +21,18 @@ class TokenRefresherImpl @Inject constructor(
     override suspend fun refreshAccessToken(
         accessToken: String,
         refreshToken: String
-    ): String? {
+    ): String {
         val requestDto = TokenRefreshRequestDto(accessToken, refreshToken)
         val apiResult = apiCall { authAPI.refreshAccessToken(requestDto) }
         return apiResult.handle(
             onSuccess = {
-                val (accessToken, refreshToken) = it.data ?: error("No token")
+                val (accessToken, refreshToken) = it.data
+                    ?: throw AppException(reason = AppError.Api.EmptyResponse())
                 tokenManager.saveTokens(accessToken, refreshToken)
                 accessToken
             },
-            onFailure = {
-                null
+            onFailure = { reason ->
+                throw AppException(reason = reason)
             }
         )
     }

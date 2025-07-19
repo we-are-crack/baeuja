@@ -4,17 +4,13 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eello.baeuja.auth.TokenManager
+import com.eello.baeuja.exception.AppException
 import com.eello.baeuja.retrofit.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-data class SignedInState(
-    val isSignedIn: Boolean = false,
-    val isCheckCompleted: Boolean = false
-)
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
@@ -29,10 +25,6 @@ class SplashViewModel @Inject constructor(
     private val _isCheckCompleted = MutableStateFlow(false)
     val isCheckCompleted: StateFlow<Boolean> = _isCheckCompleted
 
-
-    private val _signedInState = MutableStateFlow(SignedInState())
-    val signedInState: StateFlow<SignedInState> = _signedInState
-
     fun checkSignInStatus() {
         viewModelScope.launch {
             if (tokenManager.refreshToken == null) {
@@ -42,9 +34,10 @@ class SplashViewModel @Inject constructor(
 
             try {
                 userSession.setUserInfo(userRepository.fetchUserInfo())
+                Log.i("SplashViewModel", "유저 인증 성공: ${userSession.userInfo.value}")
                 _isSignedIn.value = true
-            } catch (e: Exception) {
-                Log.e("SplashViewModel", "Error fetching user info", e)
+            } catch (e: AppException) {
+                Log.w("SplashViewModel", "유저 인증 실패: ${e.reason}")
                 tokenManager.clearTokens()
             } finally {
                 _isCheckCompleted.value = true
