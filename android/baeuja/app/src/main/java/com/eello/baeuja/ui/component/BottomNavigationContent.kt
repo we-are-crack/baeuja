@@ -34,7 +34,9 @@ fun BottomNavigationContent(
         containerColor = Color.White,
         tonalElevation = 0.dp
     ) {
-        BottomNavigationItem.items.forEach { item ->
+//        val navItems = BottomNavigationItem.items
+        val navItems = BottomNavigationItemGiVer.items
+        navItems.forEach { item ->
             val selected = currentRoute == item.route
             NavigationBarItem(
                 icon = {
@@ -56,6 +58,7 @@ fun BottomNavigationContent(
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = Color(0xFF9388E8),
                     selectedTextColor = Color(0xFF9388E8),
                     unselectedTextColor = Color(0xFFCCCCCC),
                     indicatorColor = Color.Transparent
@@ -68,6 +71,52 @@ fun BottomNavigationContent(
                 }
             )
         }
+    }
+}
+
+sealed class BottomNavigationItemGiVer( // Google Icon Version
+    val route: String,
+    val unselectedIcon: Int,
+    val selectedIcon: Int,
+    val label: String
+) {
+    object Learning : BottomNavigationItemGiVer(
+        route = Screen.Learning.route,
+        unselectedIcon = R.drawable.nav_learning_unselected_gi,
+        selectedIcon = R.drawable.nav_learning_selected_gi,
+        label = "Learning"
+    )
+
+    object Bookmark : BottomNavigationItemGiVer(
+        route = Screen.Bookmark.route,
+        unselectedIcon = R.drawable.nav_bookmark_unselected_gi,
+        selectedIcon = R.drawable.nav_bookmark_selected_gi,
+        label = "Bookmark"
+    )
+
+    object Home : BottomNavigationItemGiVer(
+        route = Screen.Home.route,
+        unselectedIcon = R.drawable.nav_home_unselected_gi,
+        selectedIcon = R.drawable.nav_home_selected_gi,
+        label = "Home"
+    )
+
+    object Review : BottomNavigationItemGiVer(
+        route = Screen.Review.route,
+        unselectedIcon = R.drawable.nav_review_unselected_gi,
+        selectedIcon = R.drawable.nav_review_selected_gi,
+        label = "Review"
+    )
+
+    object My : BottomNavigationItemGiVer(
+        route = Screen.MyPage.route,
+        unselectedIcon = R.drawable.nav_my_unselected_gi,
+        selectedIcon = R.drawable.nav_my_selected_gi,
+        label = "My"
+    )
+
+    companion object {
+        val items = listOf(Learning, Bookmark, Home, Review, My)
     }
 }
 
