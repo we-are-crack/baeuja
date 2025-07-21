@@ -1,0 +1,39 @@
+package xyz.baeuja.api.content.domain;
+
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Unit {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "unit_id")
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "content_id")
+    private Content content;
+
+    @OneToMany(mappedBy = "unit")
+    private List<Sentence> sentences = new ArrayList<>();
+
+    @Column(nullable = false)
+    private String thumbnailUrl;
+
+    @Column(nullable = false)
+    private String youtubeId;
+
+    @Column(nullable = false)
+    private int startTime;
+
+    @Column(nullable = false)
+    private int endTime;
+}
