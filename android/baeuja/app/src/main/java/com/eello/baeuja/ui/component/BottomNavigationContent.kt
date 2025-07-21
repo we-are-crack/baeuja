@@ -29,13 +29,13 @@ fun BottomNavigationContent(
     val currentRoute = navBackStackEntry?.destination?.route
     NavigationBar(
         modifier = Modifier
-            .shadow(16.dp, RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp), clip = false)
+            .shadow(16.dp, RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp), clip = false)
             .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)),
         containerColor = Color.White,
         tonalElevation = 0.dp
     ) {
-//        val navItems = BottomNavigationItem.items
-        val navItems = BottomNavigationItemGiVer.items
+        val navItems = BottomNavigationItem.items
+//        val navItems = BottomNavigationItemGiVer.items
         navItems.forEach { item ->
             val selected = currentRoute == item.route
             NavigationBarItem(
