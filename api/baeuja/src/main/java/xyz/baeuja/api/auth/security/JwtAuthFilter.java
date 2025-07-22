@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 import xyz.baeuja.api.auth.security.exception.InvalidJwtException;
 import xyz.baeuja.api.auth.security.handler.CustomAuthenticationEntryPoint;
@@ -25,17 +26,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final CustomAuthenticationEntryPoint entryPoint;
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String uri = request.getRequestURI();
+        return SecurityWhitelist.isWhitelisted(uri);
+    }
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
         try {
-            // 인증 필터 화이트리스트
-            if (SecurityWhitelist.isWhitelisted(request.getRequestURI())) {
-                filterChain.doFilter(request, response);
-                return;
-            }
-
             String authorizationHeader = request.getHeader("Authorization");
 
             if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {

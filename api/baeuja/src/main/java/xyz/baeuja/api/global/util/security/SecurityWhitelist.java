@@ -11,7 +11,7 @@ public class SecurityWhitelist {
             "/api/auth",
             "/favicon.ico",
             "/error",
-            "/docs/"
+            "/docs"
     );
 
     public static boolean isWhitelisted(String path) {
