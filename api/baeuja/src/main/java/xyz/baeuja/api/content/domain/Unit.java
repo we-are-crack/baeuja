@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import xyz.baeuja.api.global.entity.BaseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Unit {
+public class Unit extends BaseEntity {
 
     @Id
     @Column(name = "unit_id")
@@ -24,7 +25,7 @@ public class Unit {
     @OneToMany(mappedBy = "unit")
     private List<Sentence> sentences = new ArrayList<>();
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 500)
     private String thumbnailUrl;
 
     @Column(nullable = false)

@@ -34,6 +34,7 @@ public class Sentence extends BaseEntity {
     @Column(nullable = false)
     private String roman;
 
+    @Column(length = 500)
     private String perfectVoiceUrl;
 
     @Column(nullable = false)

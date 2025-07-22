@@ -34,10 +34,10 @@ public class Content extends BaseEntity {
     @Column(length = 100)
     private String director;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 9999)
     private String description;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 500)
     private String thumbnailUrl;
 
     @Column(nullable = false)
