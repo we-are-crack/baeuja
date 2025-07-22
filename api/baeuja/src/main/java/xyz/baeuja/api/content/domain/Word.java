@@ -31,7 +31,6 @@ public class Word extends BaseEntity {
     @Column(nullable = false)
     private String roman;
 
-    @Column(nullable = false)
     private String perfectVoiceUrl;
 
     @Column(nullable = false)

@@ -25,8 +25,8 @@ public class SentenceWord extends BaseEntity {
     private Word word;
 
     @Column(nullable = false)
-    private String koreanInSentence;
+    private String koreanWordInSentence;
 
     @Column(nullable = false)
-    private String englishInSentence;
+    private String englishWordInSentence;
 }
