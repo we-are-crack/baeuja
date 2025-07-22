@@ -14,7 +14,6 @@ import java.util.List;
 public class Unit {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "unit_id")
     private Long id;
 

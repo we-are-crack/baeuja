@@ -15,7 +15,6 @@ import java.util.List;
 public class Word extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "word_id")
     private Long id;
 

@@ -15,7 +15,6 @@ import java.util.List;
 public class Sentence extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sentence_id")
     private Long id;
 

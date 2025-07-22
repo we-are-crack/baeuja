@@ -12,7 +12,6 @@ import xyz.baeuja.api.global.entity.BaseEntity;
 public class SentenceWord extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sentence_word_id")
     private Long id;
 
