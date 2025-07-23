@@ -25,6 +25,9 @@ import xyz.baeuja.api.helper.RestDocsHelper;
 import xyz.baeuja.api.helper.TestDataHelper;
 import xyz.baeuja.api.user.domain.User;
 
+import java.util.List;
+import java.util.stream.LongStream;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static xyz.baeuja.api.docs.RestDocsSnippets.authorizationHeader;
 import static xyz.baeuja.api.docs.RestDocsSnippets.defaultResponse;
@@ -154,14 +157,42 @@ class HomeApiControllerTest {
     }
 
     @Test
-    @DisplayName("추천 학습 단어 조회 실패 - 잘못된 쿼리 파라미터")
+    @DisplayName("추천 학습 단어 조회 성공 - 쿼피 파리미터 추가")
     void getWords_success_exclude() {
+        String accessToken = jwtProvider.createAccessToken(new JwtUserInfo(user.getId(), user.getTimezone(), user.getRole()));
+
+        List<Long> excludeIds = LongStream.rangeClosed(0, 10).boxed().toList();
+
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createQueryResponseWithAuthSnippet(
+                "home-get-words-success-exclude",
+                RestDocsSnippets.authorizationHeader(),
+                RestDocsSnippets.excludeIdsRequest(),
+                buildListResultResponseFields(RestDocsSnippets.homeRecommendWordsResponse())
+        ));
+
+        Response response = RestAssured
+                .given(spec)
+                .queryParam("excludeIds", excludeIds)
+                .header("Authorization", "Bearer " + accessToken)
+                .when()
+                .get("/api/home/words");
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.jsonPath().getList("data.wordId")).hasSize(5);
+        assertThat(response.jsonPath().getInt("data[0].wordId")).isNotZero();
+        assertThat(response.jsonPath().getString("data[0].koreanWord")).isNotBlank();
+        assertThat(response.jsonPath().getInt("data[0].sentences[0].unitId")).isNotZero();
+    }
+
+    @Test
+    @DisplayName("추천 학습 단어 조회 실패 - 잘못된 쿼리 파라미터")
+    void getWords_fail_invalid_query_param() {
         String accessToken = jwtProvider.createAccessToken(new JwtUserInfo(user.getId(), user.getTimezone(), user.getRole()));
 
         String excludeIds = "1&2&3&4&5";
 
         RequestSpecification spec = docsHelper.createSpecWithDocs(createQueryResponseWithAuthSnippet(
-                "home-get-words-success-exclude",
+                "home-get-words-fail-invalid-query-param",
                 RestDocsSnippets.authorizationHeader(),
                 RestDocsSnippets.excludeIdsRequest(),
                 defaultResponse()
@@ -176,22 +207,5 @@ class HomeApiControllerTest {
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(response.jsonPath().getString("code")).isEqualTo("INVALID_PARAMETER");
-    }
-
-    @Test
-    @DisplayName("추천 학습 단어 조회 실패 - 쿼피 파리미터 추가")
-    void getWords_fail_exclude() {
-        RequestSpecification spec = docsHelper.createSpecWithDocs(createResponseSnippet(
-                "home-get-contents-fail_missing",
-                defaultResponse())
-        );
-
-        Response response = RestAssured
-                .given(spec)
-                .when()
-                .get("/api/home/contents");
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-        assertThat(response.jsonPath().getString("code")).isEqualTo(InvalidJwtException.CODE);
     }
 }

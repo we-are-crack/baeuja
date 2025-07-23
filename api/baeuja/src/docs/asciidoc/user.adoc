@@ -6,7 +6,7 @@
 
 == GET /api/users/me
 
-=== 성공: 사용자 정보 조회
+=== *✅ 성공: 사용자 정보 조회*
 
 include::{snippets}/users-get-my-info-success/http-request.adoc[]
 include::{snippets}/users-get-my-info-success/http-response.adoc[]
@@ -17,9 +17,8 @@ include::{snippets}/users-get-my-info-success/request-headers.adoc[]
 ==== 응답 필드
 include::{snippets}/users-get-my-info-success/response-fields.adoc[]
 
----
 
-=== 실패: 인증 헤더 누락
+=== *❌ 실패: 인증 헤더 누락*
 
 include::{snippets}/users-get-my-info-fail-missing/http-request.adoc[]
 include::{snippets}/users-get-my-info-fail-missing/http-response.adoc[]
@@ -27,9 +26,8 @@ include::{snippets}/users-get-my-info-fail-missing/http-response.adoc[]
 ==== 응답 필드
 include::{snippets}/users-get-my-info-fail-missing/response-fields.adoc[]
 
----
 
-=== 실패: 유효하지 않은 토큰
+=== *❌ 실패: 유효하지 않은 토큰*
 
 include::{snippets}/users-get-my-info-fail-invalid/http-request.adoc[]
 include::{snippets}/users-get-my-info-fail-invalid/http-response.adoc[]
@@ -40,9 +38,8 @@ include::{snippets}/users-get-my-info-fail-invalid/request-headers.adoc[]
 ==== 응답 필드
 include::{snippets}/users-get-my-info-fail-invalid/response-fields.adoc[]
 
----
 
-=== 실패: 만료된 토큰
+=== *❌ 실패: 만료된 토큰*
 
 include::{snippets}/users-get-my-info-fail-expired/http-request.adoc[]
 include::{snippets}/users-get-my-info-fail-expired/http-response.adoc[]

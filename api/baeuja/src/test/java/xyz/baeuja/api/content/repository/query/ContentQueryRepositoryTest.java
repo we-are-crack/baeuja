@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @Sql(scripts = {
+        "/sql/truncate_all.sql",
         "/sql/content.sql",
         "/sql/unit.sql",
         "/sql/sentence.sql",

@@ -5,6 +5,8 @@
 
 == Baeuja API 문서
 
-include::src/docs/asciidoc/auth.adoc[]
+include::auth.adoc[]
 
-include::src/docs/asciidoc/user.adoc[]
+include::user.adoc[]
+
+include::home.adoc[]
