@@ -3,7 +3,7 @@ package xyz.baeuja.api.home.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import xyz.baeuja.api.content.repository.ContentRepository;
+import xyz.baeuja.api.content.repository.query.ContentQueryRepository;
 import xyz.baeuja.api.home.dto.HomeContentResponse;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HomeService {
 
-    private final ContentRepository contentRepository;
+    private final ContentQueryRepository contentRepository;
 
     /**
      * 최근 추가된 content 조회
