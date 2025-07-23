@@ -8,29 +8,25 @@
 
 === *✅ 성공: 최신 콘텐츠 10개 조회*
 
-include::{snippets}/home-get-contents-success/http-request.adoc[]
-include::{snippets}/home-get-contents-success/http-response.adoc[]
-
 ==== 요청 헤더
 include::{snippets}/home-get-contents-success/request-headers.adoc[]
 
 ==== 응답 필드
 include::{snippets}/home-get-contents-success/response-fields.adoc[]
 
+include::{snippets}/home-get-contents-success/http-request.adoc[]
+include::{snippets}/home-get-contents-success/http-response.adoc[]
 
 === *❌ 실패: 인증 헤더 누락*
-
-include::{snippets}/home-get-contents-fail_missing/http-request.adoc[]
-include::{snippets}/home-get-contents-fail_missing/http-response.adoc[]
 
 ==== 응답 필드
 include::{snippets}/home-get-contents-fail_missing/response-fields.adoc[]
 
+include::{snippets}/home-get-contents-fail_missing/http-request.adoc[]
+include::{snippets}/home-get-contents-fail_missing/http-response.adoc[]
+
 
 === *❌ 실패: 유효하지 않은 토큰*
-
-include::{snippets}/home-get-contents-fail_invalid/http-request.adoc[]
-include::{snippets}/home-get-contents-fail_invalid/http-response.adoc[]
 
 ==== 요청 헤더
 include::{snippets}/home-get-contents-fail_invalid/request-headers.adoc[]
@@ -38,13 +34,12 @@ include::{snippets}/home-get-contents-fail_invalid/request-headers.adoc[]
 ==== 응답 필드
 include::{snippets}/home-get-contents-fail_invalid/response-fields.adoc[]
 
+include::{snippets}/home-get-contents-fail_invalid/http-request.adoc[]
+include::{snippets}/home-get-contents-fail_invalid/http-response.adoc[]
 
 == GET /api/home/words
 
 === *✅ 성공: 추천 학습 단어 조회 - 쿼피 파리미터 생략*
-
-include::{snippets}/home-get-words-success/http-request.adoc[]
-include::{snippets}/home-get-words-success/http-response.adoc[]
 
 ==== 요청 헤더
 include::{snippets}/home-get-words-success/request-headers.adoc[]
@@ -52,11 +47,11 @@ include::{snippets}/home-get-words-success/request-headers.adoc[]
 ==== 응답 필드
 include::{snippets}/home-get-words-success/response-fields.adoc[]
 
+include::{snippets}/home-get-words-success/http-request.adoc[]
+include::{snippets}/home-get-words-success/http-response.adoc[]
+
 
 === *✅ 성공: 추천 학습 단어 조회 - 쿼피 파리미터 추가*
-
-include::{snippets}/home-get-words-success-exclude/http-request.adoc[]
-include::{snippets}/home-get-words-success-exclude/http-response.adoc[]
 
 ==== 요청 헤더
 include::{snippets}/home-get-words-success-exclude/request-headers.adoc[]
@@ -67,11 +62,11 @@ include::{snippets}/home-get-words-success-exclude/query-parameters.adoc[]
 ==== 응답 필드
 include::{snippets}/home-get-words-success-exclude/response-fields.adoc[]
 
+include::{snippets}/home-get-words-success-exclude/http-request.adoc[]
+include::{snippets}/home-get-words-success-exclude/http-response.adoc[]
+
 
 === *❌ 실패: 잘못된 쿼리 파라미터*
-
-include::{snippets}/home-get-words-fail-invalid-query-param/http-request.adoc[]
-include::{snippets}/home-get-words-fail-invalid-query-param/http-response.adoc[]
 
 ==== 요청 헤더
 include::{snippets}/home-get-words-fail-invalid-query-param/request-headers.adoc[]
@@ -81,3 +76,6 @@ include::{snippets}/home-get-words-fail-invalid-query-param/query-parameters.ado
 
 ==== 응답 필드
 include::{snippets}/home-get-words-fail-invalid-query-param/response-fields.adoc[]
+
+include::{snippets}/home-get-words-fail-invalid-query-param/http-request.adoc[]
+include::{snippets}/home-get-words-fail-invalid-query-param/http-response.adoc[]

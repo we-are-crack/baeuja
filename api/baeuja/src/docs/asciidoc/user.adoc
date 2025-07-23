@@ -8,29 +8,26 @@
 
 === *✅ 성공: 사용자 정보 조회*
 
-include::{snippets}/users-get-my-info-success/http-request.adoc[]
-include::{snippets}/users-get-my-info-success/http-response.adoc[]
-
 ==== 요청 헤더
 include::{snippets}/users-get-my-info-success/request-headers.adoc[]
 
 ==== 응답 필드
 include::{snippets}/users-get-my-info-success/response-fields.adoc[]
 
+include::{snippets}/users-get-my-info-success/http-request.adoc[]
+include::{snippets}/users-get-my-info-success/http-response.adoc[]
+
 
 === *❌ 실패: 인증 헤더 누락*
-
-include::{snippets}/users-get-my-info-fail-missing/http-request.adoc[]
-include::{snippets}/users-get-my-info-fail-missing/http-response.adoc[]
 
 ==== 응답 필드
 include::{snippets}/users-get-my-info-fail-missing/response-fields.adoc[]
 
+include::{snippets}/users-get-my-info-fail-missing/http-request.adoc[]
+include::{snippets}/users-get-my-info-fail-missing/http-response.adoc[]
+
 
 === *❌ 실패: 유효하지 않은 토큰*
-
-include::{snippets}/users-get-my-info-fail-invalid/http-request.adoc[]
-include::{snippets}/users-get-my-info-fail-invalid/http-response.adoc[]
 
 ==== 요청 헤더
 include::{snippets}/users-get-my-info-fail-invalid/request-headers.adoc[]
@@ -38,14 +35,17 @@ include::{snippets}/users-get-my-info-fail-invalid/request-headers.adoc[]
 ==== 응답 필드
 include::{snippets}/users-get-my-info-fail-invalid/response-fields.adoc[]
 
+include::{snippets}/users-get-my-info-fail-invalid/http-request.adoc[]
+include::{snippets}/users-get-my-info-fail-invalid/http-response.adoc[]
+
 
 === *❌ 실패: 만료된 토큰*
-
-include::{snippets}/users-get-my-info-fail-expired/http-request.adoc[]
-include::{snippets}/users-get-my-info-fail-expired/http-response.adoc[]
 
 ==== 요청 헤더
 include::{snippets}/users-get-my-info-fail-expired/request-headers.adoc[]
 
 ==== 응답 필드
 include::{snippets}/users-get-my-info-fail-expired/response-fields.adoc[]
+
+include::{snippets}/users-get-my-info-fail-expired/http-request.adoc[]
+include::{snippets}/users-get-my-info-fail-expired/http-response.adoc[]
