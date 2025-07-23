@@ -34,5 +34,6 @@ public class Word extends BaseEntity {
     private String perfectVoiceUrl;
 
     @Column(nullable = false)
-    private String importance;
+    @Enumerated(value = EnumType.STRING)
+    private Importance importance;
 }

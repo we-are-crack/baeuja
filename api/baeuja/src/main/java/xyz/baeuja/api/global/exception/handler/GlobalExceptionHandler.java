@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import xyz.baeuja.api.global.exception.UnexpectedException;
 import xyz.baeuja.api.auth.security.exception.ExpiredTokenException;
 import xyz.baeuja.api.auth.security.exception.InvalidJwtException;
@@ -49,6 +50,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ResultResponse.failure("MISSING_PARAMETER", "The request parameter was missing."));
+    }
+
+    /**
+     * 요청 쿼리 파라미터 타입 불일치
+     */
+    @ExceptionHandler
+    public ResponseEntity<ResultResponse<Void>> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
+        log.info("🚫MethodArgumentTypeMismatchExceptionHandler handled: {} ", exception.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ResultResponse.failure("INVALID_PARAMETER", "The request parameter is invalid"));
     }
 
     /**

@@ -59,6 +59,20 @@ public class RestDocsHelper {
         );
     }
 
+    public static RestDocumentationFilter createQueryResponseWithAuthSnippet(
+            String identifier,
+            RequestHeadersSnippet header,
+            ParameterDescriptor[] queryParams,
+            FieldDescriptor[] responseFields
+    ) {
+        return buildSnippet(
+                identifier,
+                header,
+                queryParameters(queryParams),
+                responseFields(responseFields)
+        );
+    }
+
     public static RestDocumentationFilter createAuthHeaderSnippet(
             String identifier,
             RequestHeadersSnippet header,
@@ -81,28 +95,43 @@ public class RestDocsHelper {
         );
     }
 
-    public static FieldDescriptor[] buildResultResponseField(FieldDescriptor... dataFields) {
-        FieldDescriptor[] defaultField = new FieldDescriptor[] {
+    public static FieldDescriptor[] buildSingleResultResponseFields(FieldDescriptor... dataFields) {
+        return buildResultResponseFields("data.", dataFields);
+    }
+
+    public static FieldDescriptor[] buildListResultResponseFields(FieldDescriptor... dataFields) {
+        return buildResultResponseFields("data[].", dataFields);
+    }
+
+    private static FieldDescriptor[] buildResultResponseFields(String prefix, FieldDescriptor... dataFields) {
+        FieldDescriptor[] defaultFields = new FieldDescriptor[] {
                 fieldWithPath("code").description("응답 코드"),
                 fieldWithPath("message").description("응답 메시지"),
-                fieldWithPath("data").description("응답 데이터")
+                fieldWithPath("data").description("응답 데이터").optional()
         };
 
         if (dataFields == null || dataFields.length == 0) {
-            return defaultField;
+            return defaultFields;
         }
 
-        FieldDescriptor[] resultResponseField = new FieldDescriptor[defaultField.length + dataFields.length];
-        System.arraycopy(defaultField, 0, resultResponseField, 0, defaultField.length);
+        FieldDescriptor[] combined = new FieldDescriptor[defaultFields.length + dataFields.length];
+        System.arraycopy(defaultFields, 0, combined, 0, defaultFields.length);
 
         for (int i = 0; i < dataFields.length; i++) {
             FieldDescriptor fd = dataFields[i];
 
-            resultResponseField[defaultField.length + i] = fieldWithPath("data." + fd.getPath())
+            FieldDescriptor newField = fieldWithPath(prefix + fd.getPath())
                     .description(fd.getDescription())
                     .type(fd.getType());
+
+            if (fd.isOptional()) {
+                newField = newField.optional();
+            }
+
+            combined[defaultFields.length + i] = newField;
         }
-        return resultResponseField;
+
+        return combined;
     }
 
     private static RestDocumentationFilter buildSnippet(String identifier, Snippet... snippets) {

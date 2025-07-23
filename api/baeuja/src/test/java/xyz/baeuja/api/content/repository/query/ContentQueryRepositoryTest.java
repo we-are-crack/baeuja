@@ -6,12 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import xyz.baeuja.api.home.dto.HomeContentResponse;
+import xyz.baeuja.api.home.dto.HomeContentsResponse;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @Sql(scripts = {
@@ -30,7 +29,7 @@ class ContentQueryRepositoryTest {
     @DisplayName("최근에 추가된 10개 content 정보 조회")
     void findTop10ByOrderByCreatedAtDesc_success() {
         // when
-        List<HomeContentResponse> latestContents = contentRepository.findTop10ByOrderByCreatedAtDesc();
+        List<HomeContentsResponse> latestContents = contentRepository.findTop10ByOrderByCreatedAtDesc();
 
         // then
         assertThat(latestContents).hasSize(10);

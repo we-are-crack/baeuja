@@ -71,7 +71,7 @@ class AuthApiControllerTest {
         RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
                         "auth-sign-in-success",
                         signInRequest(),
-                        buildResultResponseField(authData()))
+                        buildSingleResultResponseFields(authData()))
         );
 
         Response response = RestAssured
@@ -122,7 +122,7 @@ class AuthApiControllerTest {
         RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
                 "auth-sign-up-guest-success",
                 signUpGuestRequest(),
-                buildResultResponseField(authData()))
+                buildSingleResultResponseFields(authData()))
         );
 
         Response response = RestAssured
@@ -151,8 +151,8 @@ class AuthApiControllerTest {
         RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
                 "auth-sign-up-google-success",
                 signUpGoogleRequest(),
-                buildResultResponseField(authData()))
-        );
+                buildSingleResultResponseFields(authData())
+        ));
 
         Response response = RestAssured
                 .given(spec)
@@ -298,7 +298,7 @@ class AuthApiControllerTest {
         RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
                 "auth-renew-token-success",
                 authData(),
-                buildResultResponseField(authData()))
+                buildSingleResultResponseFields(authData()))
         );
 
         Response response = RestAssured

@@ -15,6 +15,7 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.restassured.RestAssuredRestDocumentation;
 import org.springframework.restdocs.restassured.RestAssuredRestDocumentationConfigurer;
+import org.springframework.test.context.ActiveProfiles;
 import xyz.baeuja.api.auth.security.exception.ExpiredTokenException;
 import xyz.baeuja.api.auth.security.exception.InvalidJwtException;
 import xyz.baeuja.api.global.util.jwt.JwtProvider;
@@ -28,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static xyz.baeuja.api.docs.RestDocsSnippets.*;
 import static xyz.baeuja.api.helper.RestDocsHelper.*;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(RestDocumentationExtension.class)
 class UserApiControllerTest {
@@ -66,7 +68,7 @@ class UserApiControllerTest {
         RequestSpecification spec = restDocsHelper.createSpecWithDocs(createAuthHeaderSnippet(
                 "users-get-my-info-success",
                 authorizationHeader(),
-                buildResultResponseField(getMyInfoResponse()))
+                buildSingleResultResponseFields(getMyInfoResponse()))
         );
 
         Response response = RestAssured

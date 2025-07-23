@@ -3,7 +3,7 @@ package xyz.baeuja.api.content.repository.query;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import xyz.baeuja.api.home.dto.HomeContentResponse;
+import xyz.baeuja.api.home.dto.HomeContentsResponse;
 
 import java.util.List;
 
@@ -18,13 +18,13 @@ public class ContentQueryRepository {
      *
      * @return content 정보와 unit 개수, 단어 개수를 포함한 HomeContentResponse 리스트
      */
-    public List<HomeContentResponse> findTop10ByOrderByCreatedAtDesc() {
-        return em.createQuery("select new xyz.baeuja.api.home.dto.HomeContentResponse(" +
+    public List<HomeContentsResponse> findTop10ByOrderByCreatedAtDesc() {
+        return em.createQuery("select new xyz.baeuja.api.home.dto.HomeContentsResponse(" +
                         "c.classification, c.title, c.artist, c.director, c.thumbnailUrl, " +
                         "(select count(u) from Unit u where u.content.id = c.id), " +
                         "(select count(sw.word) from SentenceWord sw where sw.sentence.unit.content.id = c.id))" +
                         "from Content c " +
-                        "order by c.createdAt desc", HomeContentResponse.class)
+                        "order by c.createdAt desc", HomeContentsResponse.class)
                 .setMaxResults(10)
                 .getResultList();
     }
