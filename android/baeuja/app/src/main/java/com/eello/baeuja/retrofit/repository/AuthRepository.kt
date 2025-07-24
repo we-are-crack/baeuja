@@ -5,8 +5,8 @@ import com.eello.baeuja.auth.TokenManager
 import com.eello.baeuja.exception.AppError
 import com.eello.baeuja.exception.AppException
 import com.eello.baeuja.retrofit.api.AuthAPI
+import com.eello.baeuja.retrofit.core.ApiCaller
 import com.eello.baeuja.retrofit.core.ApiResponseCode
-import com.eello.baeuja.retrofit.core.apiCall
 import com.eello.baeuja.retrofit.core.handle
 import com.eello.baeuja.retrofit.dto.request.SignInRequestDto
 import com.eello.baeuja.retrofit.dto.request.SignUpRequestDto
@@ -28,12 +28,13 @@ interface AuthRepository {
 }
 
 class AuthRepositoryImpl @Inject constructor(
+    private val apiCaller: ApiCaller,
     private val authAPI: AuthAPI,
     private val tokenManager: TokenManager
 ) : AuthRepository {
     override suspend fun signIn(googleSignInUserInfo: GoogleSignInUserInfo): AuthResult {
         val requestDto = SignInRequestDto.from(googleSignInUserInfo)
-        val apiResult = apiCall { authAPI.signIn(requestDto) }
+        val apiResult = apiCaller.call { authAPI.signIn(requestDto) }
         return apiResult.handle(
             onSuccess = { body ->
                 when (body.code) {
@@ -75,7 +76,7 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     private suspend fun signUp(signUpRequestDto: SignUpRequestDto): AuthResult {
-        val apiResult = apiCall { authAPI.signUp(signUpRequestDto) }
+        val apiResult = apiCaller.call { authAPI.signUp(signUpRequestDto) }
         return apiResult.handle(
             onSuccess = { body ->
                 when (body.code) {
@@ -98,7 +99,7 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun checkDisplayNameAvailable(displayName: String): DisplayNameAvailable {
-        val apiResult = apiCall { authAPI.checkDisplayNameAvailable(displayName) }
+        val apiResult = apiCaller.call { authAPI.checkDisplayNameAvailable(displayName) }
         return apiResult.handle(
             onSuccess = { body ->
                 when (body.code) {
