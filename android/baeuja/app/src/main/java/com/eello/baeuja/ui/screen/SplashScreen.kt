@@ -48,25 +48,27 @@ private fun SplashRoute(
 ) {
     val isSignedIn by splashViewModel.isSignedIn.collectAsState()
     val isCheckCompleted by splashViewModel.isCheckCompleted.collectAsState()
+    val isLoadingCompleted by splashViewModel.isLoadingCompleted.collectAsState()
 
     LaunchedEffect(Unit) {
         splashViewModel.checkSignInStatus()
     }
 
-    LaunchedEffect(isCheckCompleted) {
+    LaunchedEffect(isCheckCompleted, isSignedIn) {
         if (isCheckCompleted) {
-            delay(2000L)
-
             if (isSignedIn) {
-                Log.i("SplashRoute", "유저 인증 성공: Splash -> Home")
-                navController.navigate(Screen.Home.route) {
-                    popUpTo(Screen.Splash.route) { inclusive = true }
-                }
-            } else {
-                Log.i("SplashRoute", "유저 인증 실패: Splash -> SignIn")
-                navController.navigate(Screen.SignIn.route) {
-                    popUpTo(Screen.Splash.route) { inclusive = true }
-                }
+                splashViewModel.loadHomeContents()
+            }
+        }
+    }
+
+    LaunchedEffect(isCheckCompleted, isSignedIn, isLoadingCompleted) {
+        if (isCheckCompleted && ((isSignedIn && isLoadingCompleted) || !isSignedIn)) {
+            val nextRoute = if (isSignedIn) Screen.Home.route else Screen.SignIn.route
+            Log.i("SplashRoute", "다음 화면: $nextRoute")
+            delay(2000L)
+            navController.navigate(nextRoute) {
+                popUpTo(Screen.Splash.route) { inclusive = true }
             }
         }
     }

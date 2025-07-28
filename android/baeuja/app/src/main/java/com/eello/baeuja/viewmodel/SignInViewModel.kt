@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.eello.baeuja.auth.AuthResult
 import com.eello.baeuja.retrofit.repository.AuthRepository
 import com.eello.baeuja.retrofit.repository.UserRepository
+import com.eello.baeuja.session.HomeContentSession
+import com.eello.baeuja.session.UserSession
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,13 +24,18 @@ data class GoogleSignInUserInfo(
 class SignInViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
-    private val userSession: UserSession
-) : ViewModel() {
+    private val userSession: UserSession,
+    private val homeContentSession: HomeContentSession,
+
+    ) : ViewModel() {
     private val _googleSignInUserInfo = MutableStateFlow<GoogleSignInUserInfo?>(null)
     val googleSignInUserInfo: StateFlow<GoogleSignInUserInfo?> = _googleSignInUserInfo
 
     private val _signInResult = MutableStateFlow<AuthResult>(AuthResult.Idle)
     val signInResult: StateFlow<AuthResult> = _signInResult
+
+    private val _isHomeContentLoaded = MutableStateFlow(false)
+    val isHomeContentLoaded: StateFlow<Boolean> = _isHomeContentLoaded
 
     fun onGoogleSignInSuccess(account: GoogleSignInAccount) {
         _googleSignInUserInfo.value = GoogleSignInUserInfo(
@@ -68,6 +75,13 @@ class SignInViewModel @Inject constructor(
                 Log.e("LoginViewModel", "Error guest Google sign-in", e)
                 _signInResult.value = AuthResult.Failure()
             }
+        }
+    }
+
+    fun loadHomeContent() {
+        viewModelScope.launch {
+            homeContentSession.initialize()
+            _isHomeContentLoaded.value = true
         }
     }
 }

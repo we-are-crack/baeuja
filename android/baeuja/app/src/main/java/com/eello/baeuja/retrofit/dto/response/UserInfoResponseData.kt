@@ -1,7 +1,7 @@
 package com.eello.baeuja.retrofit.dto.response
 
-import com.eello.baeuja.viewmodel.SignInType
-import com.eello.baeuja.viewmodel.UserInfo
+import com.eello.baeuja.session.SignInType
+import com.eello.baeuja.session.UserInfo
 import java.time.ZoneId
 import java.util.Locale
 

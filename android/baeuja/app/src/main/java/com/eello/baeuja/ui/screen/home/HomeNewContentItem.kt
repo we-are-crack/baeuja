@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,24 +14,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.eello.baeuja.ui.theme.BaujaTheme
+import com.eello.baeuja.viewmodel.NewContentItem
+
 
 @Composable
-fun HomeNewContentItem() {
+fun HomeNewContentItem(items: List<NewContentItem> = emptyList()) {
+//    val viewModel: HomeNewContentViewModel = hiltViewModel()
+//    val items by viewModel.items.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 16.dp)
     ) {
         Text(
-            text = "New!! (콘텐츠 수)",
+            text = "New!! (${items.size})",
             fontWeight = FontWeight.W500,
-            fontSize = 22.sp,
+            fontSize = 20.sp,
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
         LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            items(10) {
-                HomeNewContentCard()
+            items(items = items) { item ->
+                HomeNewContentCard(item)
             }
         }
     }

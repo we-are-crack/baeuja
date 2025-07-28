@@ -19,7 +19,7 @@ class TokenAuthenticator @Inject constructor(
             return null
         }
 
-        val requestUrl = response.request().url().toString()
+        val requestUrl = response.request.url.toString()
         if (requestUrl.contains("/auth", ignoreCase = true)) {
             Log.i("TokenAuthenticator", "Auth 요청이므로 토큰 재발급 건너뜀: $requestUrl")
             return null
@@ -39,7 +39,7 @@ class TokenAuthenticator @Inject constructor(
         }
 
         return newAccessToken?.let {
-            response.request().newBuilder()
+            response.request.newBuilder()
                 .header("Authorization", "Bearer $it")
                 .build()
         }
@@ -47,10 +47,10 @@ class TokenAuthenticator @Inject constructor(
 
     private fun responseCount(response: Response): Int {
         var count = 1
-        var priorResponse = response.priorResponse()
+        var priorResponse = response.priorResponse
         while (priorResponse != null) {
             count++
-            priorResponse = priorResponse.priorResponse()
+            priorResponse = priorResponse.priorResponse
         }
         return count
     }

@@ -1,4 +1,4 @@
-package com.eello.baeuja.viewmodel
+package com.eello.baeuja.session
 
 import android.content.Context
 import android.util.Log

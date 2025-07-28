@@ -5,6 +5,7 @@ import com.eello.baeuja.auth.TokenAuthenticator
 import com.eello.baeuja.auth.TokenManager
 import com.eello.baeuja.retrofit.core.ApiResponseCode
 import com.eello.baeuja.retrofit.core.ApiResponseCodeAdapter
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -39,18 +40,19 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-        val gsonWithAdapters = GsonBuilder()
-            .registerTypeAdapter(ApiResponseCode::class.java, ApiResponseCodeAdapter())
-            .serializeNulls()
-            .create()
+    fun provideGsonWithAdapters(): Gson = GsonBuilder()
+        .registerTypeAdapter(ApiResponseCode::class.java, ApiResponseCodeAdapter())
+        .serializeNulls()
+        .create()
 
-        return Retrofit.Builder()
+    @Provides
+    @Singleton
+    fun provideRetrofit(okHttpClient: OkHttpClient, gsonWithAdapter: Gson): Retrofit =
+        Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create(gsonWithAdapters))
+            .addConverterFactory(GsonConverterFactory.create(gsonWithAdapter))
             .build()
-    }
 
     // 토큰 갱신용 Authenticator 없는 Retrofit
     @Provides

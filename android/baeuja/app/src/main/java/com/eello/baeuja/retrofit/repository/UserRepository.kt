@@ -5,7 +5,7 @@ import com.eello.baeuja.exception.AppException
 import com.eello.baeuja.retrofit.api.UserAPI
 import com.eello.baeuja.retrofit.core.ApiCaller
 import com.eello.baeuja.retrofit.core.handle
-import com.eello.baeuja.viewmodel.UserInfo
+import com.eello.baeuja.session.UserInfo
 import javax.inject.Inject
 
 interface UserRepository {

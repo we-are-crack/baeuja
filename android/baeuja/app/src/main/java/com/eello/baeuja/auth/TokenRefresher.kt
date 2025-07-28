@@ -3,7 +3,7 @@ package com.eello.baeuja.auth
 import com.eello.baeuja.exception.AppError
 import com.eello.baeuja.exception.AppException
 import com.eello.baeuja.retrofit.api.AuthAPI
-import com.eello.baeuja.retrofit.core.apiCall
+import com.eello.baeuja.retrofit.core.ApiCaller
 import com.eello.baeuja.retrofit.core.handle
 import com.eello.baeuja.retrofit.dto.request.TokenRefreshRequestDto
 import javax.inject.Inject
@@ -15,7 +15,8 @@ interface TokenRefresher {
 
 class TokenRefresherImpl @Inject constructor(
     @Named("refresh") private val authAPI: AuthAPI,
-    private val tokenManager: TokenManager
+    private val tokenManager: TokenManager,
+    private val apiCaller: ApiCaller
 ) : TokenRefresher {
 
     override suspend fun refreshAccessToken(
@@ -23,7 +24,7 @@ class TokenRefresherImpl @Inject constructor(
         refreshToken: String
     ): String {
         val requestDto = TokenRefreshRequestDto(accessToken, refreshToken)
-        val apiResult = apiCall { authAPI.refreshAccessToken(requestDto) }
+        val apiResult = apiCaller.call { authAPI.refreshAccessToken(requestDto) }
         return apiResult.handle(
             onSuccess = {
                 val (accessToken, refreshToken) = it.data

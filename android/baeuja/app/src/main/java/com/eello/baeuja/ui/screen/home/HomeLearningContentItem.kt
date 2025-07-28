@@ -6,19 +6,24 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.eello.baeuja.ui.theme.NotoSansKrFamily
 import com.eello.baeuja.ui.theme.RobotoFamily
+import com.eello.baeuja.viewmodel.HomeLearningContent
 
 @Composable
-fun HomeLearningContentItem() {
+fun HomeLearningContentItem(learningContent: HomeLearningContent) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -29,17 +34,33 @@ fun HomeLearningContentItem() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "#첫눈",
+                text = "#${learningContent.koreanWord}",
                 fontFamily = NotoSansKrFamily,
                 fontWeight = FontWeight.W500,
-                fontSize = 22.sp,
+                fontSize = 20.sp,
                 modifier = Modifier
                     .padding(bottom = 16.dp)
                     .alignByBaseline()
             )
 
             Text(
-                text = "importance 3",
+                buildAnnotatedString {
+                    withStyle(
+                        style = SpanStyle(
+                            fontWeight = FontWeight.Normal,
+                        )
+                    ) {
+                        append("importance ")
+                    }
+
+                    withStyle(
+                        style = SpanStyle(
+                            fontWeight = FontWeight.Bold,
+                        )
+                    ) {
+                        append(learningContent.importance)
+                    }
+                },
                 fontFamily = RobotoFamily,
                 fontWeight = FontWeight.Normal,
                 fontSize = 16.sp,
@@ -52,8 +73,8 @@ fun HomeLearningContentItem() {
         }
 
         LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            items(10) {
-                HomeLearningContentCard()
+            items(learningContent.sentences) { item ->
+                HomeLearningContentCard(item)
             }
         }
     }

@@ -60,7 +60,8 @@ fun SignInScreen(navController: NavController) {
 @Composable
 fun SignInRoute(navController: NavController, signInViewModel: SignInViewModel) {
     val signInResult by signInViewModel.signInResult.collectAsState()
-    LaunchedEffect(signInResult) {
+    val isHomeContentLoaded by signInViewModel.isHomeContentLoaded.collectAsState()
+    LaunchedEffect(signInResult, isHomeContentLoaded) {
         when (signInResult) {
             AuthResult.Unregistered -> {
                 navController.navigate(Screen.ProfileInput.route) {
@@ -69,9 +70,11 @@ fun SignInRoute(navController: NavController, signInViewModel: SignInViewModel) 
             }
 
             AuthResult.Success -> {
-                navController.navigate(Screen.Home.route) {
-                    popUpTo(NavGraph.Auth.route) { inclusive = true }
-                }
+                if (isHomeContentLoaded) {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(NavGraph.Auth.route) { inclusive = true }
+                    }
+                } else signInViewModel.loadHomeContent()
             }
 
             else -> {}

@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.eello.baeuja.auth.TokenManager
 import com.eello.baeuja.exception.AppException
 import com.eello.baeuja.retrofit.repository.UserRepository
+import com.eello.baeuja.session.HomeContentSession
+import com.eello.baeuja.session.UserSession
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +19,7 @@ class SplashViewModel @Inject constructor(
     private val tokenManager: TokenManager,
     private val userSession: UserSession,
     private val userRepository: UserRepository,
+    private val homeContentSession: HomeContentSession
 ) : ViewModel() {
 
     private val _isSignedIn = MutableStateFlow(false)
@@ -24,6 +27,9 @@ class SplashViewModel @Inject constructor(
 
     private val _isCheckCompleted = MutableStateFlow(false)
     val isCheckCompleted: StateFlow<Boolean> = _isCheckCompleted
+
+    private val _isLoadingCompleted = MutableStateFlow(false)
+    val isLoadingCompleted: StateFlow<Boolean> = _isLoadingCompleted
 
     fun checkSignInStatus() {
         viewModelScope.launch {
@@ -43,6 +49,21 @@ class SplashViewModel @Inject constructor(
             } finally {
                 _isCheckCompleted.value = true
             }
+        }
+    }
+
+    fun loadHomeContents() {
+        if (!_isCheckCompleted.value) {
+            Log.i("SplashViewModel", "홈 콘텐츠 로딩 실패: 사용자 인증 진행 중")
+        }
+
+        if (!_isSignedIn.value) {
+            Log.i("SplashViewModel", "홈 콘텐츠 로딩 실패: 사용자 인증 실패")
+        }
+
+        viewModelScope.launch {
+            homeContentSession.initialize()
+            _isLoadingCompleted.value = true
         }
     }
 }

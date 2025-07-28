@@ -10,9 +10,9 @@ import com.eello.baeuja.retrofit.core.ApiResponseCode
 import com.eello.baeuja.retrofit.core.handle
 import com.eello.baeuja.retrofit.dto.request.SignInRequestDto
 import com.eello.baeuja.retrofit.dto.request.SignUpRequestDto
+import com.eello.baeuja.session.SignInType
 import com.eello.baeuja.viewmodel.DisplayNameAvailable
 import com.eello.baeuja.viewmodel.GoogleSignInUserInfo
-import com.eello.baeuja.viewmodel.SignInType
 import javax.inject.Inject
 
 interface AuthRepository {

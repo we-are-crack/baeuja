@@ -1,34 +1,128 @@
 package com.eello.baeuja.ui.screen.home
 
+import android.util.Log
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.eello.baeuja.ui.component.RetryComponent
 import com.eello.baeuja.ui.theme.BaujaTheme
+import com.eello.baeuja.viewmodel.HomeLearningContent
+import com.eello.baeuja.viewmodel.HomeViewModel
+import com.eello.baeuja.viewmodel.NewContentItem
 
 @Composable
 fun HomeScreen() {
-    HomeContent()
+    val homeViewModel: HomeViewModel = hiltViewModel()
+    HomeRoute(homeViewModel)
 }
 
 @Composable
-fun HomeContent() {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize(),
-    ) {
-        item {
-            HomeNewContentItem()
-            ItemSeparator(4.dp)
+fun HomeRoute(homeViewModel: HomeViewModel) {
+    val initLoadFailed by homeViewModel.initLoadFailed.collectAsState()
+    val newContents = homeViewModel.newContents
+    val homeLearningContents by homeViewModel.homeLearningContents.collectAsState()
+    val isLoading by homeViewModel.isLoading.collectAsState()
+
+    LaunchedEffect(Unit) {
+        if (initLoadFailed) {
+            homeViewModel.retryFetchInitHomeContents()
         }
+    }
 
-        items(10) { index ->
-            HomeLearningContentItem()
+    LaunchedEffect(isLoading) {
+        Log.d("HomeScreen", "isLoading changed: $isLoading")
+    }
 
-            if (index < 9) {
-                ItemSeparator(2.dp)
+    if (initLoadFailed) {
+        Log.i("HomeRoute", "홈 콘텐츠 로딩 실패 -> Retry 화면")
+        RetryComponent(onRetry = homeViewModel::retryFetchInitHomeContents)
+    } else {
+        Log.i("HomeRoute", "홈 콘텐츠 로딩 성공 -> 홈 화면")
+        HomeContent(
+            newContents = newContents,
+            homeLearningContents = homeLearningContents,
+            isLoading = isLoading,
+            onEndOfContents = homeViewModel::fetchMoreLearningContents
+        )
+    }
+}
+
+@Composable
+fun HomeContent(
+    newContents: List<NewContentItem> = emptyList(),
+    homeLearningContents: List<HomeLearningContent> = emptyList(),
+    isLoading: Boolean = false,
+    onEndOfContents: () -> Unit = {}
+) {
+    val listState = rememberLazyListState()
+    val shouldLoadMore = remember {
+        derivedStateOf {
+            val lastVisibleItemIndex =
+                listState.firstVisibleItemIndex + listState.layoutInfo.visibleItemsInfo.size
+            val totalItems = listState.layoutInfo.totalItemsCount
+            lastVisibleItemIndex >= totalItems
+        }
+    }
+
+    LaunchedEffect(shouldLoadMore.value, isLoading) {
+        if (shouldLoadMore.value && !isLoading) {
+            onEndOfContents()
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            if (newContents.isNotEmpty()) {
+                item {
+                    HomeNewContentItem(newContents)
+                    ItemSeparator(4.dp)
+                }
+            }
+
+            itemsIndexed(homeLearningContents) { index, content ->
+                HomeLearningContentItem(content)
+                if (index < homeLearningContents.size - 1) {
+                    ItemSeparator(2.dp)
+                }
+            }
+
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (isLoading) {
+                        CircularProgressIndicator()
+                    } else {
+                        Spacer(modifier = Modifier.height(32.dp))
+                    }
+                }
             }
         }
     }
@@ -36,7 +130,7 @@ fun HomeContent() {
 
 @Preview(showBackground = true)
 @Composable
-fun HomeScreenPreview() {
+fun PreviewHomeScreen() {
     BaujaTheme {
         HomeContent()
     }
