@@ -81,9 +81,15 @@ class AuthRepositoryImpl @Inject constructor(
             onSuccess = { body ->
                 when (body.code) {
                     ApiResponseCode.SUCCESS -> {
-                        val token = body.data?.accessToken
+                        val accessToken = body.data?.accessToken
                             ?: throw AppException(AppError.Api.EmptyResponse())
-                        tokenManager.saveAccessToken(token)
+                        val refreshToken = body.data.refreshToken
+
+                        tokenManager.saveTokens(
+                            accessToken = accessToken,
+                            refreshToken = refreshToken
+                        )
+
                         AuthResult.Success
                     }
 

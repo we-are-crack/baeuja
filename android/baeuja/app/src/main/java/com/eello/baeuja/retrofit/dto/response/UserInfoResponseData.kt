@@ -6,7 +6,7 @@ import java.time.ZoneId
 import java.util.Locale
 
 data class UserInfoResponseData(
-    val email: String,
+    val email: String?,
     val nickname: String,
     val language: String,
     val timezone: String,

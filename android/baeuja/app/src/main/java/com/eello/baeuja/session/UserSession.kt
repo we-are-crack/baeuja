@@ -17,7 +17,7 @@ enum class SignInType {
 }
 
 data class UserInfo(
-    val email: String,
+    val email: String?,
     val displayName: String,
     val language: Locale,
     val timezone: ZoneId,

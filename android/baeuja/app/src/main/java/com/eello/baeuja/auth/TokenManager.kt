@@ -1,6 +1,7 @@
 package com.eello.baeuja.auth
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -41,6 +42,7 @@ class TokenManagerImpl @Inject constructor(
     }
 
     override suspend fun saveAccessToken(accessToken: String) {
+        Log.d("TokenManagerImpl", "Saving access token: $accessToken")
         _accessToken = accessToken
         context.dataStore.edit { preferences ->
             preferences[ACCESS_TOKEN_KEY] = accessToken
@@ -48,6 +50,7 @@ class TokenManagerImpl @Inject constructor(
     }
 
     override suspend fun saveRefreshToken(refreshToken: String) {
+        Log.d("TokenManagerImpl", "Saving refresh token: $refreshToken")
         _refreshToken = refreshToken
         context.dataStore.edit { preferences ->
             preferences[REFRESH_TOKEN_KEY] = refreshToken
@@ -55,6 +58,10 @@ class TokenManagerImpl @Inject constructor(
     }
 
     override suspend fun saveTokens(accessToken: String, refreshToken: String) {
+        Log.d(
+            "TokenManagerImpl",
+            "Saving tokens: \n\taccessToken: t$accessToken\n\trefreshToken: $refreshToken"
+        )
         _accessToken = accessToken
         _refreshToken = refreshToken
         context.dataStore.edit { preferences ->
