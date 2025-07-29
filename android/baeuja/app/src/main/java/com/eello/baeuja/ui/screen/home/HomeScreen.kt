@@ -1,6 +1,5 @@
 package com.eello.baeuja.ui.screen.home
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +26,7 @@ import com.eello.baeuja.ui.theme.BaujaTheme
 import com.eello.baeuja.viewmodel.HomeLearningContent
 import com.eello.baeuja.viewmodel.HomeViewModel
 import com.eello.baeuja.viewmodel.NewContentItem
+import timber.log.Timber
 
 @Composable
 fun HomeScreen() {
@@ -47,15 +47,10 @@ fun HomeRoute(homeViewModel: HomeViewModel) {
         }
     }
 
-    LaunchedEffect(isLoading) {
-        Log.d("HomeScreen", "isLoading changed: $isLoading")
-    }
-
     if (initLoadFailed) {
-        Log.i("HomeRoute", "홈 콘텐츠 로딩 실패 -> Retry 화면")
+        Timber.w("HomeContentSession 초기화 실패로 RetryComponent 출력")
         RetryComponent(onRetry = homeViewModel::retryFetchInitHomeContents)
     } else {
-        Log.i("HomeRoute", "홈 콘텐츠 로딩 성공 -> 홈 화면")
         HomeContent(
             newContents = newContents,
             homeLearningContents = homeLearningContents,

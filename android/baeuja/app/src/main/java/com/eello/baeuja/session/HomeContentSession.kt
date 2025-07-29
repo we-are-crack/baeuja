@@ -1,9 +1,9 @@
 package com.eello.baeuja.session
 
-import android.util.Log
 import com.eello.baeuja.retrofit.repository.ContentRepository
 import com.eello.baeuja.viewmodel.HomeLearningContent
 import com.eello.baeuja.viewmodel.NewContentItem
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -26,6 +26,7 @@ class HomeContentSession @Inject constructor(
         private set
 
     suspend fun initialize() {
+        Timber.d("HomeContetnSession 초기화 시작...")
         try {
             clear()
 
@@ -38,16 +39,15 @@ class HomeContentSession @Inject constructor(
 
             loadFailed = false
 
-            Log.d("HomeContentSession", "홈 콘텐츠 세션 초기화 성공")
-            Log.d(
-                "HomeContentSession",
-                "\t새로운 콘텐츠(${cachedNewContents.size}): ${cachedNewContents}"
-            )
-            Log.d("HomeContentSession", "\t홈 콘텐츠: ${cachedLearningContents}")
-            Log.d("HomeContentSession", "\t사용된 단어 ID: ${usedWordId}")
+            Timber.d(buildString {
+                append("홈 콘텐츠 세션 초기화 성공")
+                append("\n\t새로운 콘텐츠(size: ${cachedNewContents.size}): $cachedNewContents")
+                append("\n\t홈 콘텐츠: $cachedLearningContents")
+                append("\n\t사용된 단어 ID: $usedWordId")
+            })
         } catch (e: Exception) {
             loadFailed = true
-            Log.e("SplashViewModel", "홈 콘텐츠 로딩 실패: ${e.message}")
+            Timber.e("홈 콘텐츠 로딩 실패: ${e.message}")
         }
     }
 
@@ -60,6 +60,7 @@ class HomeContentSession @Inject constructor(
         _cachedNewContents.clear()
         _cachedLearningContents.clear()
         _usedWordId.clear()
+        Timber.d("HomeContentSession 초기화")
     }
 
     fun failInitContentsLoad() {

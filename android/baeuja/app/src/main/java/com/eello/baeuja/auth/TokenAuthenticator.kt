@@ -1,11 +1,11 @@
 package com.eello.baeuja.auth
 
-import android.util.Log
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
+import timber.log.Timber
 import javax.inject.Inject
 
 class TokenAuthenticator @Inject constructor(
@@ -21,7 +21,7 @@ class TokenAuthenticator @Inject constructor(
 
         val requestUrl = response.request.url.toString()
         if (requestUrl.contains("/auth", ignoreCase = true)) {
-            Log.i("TokenAuthenticator", "Auth 요청이므로 토큰 재발급 건너뜀: $requestUrl")
+            Timber.d("Auth 요청이므로 토큰 재발급 건너뜀: $requestUrl")
             return null
         }
 
@@ -33,7 +33,7 @@ class TokenAuthenticator @Inject constructor(
             try {
                 tokenRefresher.refreshAccessToken(accessToken, refreshToken)
             } catch (e: Exception) {
-                Log.i("TokenAuthenticator", "토큰 재발급 실패: ${e.message}")
+                Timber.d("토큰 재발급 실패: ${e.message}")
                 null
             }
         }

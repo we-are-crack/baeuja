@@ -1,6 +1,5 @@
 package com.eello.baeuja.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eello.baeuja.auth.TokenManager
@@ -12,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,38 +32,42 @@ class SplashViewModel @Inject constructor(
     val isLoadingCompleted: StateFlow<Boolean> = _isLoadingCompleted
 
     fun checkSignInStatus() {
+        Timber.d("로그인 상태 체크 확인 시도...")
         viewModelScope.launch {
             if (tokenManager.refreshToken == null) {
                 _isCheckCompleted.value = true
-                Log.i("SplashViewModel", "유저 인증 실패: 토큰 없음")
+                Timber.d("유저 인증 실패: 토큰 없음")
                 return@launch
             }
 
             try {
                 userSession.setUserInfo(userRepository.fetchUserInfo())
-                Log.i("SplashViewModel", "유저 인증 성공: ${userSession.userInfo.value}")
+                Timber.d("유저 인증 성공: ${userSession.userInfo.value}")
                 _isSignedIn.value = true
             } catch (e: AppException) {
-                Log.w("SplashViewModel", "유저 인증 실패: ${e.reason}")
+                Timber.d("유저 인증 실패: ${e.reason}")
                 tokenManager.clearTokens()
             } finally {
+                Timber.d("로그인 상태 체크 확인 완료")
                 _isCheckCompleted.value = true
             }
         }
     }
 
     fun loadHomeContents() {
+        Timber.d("홈 콘텐츠 로딩 시도...")
         if (!_isCheckCompleted.value) {
-            Log.i("SplashViewModel", "홈 콘텐츠 로딩 실패: 사용자 인증 진행 중")
+            Timber.d("홈 콘텐츠 로딩 실패: 사용자 인증 진행 중")
         }
 
         if (!_isSignedIn.value) {
-            Log.i("SplashViewModel", "홈 콘텐츠 로딩 실패: 사용자 인증 실패")
+            Timber.d("홈 콘텐츠 로딩 실패: 사용자 인증 실패")
         }
 
         viewModelScope.launch {
             homeContentSession.initialize()
             _isLoadingCompleted.value = true
+            Timber.d("홈 콘텐츠 로딩 완료")
         }
     }
 }

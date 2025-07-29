@@ -1,6 +1,5 @@
 package com.eello.baeuja.ui.screen
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
@@ -25,6 +24,7 @@ import com.eello.baeuja.ui.navigation.Screen
 import com.eello.baeuja.ui.theme.BaujaTheme
 import com.eello.baeuja.viewmodel.SplashViewModel
 import kotlinx.coroutines.delay
+import timber.log.Timber
 
 private val guidelineStartRatio = 0.396f
 private val guidelineEndRatio = 0.398f
@@ -65,9 +65,10 @@ private fun SplashRoute(
     LaunchedEffect(isCheckCompleted, isSignedIn, isLoadingCompleted) {
         if (isCheckCompleted && ((isSignedIn && isLoadingCompleted) || !isSignedIn)) {
             val nextRoute = if (isSignedIn) Screen.Home.route else Screen.SignIn.route
-            Log.i("SplashRoute", "다음 화면: $nextRoute")
+
             delay(2000L)
             navController.navigate(nextRoute) {
+                Timber.d("화면 이동: ${Screen.Splash.route} to $nextRoute")
                 popUpTo(Screen.Splash.route) { inclusive = true }
             }
         }

@@ -7,6 +7,7 @@ import com.eello.baeuja.retrofit.core.ApiCaller
 import com.eello.baeuja.retrofit.core.handle
 import com.eello.baeuja.viewmodel.HomeLearningContent
 import com.eello.baeuja.viewmodel.NewContentItem
+import timber.log.Timber
 import javax.inject.Inject
 
 interface ContentRepository {
@@ -21,6 +22,7 @@ class ContentRepositoryImpl @Inject constructor(
 ) : ContentRepository {
 
     override suspend fun fetchHomeNewContents(): List<NewContentItem> {
+        Timber.d("서버로 부터 새로운 콘텐츠 로드...")
         val apiResult = apiCaller.call { contentAPI.fetchHomeNewContents() }
         return apiResult.handle(
             onSuccess = { body ->
@@ -34,6 +36,7 @@ class ContentRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchHomeLearningContents(excludeWords: List<Int>): List<HomeLearningContent> {
+        Timber.d("서버로 부터 학습 콘텐츠 로드...")
         val apiResult = apiCaller.call { contentAPI.fetchHomeLearningContents(excludeWords) }
         return apiResult.handle(
             onSuccess = { body ->

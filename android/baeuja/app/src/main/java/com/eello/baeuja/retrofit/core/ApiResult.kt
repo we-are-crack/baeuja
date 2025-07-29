@@ -1,8 +1,8 @@
 package com.eello.baeuja.retrofit.core
 
-import android.util.Log
 import com.eello.baeuja.exception.AppError
 import retrofit2.Response
+import timber.log.Timber
 
 data class HttpMeta(
     val code: Int,
@@ -43,13 +43,16 @@ suspend inline fun <T, R> ApiResult<T>.handleWithMeta(
 ): R {
     return when (this) {
         is ApiResult.Success -> onSuccess(meta, body)
-        is ApiResult.Failure -> onFailure(meta, reason)
+        is ApiResult.Failure -> {
+            Timber.d("API 요청 실패: $reason")
+            onFailure(meta, reason)
+        }
         is ApiResult.NetworkError -> {
             if (onNetworkError != null) {
                 onNetworkError(throwable)
             } else {
                 // 기본 처리 로직
-                Log.e("NetworkError", "Network error occurred: ${throwable.message}")
+                Timber.e("네트워크 에러 발생: ${throwable.message}")
                 throw throwable
             }
         }

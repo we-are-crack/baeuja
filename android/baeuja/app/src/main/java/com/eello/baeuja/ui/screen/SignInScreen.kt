@@ -45,6 +45,7 @@ import com.eello.baeuja.utils.auth.getGoogleSignInClient
 import com.eello.baeuja.utils.auth.handleGoogleSignInResult
 import com.eello.baeuja.viewmodel.SignInViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import timber.log.Timber
 
 @Composable
 fun SignInScreen(navController: NavController) {
@@ -64,6 +65,7 @@ fun SignInRoute(navController: NavController, signInViewModel: SignInViewModel) 
     LaunchedEffect(signInResult, isHomeContentLoaded) {
         when (signInResult) {
             AuthResult.Unregistered -> {
+                Timber.d("등록되지 않은 사용자의 로그인 시도로 ProfileInputScreen 으로 이동")
                 navController.navigate(Screen.ProfileInput.route) {
                     popUpTo(Screen.SignIn.route) { inclusive = false }
                 }
@@ -71,6 +73,7 @@ fun SignInRoute(navController: NavController, signInViewModel: SignInViewModel) 
 
             AuthResult.Success -> {
                 if (isHomeContentLoaded) {
+                    Timber.d("로그인 성공 & 홈 콘텐츠 로드 완료로 HomeScreen 화면으로 이동")
                     navController.navigate(Screen.Home.route) {
                         popUpTo(NavGraph.Auth.route) { inclusive = true }
                     }
@@ -83,7 +86,6 @@ fun SignInRoute(navController: NavController, signInViewModel: SignInViewModel) 
 
     val onGoogleSignInSuccess: (GoogleSignInAccount) -> Unit = { account ->
         signInViewModel.onGoogleSignInSuccess(account)
-        signInViewModel.googleSignIn()
     }
 
     val onGuestSignIn: () -> Unit = {

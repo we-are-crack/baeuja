@@ -51,6 +51,7 @@ import com.eello.baeuja.ui.theme.RobotoFamily
 import com.eello.baeuja.viewmodel.DisplayNameAvailable
 import com.eello.baeuja.viewmodel.SignInViewModel
 import com.eello.baeuja.viewmodel.SignUpViewModel
+import timber.log.Timber
 
 @Composable
 fun ProfileInputScreen(navController: NavController) {
@@ -72,6 +73,7 @@ fun ProfileInputRoute(
     val gui by signInViewModel.googleSignInUserInfo.collectAsState()
     LaunchedEffect(gui) {
         if (gui == null) {
+            Timber.d("GoogleSignInUserInfo 이 Null 이므로 SignInScreen 으로 이동")
             navController.navigate(Screen.SignIn.route) {
                 popUpTo(NavGraph.Auth.route) { inclusive = true }
             }
@@ -83,6 +85,8 @@ fun ProfileInputRoute(
     val signUpResult by signUpViewModel.signInResult.collectAsState()
     LaunchedEffect(signUpResult) {
         if (signUpResult == AuthResult.Success) {
+            signInViewModel.loadHomeContent()
+            Timber.d("회원가입 성공으로 HomeScreen 으로 이동")
             navController.navigate(Screen.Home.route) {
                 popUpTo(NavGraph.Auth.route) { inclusive = true }
             }

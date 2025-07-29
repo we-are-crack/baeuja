@@ -1,12 +1,12 @@
 package com.eello.baeuja.auth
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
+import timber.log.Timber
 import javax.inject.Inject
 
 val Context.dataStore by preferencesDataStore(name = "auth_prefs")
@@ -42,37 +42,35 @@ class TokenManagerImpl @Inject constructor(
     }
 
     override suspend fun saveAccessToken(accessToken: String) {
-        Log.d("TokenManagerImpl", "Saving access token: $accessToken")
         _accessToken = accessToken
         context.dataStore.edit { preferences ->
             preferences[ACCESS_TOKEN_KEY] = accessToken
         }
+        Timber.d("액세스 토큰 저장: $accessToken")
     }
 
     override suspend fun saveRefreshToken(refreshToken: String) {
-        Log.d("TokenManagerImpl", "Saving refresh token: $refreshToken")
         _refreshToken = refreshToken
         context.dataStore.edit { preferences ->
             preferences[REFRESH_TOKEN_KEY] = refreshToken
         }
+        Timber.d("리프레시 토큰 저장: $refreshToken")
     }
 
     override suspend fun saveTokens(accessToken: String, refreshToken: String) {
-        Log.d(
-            "TokenManagerImpl",
-            "Saving tokens: \n\taccessToken: t$accessToken\n\trefreshToken: $refreshToken"
-        )
         _accessToken = accessToken
         _refreshToken = refreshToken
         context.dataStore.edit { preferences ->
             preferences[ACCESS_TOKEN_KEY] = accessToken
             preferences[REFRESH_TOKEN_KEY] = refreshToken
         }
+        Timber.d("토큰 저장: \n\taccessToken: $accessToken \n\trefreshToken: $refreshToken")
     }
 
     override suspend fun clearTokens() {
         _accessToken = null
         _refreshToken = null
         context.dataStore.edit { it.clear() }
+        Timber.d("토큰 클리어:\n\taccessToken: $accessToken \n\trefreshToken: $refreshToken")
     }
 }

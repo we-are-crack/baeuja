@@ -1,11 +1,11 @@
 package com.eello.baeuja.session
 
 import android.content.Context
-import android.util.Log
 import com.eello.baeuja.di.AppEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import timber.log.Timber
 import java.time.ZoneId
 import java.util.Locale
 import javax.inject.Inject
@@ -30,7 +30,7 @@ class UserSession @Inject constructor() {
     val userInfo: StateFlow<UserInfo?> = _userInfo
 
     fun setUserInfo(userInfo: UserInfo) {
-        Log.d("UserSession", "유저 정보 저장: $userInfo")
+        Timber.d("유저 정보 저장: $userInfo")
         _userInfo.value = userInfo
     }
 }

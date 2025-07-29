@@ -7,6 +7,8 @@ plugins {
 
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
+
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -43,6 +45,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -86,6 +89,15 @@ dependencies {
 
     // coil
     implementation("io.coil-kt:coil-compose:2.7.0")
+
+    // Import the BoM for the Firebase platform
+    implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
+
+    // Add the dependency for the Analytics library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-analytics")
+
+    implementation("com.jakewharton.timber:timber:5.0.1")
 
     // androidx.navigation 추가
     val nav_version = "2.9.0"

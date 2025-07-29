@@ -1,6 +1,5 @@
 package com.eello.baeuja.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eello.baeuja.auth.AuthResult
@@ -13,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 data class GoogleSignInUserInfo(
@@ -43,14 +43,20 @@ class SignInViewModel @Inject constructor(
             googleId = account.id,
         )
 
-        Log.i("UserInfo", "Logged User: ${_googleSignInUserInfo.value}")
+        Timber.d("Google OAuth 로그인 성공: ${_googleSignInUserInfo.value}")
+
+        googleSignIn()
     }
 
     fun googleSignIn() {
+        Timber.d("Google 로그인 정보로 서비스 로그인 시도...")
         viewModelScope.launch {
             val gui = _googleSignInUserInfo.value
             if (gui == null) {
-                Log.e("LoginViewModel", "GoogleSignInUserInfo is null")
+                Timber.e(
+                    "서비스 로그인 실패: Google 로그인 정보가 없음" +
+                            "\t`googleSignIn()` 은 `onGoogleSignInSuccess()` 에서만 호출되므로 gui 가 null 이면 안된다."
+                )
                 return@launch
             }
 
@@ -61,19 +67,21 @@ class SignInViewModel @Inject constructor(
                 }
                 _signInResult.value = signInResult
             } catch (e: Exception) {
-                Log.e("LoginViewModel", "Error during Google sign-in", e)
+                Timber.e(e, "Google 로그인 정보로 서비스 로그인 시도 중 예외 발생: ${e.message}")
                 _signInResult.value = AuthResult.Failure()
             }
         }
     }
 
     fun guestSignIn() {
+        Timber.d("GUEST 로그인 시도...")
         viewModelScope.launch {
             try {
                 _signInResult.value = authRepository.guestSignUp()
+                Timber.d("GUEST 로그인 성공: signInResult: ${_signInResult.value}")
             } catch (e: Exception) {
-                Log.e("LoginViewModel", "Error guest Google sign-in", e)
                 _signInResult.value = AuthResult.Failure()
+                Timber.e("GUEST 로그인 실패: ${e.message}, signInResult: ${_signInResult.value}")
             }
         }
     }
