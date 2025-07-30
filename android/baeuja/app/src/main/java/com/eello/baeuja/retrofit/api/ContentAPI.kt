@@ -14,6 +14,6 @@ interface ContentAPI {
 
     @GET("home/words")
     suspend fun fetchHomeLearningContents(
-        @Query("excludeWords") excludeWordIds: List<Int> = emptyList()
+        @Query("excludeIds") excludeWordIds: List<Int> = emptyList()
     ): Response<ApiResponse<List<HomeLearningContentsData>>>
 }
