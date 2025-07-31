@@ -1,6 +1,5 @@
 package com.eello.baeuja.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eello.baeuja.auth.AuthResult
@@ -12,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 sealed class DisplayNameAvailable {
@@ -61,7 +61,7 @@ class SignUpViewModel @Inject constructor(
                 _signInResult.value =
                     authRepository.googleSignUp(googleSignInUserInfo, _displayName.value)
             } catch (e: Exception) {
-                Log.e("SignUpViewModel", "Error during Google sign-up", e)
+                Timber.e(e, "구글 로그인 회원 등록 실패")
                 _signInResult.value = AuthResult.Failure(message = e.message)
             }
         }

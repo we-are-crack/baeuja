@@ -4,9 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eello.baeuja.auth.TokenManager
 import com.eello.baeuja.exception.AppException
-import com.eello.baeuja.retrofit.repository.UserRepository
-import com.eello.baeuja.session.HomeContentSession
-import com.eello.baeuja.session.UserSession
+import com.eello.baeuja.session.HomeContentSessionInitializer
+import com.eello.baeuja.session.UserSessionInitializer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,9 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val tokenManager: TokenManager,
-    private val userSession: UserSession,
-    private val userRepository: UserRepository,
-    private val homeContentSession: HomeContentSession
+    private val userSessionInitializer: UserSessionInitializer,
+    private val homeContentSessionInitializer: HomeContentSessionInitializer
 ) : ViewModel() {
 
     private val _isSignedIn = MutableStateFlow(false)
@@ -40,9 +38,10 @@ class SplashViewModel @Inject constructor(
                 return@launch
             }
 
+            Timber.d("Refresh Token 존재")
+
             try {
-                userSession.setUserInfo(userRepository.fetchUserInfo())
-                Timber.d("유저 인증 성공: ${userSession.userInfo.value}")
+                userSessionInitializer.initialize()
                 _isSignedIn.value = true
             } catch (e: AppException) {
                 Timber.d("유저 인증 실패: ${e.reason}")
@@ -65,7 +64,7 @@ class SplashViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            homeContentSession.initialize()
+            homeContentSessionInitializer.initialize()
             _isLoadingCompleted.value = true
             Timber.d("홈 콘텐츠 로딩 완료")
         }

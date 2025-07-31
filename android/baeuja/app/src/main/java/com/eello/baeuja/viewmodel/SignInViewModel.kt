@@ -4,9 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eello.baeuja.auth.AuthResult
 import com.eello.baeuja.retrofit.repository.AuthRepository
-import com.eello.baeuja.retrofit.repository.UserRepository
-import com.eello.baeuja.session.HomeContentSession
-import com.eello.baeuja.session.UserSession
+import com.eello.baeuja.session.HomeContentSessionInitializer
+import com.eello.baeuja.session.UserSessionInitializer
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,9 +22,8 @@ data class GoogleSignInUserInfo(
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository,
-    private val userSession: UserSession,
-    private val homeContentSession: HomeContentSession,
+    private val userSessionInitializer: UserSessionInitializer,
+    private val homeContentSessionInitializer: HomeContentSessionInitializer
 
     ) : ViewModel() {
     private val _googleSignInUserInfo = MutableStateFlow<GoogleSignInUserInfo?>(null)
@@ -63,7 +61,7 @@ class SignInViewModel @Inject constructor(
             try {
                 val signInResult = authRepository.signIn(gui)
                 if (signInResult == AuthResult.Success) {
-                    userSession.setUserInfo(userRepository.fetchUserInfo())
+                    userSessionInitializer.initialize()
                 }
                 _signInResult.value = signInResult
             } catch (e: Exception) {
@@ -88,7 +86,7 @@ class SignInViewModel @Inject constructor(
 
     fun loadHomeContent() {
         viewModelScope.launch {
-            homeContentSession.initialize()
+            homeContentSessionInitializer.initialize()
             _isHomeContentLoaded.value = true
         }
     }
