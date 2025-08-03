@@ -3,11 +3,15 @@ package xyz.baeuja.api.home.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import xyz.baeuja.api.content.cache.WordIdCache;
+import xyz.baeuja.api.content.domain.Word;
+import xyz.baeuja.api.content.repository.WordRepository;
 import xyz.baeuja.api.content.repository.query.ContentQueryRepository;
-import xyz.baeuja.api.content.repository.query.WordQueryRepository;
 import xyz.baeuja.api.home.dto.HomeContentsResponse;
 import xyz.baeuja.api.home.dto.HomeRecommendWordsResponse;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -16,7 +20,8 @@ import java.util.List;
 public class HomeService {
 
     private final ContentQueryRepository contentRepository;
-    private final WordQueryRepository wordRepository;
+    private final WordRepository wordRepository;
+    private final WordIdCache wordIdCache;
 
     /**
      * 최근 추가된 content 조회
@@ -34,10 +39,28 @@ public class HomeService {
      * @return HomeRecommendWordResponse list
      */
     public List<HomeRecommendWordsResponse> getRecommendWords(List<Long> excludeIds) {
-        if (excludeIds == null) {
-            excludeIds = List.of();
-        }
+        final List<Long> safeExcludeIds = (excludeIds == null) ? List.of() : excludeIds;
+        int wordsSize = 5;
 
-        return wordRepository.findRandomWords(excludeIds, 5);
+        List<Long> wordIds = wordIdCache.getIds();
+
+        List<Long> filteredIds = new ArrayList<>(
+                wordIds.stream()
+                        .filter(id -> !safeExcludeIds.contains(id))
+                        .toList()
+        );
+
+        Collections.shuffle(filteredIds);
+
+        List<Long> includeIds = filteredIds.stream()
+                .limit(wordsSize)
+                .toList();
+
+        List<Word> findWords = wordRepository.findAllInIds(includeIds)
+                .orElse(new ArrayList<>());
+
+        return findWords.stream()
+                .map(w -> HomeRecommendWordsResponse.from(w))
+                .toList();
     }
 }

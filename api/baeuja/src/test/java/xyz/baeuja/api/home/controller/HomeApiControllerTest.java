@@ -18,6 +18,7 @@ import org.springframework.restdocs.restassured.RestAssuredRestDocumentationConf
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import xyz.baeuja.api.auth.security.exception.InvalidJwtException;
+import xyz.baeuja.api.content.cache.WordIdCache;
 import xyz.baeuja.api.docs.RestDocsSnippets;
 import xyz.baeuja.api.global.util.jwt.JwtProvider;
 import xyz.baeuja.api.global.util.jwt.JwtUserInfo;
@@ -35,6 +36,7 @@ import static xyz.baeuja.api.helper.RestDocsHelper.*;
 
 @ActiveProfiles("test")
 @Sql(scripts = {
+        "/sql/truncate_all.sql",
         "/sql/content.sql",
         "/sql/unit.sql",
         "/sql/sentence.sql",
@@ -54,6 +56,9 @@ class HomeApiControllerTest {
     @Autowired
     JwtProvider jwtProvider;
 
+    @Autowired
+    WordIdCache wordIdCache;
+
     RestAssuredRestDocumentationConfigurer docConfig;
     RestDocsHelper docsHelper;
     User user;
@@ -68,6 +73,7 @@ class HomeApiControllerTest {
         docConfig = RestAssuredRestDocumentation.documentationConfiguration(provider);
         docsHelper = new RestDocsHelper(port, docConfig);
         user = dataHelper.saveGuestUser(nickname, language, timezone);
+        wordIdCache.init();
     }
 
     @Test

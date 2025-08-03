@@ -32,15 +32,14 @@ include::{snippets}/auth-sign-in-fail/http-response.adoc[]
 
 === *✅ 성공: GUEST 회원가입*
 
-include::{snippets}/auth-sign-up-guest-success/http-request.adoc[]
-include::{snippets}/auth-sign-up-guest-success/http-response.adoc[]
-
 ==== 요청 필드
 include::{snippets}/auth-sign-up-guest-success/request-fields.adoc[]
 
 ==== 응답 필드
-
 include::{snippets}/auth-sign-up-guest-success/response-fields.adoc[]
+
+include::{snippets}/auth-sign-up-guest-success/http-request.adoc[]
+include::{snippets}/auth-sign-up-guest-success/http-response.adoc[]
 
 === *✅ 성공: GOOGLE 회원가입*
 

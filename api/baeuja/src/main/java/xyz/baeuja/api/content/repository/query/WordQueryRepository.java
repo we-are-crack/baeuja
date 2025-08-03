@@ -19,6 +19,9 @@ public class WordQueryRepository {
 
     private final EntityManager em;
 
+
+
+
     /**
      * 홈 화면에서 뿌려줄 랜덤한 단어 리스트.
      * excludeIds 에 포함된 단어들을 제외하고, limit 개수 만큼 랜덤하게 단어를 조회
@@ -30,18 +33,18 @@ public class WordQueryRepository {
     @SuppressWarnings("unchecked")
     public List<HomeRecommendWordsResponse> findRandomWords(List<Long> excludeIds, int limit) {
         String queryString = "SELECT " +
-                       "w.word_id AS word_id, w.korean AS word_korean, w.importance AS word_importance, " +
-                       "u.unit_id AS unit_id, u.thumbnail_url AS unit_thumbnail_url, " +
-                       "s.sentence_id AS sentence_id, s.korean AS korean_sentence, s.english AS english_sentence, " +
-                       "sw.korean_word_in_sentence AS korean_word_in_sentence, " +
-                       "sw.english_word_in_sentence AS english_word_in_sentence " +
-                       "FROM word w " +
-                       "JOIN sentence_word sw ON sw.word_id = w.word_id " +
-                       "JOIN sentence s ON s.sentence_id = sw.sentence_id " +
-                       "JOIN unit u ON u.unit_id = s.unit_id " +
-                       (excludeIds != null && !excludeIds.isEmpty() ? " WHERE w.word_id NOT IN (:excludeIds)" : "") +
-                       "ORDER BY RANDOM() " +
-                       "LIMIT :limit";
+                             "w.word_id AS word_id, w.korean AS word_korean, w.importance AS word_importance, " +
+                             "u.unit_id AS unit_id, u.thumbnail_url AS unit_thumbnail_url, " +
+                             "s.sentence_id AS sentence_id, s.korean AS korean_sentence, s.english AS english_sentence, " +
+                             "sw.korean_word_in_sentence AS korean_word_in_sentence, " +
+                             "sw.english_word_in_sentence AS english_word_in_sentence " +
+                             "FROM word w " +
+                             "JOIN sentence_word sw ON sw.word_id = w.word_id " +
+                             "JOIN sentence s ON s.sentence_id = sw.sentence_id " +
+                             "JOIN unit u ON u.unit_id = s.unit_id " +
+                             (excludeIds != null && !excludeIds.isEmpty() ? " WHERE w.word_id NOT IN (:excludeIds)" : "") +
+                             "ORDER BY RANDOM() " +
+                             "LIMIT :limit";
 
         Query nativeQuery = em.createNativeQuery(queryString);
 
@@ -74,7 +77,9 @@ public class WordQueryRepository {
 
             resultMap.computeIfAbsent(
                     wordId,
-                    id -> new HomeRecommendWordsResponse(wordId, koreanWord, importance, new ArrayList<>())
+                    id -> new HomeRecommendWordsResponse(
+                            wordId, koreanWord, importance, new ArrayList<>()
+                    )
             ).getSentences().add(sentence);
         });
 
