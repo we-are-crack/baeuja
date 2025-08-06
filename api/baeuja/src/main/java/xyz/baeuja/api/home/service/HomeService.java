@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.baeuja.api.content.cache.WordIdCache;
 import xyz.baeuja.api.content.domain.Word;
-import xyz.baeuja.api.content.repository.WordRepository;
+import xyz.baeuja.api.content.repository.jpa.WordJpaRepository;
 import xyz.baeuja.api.content.repository.query.ContentQueryRepository;
 import xyz.baeuja.api.home.dto.HomeContentsResponse;
 import xyz.baeuja.api.home.dto.HomeRecommendWordsResponse;
@@ -20,7 +20,7 @@ import java.util.List;
 public class HomeService {
 
     private final ContentQueryRepository contentRepository;
-    private final WordRepository wordRepository;
+    private final WordJpaRepository wordRepository;
     private final WordIdCache wordIdCache;
 
     /**

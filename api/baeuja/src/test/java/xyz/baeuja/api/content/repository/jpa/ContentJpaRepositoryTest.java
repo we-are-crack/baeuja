@@ -1,4 +1,4 @@
-package xyz.baeuja.api.content.repository;
+package xyz.baeuja.api.content.repository.jpa;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
         "/sql/sentence_word.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @SpringBootTest
-class ContentRepositoryTest {
+class ContentJpaRepositoryTest {
 
-    @Autowired ContentRepository contentRepository;
+    @Autowired
+    ContentJpaRepository contentJpaRepository;
 }

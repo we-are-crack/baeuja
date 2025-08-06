@@ -1,4 +1,4 @@
-package xyz.baeuja.api.content.repository;
+package xyz.baeuja.api.content.repository.jpa;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.stream.LongStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @Sql(scripts = {
@@ -24,10 +23,10 @@ import static org.junit.jupiter.api.Assertions.*;
         "/sql/sentence_word.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @SpringBootTest
-class WordRepositoryTest {
+class WordJpaRepositoryTest {
 
     @Autowired
-    WordRepository wordRepository;
+    WordJpaRepository wordRepository;
 
     @Test
     void findOne_success() {

@@ -7,17 +7,17 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import xyz.baeuja.api.global.util.jwt.JwtUserInfo;
 import xyz.baeuja.api.user.domain.User;
-import xyz.baeuja.api.user.repository.UserRepository;
+import xyz.baeuja.api.user.repository.jpa.UserJpaRepository;
 
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserJpaRepository userJpaRepository;
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        User findUser = userRepository.findOne(Long.parseLong(userId));
+        User findUser = userJpaRepository.findOne(Long.parseLong(userId));
 
         if (findUser == null) {
             throw new UsernameNotFoundException("Token user not found.");

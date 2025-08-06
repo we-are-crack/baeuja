@@ -4,7 +4,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import xyz.baeuja.api.content.repository.WordRepository;
+import xyz.baeuja.api.content.repository.jpa.WordJpaRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WordIdCache {
 
-    private final WordRepository wordRepository;
+    private final WordJpaRepository wordRepository;
     private List<Long> ids = new ArrayList<>();
 
     @PostConstruct

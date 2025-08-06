@@ -1,4 +1,4 @@
-package xyz.baeuja.api.user.repository;
+package xyz.baeuja.api.user.repository.jpa;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,9 +15,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class UserRepositoryTest {
+class UserJpaRepositoryTest {
 
-    @Autowired UserRepository userRepository;
+    @Autowired
+    UserJpaRepository userJpaRepository;
 
     @Test
     @DisplayName("새로운 사용자 회원가입(저장) 성공")
@@ -27,7 +28,7 @@ class UserRepositoryTest {
         User guest = getGuest(nickname);
 
         // when
-        Long savedId = userRepository.save(guest);
+        Long savedId = userJpaRepository.save(guest);
 
         // then
         assertThat(guest.getId()).isEqualTo(savedId);
@@ -40,10 +41,10 @@ class UserRepositoryTest {
         // given
         String nickname = "test1";
         User guest = getGuest(nickname);
-        Long savedId = userRepository.save(guest);
+        Long savedId = userJpaRepository.save(guest);
 
         // when
-        User findUser = userRepository.findOne(savedId);
+        User findUser = userJpaRepository.findOne(savedId);
 
         // then
         assertThat(findUser).isNotNull();
@@ -59,7 +60,7 @@ class UserRepositoryTest {
 
         // when & then
         assertThrows(DataIntegrityViolationException.class, () -> {
-            userRepository.save(invalidUser);
+            userJpaRepository.save(invalidUser);
         });
     }
 

@@ -1,4 +1,4 @@
-package xyz.baeuja.api.content.repository;
+package xyz.baeuja.api.content.repository.jpa;
 
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class WordRepository {
+public class WordJpaRepository {
 
     private final EntityManager em;
 

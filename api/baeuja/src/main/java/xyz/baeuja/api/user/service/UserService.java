@@ -11,7 +11,7 @@ import xyz.baeuja.api.user.domain.LoginType;
 import xyz.baeuja.api.user.domain.Role;
 import xyz.baeuja.api.user.domain.User;
 import xyz.baeuja.api.user.dto.UserDto;
-import xyz.baeuja.api.user.repository.UserRepository;
+import xyz.baeuja.api.user.repository.jpa.UserJpaRepository;
 
 import java.util.UUID;
 
@@ -21,7 +21,7 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final UserJpaRepository userJpaRepository;
     private static final String NICKNAME_MATCH_REGEX = "^[a-zA-Z0-9가-힣]+$";
 
     /**
@@ -32,7 +32,7 @@ public class UserService {
      * @throws UserNotFoundException 토큰에서 조회한 userId 를 가진 사용자가 DB에 존재하지 않는다면
      */
     public JwtUserInfo loadUserForSignIn(String email) throws UserNotFoundException {
-        User user = userRepository.findByEmail(email)
+        User user = userJpaRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
         return new JwtUserInfo(user.getId(), user.getTimezone(), user.getRole());
@@ -64,7 +64,7 @@ public class UserService {
             role = Role.MEMBER;
         }
 
-        Long savedId = userRepository.save(user);
+        Long savedId = userJpaRepository.save(user);
 
         return new JwtUserInfo(savedId, request.getTimezone(), role);
     }
@@ -76,7 +76,7 @@ public class UserService {
      * @return 조회한 User 로부터 생성한 UserDto
      */
     public UserDto getUserInfo(Long userId) {
-        User findUser = userRepository.findOne(userId);
+        User findUser = userJpaRepository.findOne(userId);
         return UserDto.from(findUser);
     }
 
@@ -103,7 +103,7 @@ public class UserService {
             throw new InvalidNicknameException("Nicknames can only use Korean, English, and numbers.");
         }
 
-        if (userRepository.existsByNickname(nickname)) {
+        if (userJpaRepository.existsByNickname(nickname)) {
             throw new DuplicateNicknameException();
         }
     }
@@ -112,7 +112,7 @@ public class UserService {
      * 이메일 중복 검사
      */
     private void validateDuplicateEmail(String email) throws DuplicateEmailException {
-        if (userRepository.existsByEmail(email)) {
+        if (userJpaRepository.existsByEmail(email)) {
             throw new DuplicateEmailException();
         }
     }

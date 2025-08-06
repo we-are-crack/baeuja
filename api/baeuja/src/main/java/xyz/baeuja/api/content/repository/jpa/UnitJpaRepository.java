@@ -1,4 +1,4 @@
-package xyz.baeuja.api.content.repository;
+package xyz.baeuja.api.content.repository.jpa;
 
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class UnitRepository {
+public class UnitJpaRepository {
 
     private final EntityManager em;
 

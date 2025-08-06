@@ -1,16 +1,15 @@
-package xyz.baeuja.api.user.repository;
+package xyz.baeuja.api.user.repository.jpa;
 
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import xyz.baeuja.api.user.domain.User;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class UserRepository {
+public class UserJpaRepository {
 
     private final EntityManager em;
 
