@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.eello.baeuja.ui.component.ItemSeparator
 import com.eello.baeuja.ui.component.RetryComponent
 import com.eello.baeuja.ui.theme.BaujaTheme
 import com.eello.baeuja.viewmodel.HomeLearningContent

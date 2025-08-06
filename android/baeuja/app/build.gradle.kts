@@ -99,6 +99,8 @@ dependencies {
 
     implementation("com.jakewharton.timber:timber:5.0.1")
 
+    implementation("androidx.compose.ui:ui:1.8.3")
+
     // androidx.navigation 추가
     val nav_version = "2.9.0"
     // Jetpack Compose integration

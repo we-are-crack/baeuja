@@ -1,4 +1,4 @@
-package com.eello.baeuja.ui.screen.home
+package com.eello.baeuja.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

@@ -8,13 +8,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.eello.baeuja.ui.screen.BookmarkScreen
-import com.eello.baeuja.ui.screen.LearningScreen
 import com.eello.baeuja.ui.screen.MyPageScreen
 import com.eello.baeuja.ui.screen.ProfileInputScreen
 import com.eello.baeuja.ui.screen.ReviewScreen
 import com.eello.baeuja.ui.screen.SignInScreen
 import com.eello.baeuja.ui.screen.SplashScreen
 import com.eello.baeuja.ui.screen.home.HomeScreen
+import com.eello.baeuja.ui.screen.learning.LearningScreen
 
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
