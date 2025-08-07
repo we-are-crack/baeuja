@@ -11,19 +11,22 @@ fun LearningItemContainer(
     layoutType: LayoutType,
     modifier: Modifier = Modifier,
     items: List<LearningItem>,
+    onNavigateToDetail: (Int) -> Unit = {},
     isPreview: Boolean = false
 ) {
     when (layoutType) {
         LayoutType.Pager -> LearningItemPagerContainer(
+            modifier = modifier,
             items = items,
-            isPreview = isPreview,
-            modifier = modifier
+            onNavigateToDetail = onNavigateToDetail,
+            isPreview = isPreview
         )
 
         LayoutType.LazyRow -> LearningItemLazyRowContainer(
+            modifier = modifier,
             items = items,
-            isPreview = isPreview,
-            modifier = modifier
+            onNavigateToDetail = onNavigateToDetail,
+            isPreview = isPreview
         )
     }
 }

@@ -1,6 +1,7 @@
 package com.eello.baeuja.ui.screen.learning
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,6 +38,7 @@ private val IMAGE_HEIGHT = 200.dp
 @Composable
 fun LearningItemLazyRowCard(
     item: LearningItem,
+    onNavigateToDetail: (Int) -> Unit = {},
     isPreview: Boolean = false
 ) {
     Column(
@@ -94,7 +96,9 @@ fun LearningItemLazyRowCard(
                 painterResource(R.drawable.detail_info_icon_16dp),
                 contentDescription = "info",
                 tint = Color(0xFF797979),
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier
+                    .size(16.dp)
+                    .clickable { onNavigateToDetail(item.id) }
             )
         }
 

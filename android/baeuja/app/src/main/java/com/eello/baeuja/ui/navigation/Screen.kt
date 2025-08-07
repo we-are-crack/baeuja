@@ -10,6 +10,10 @@ sealed class Screen(val route: String) {
     // Main Graph
     object Home : Screen("${NavGraph.Main.route}/home")
     object Learning : Screen("${NavGraph.Main.route}/learning")
+    object LearningItemDetailInfo :
+        Screen("${NavGraph.Learn.route}/learning_item_detail_info/{itemId}") {
+        fun createRoute(itemId: Int) = "${NavGraph.Learn.route}/learning_item_detail_info/$itemId"
+    }
     object Review : Screen("${NavGraph.Main.route}/review")
     object Bookmark : Screen("${NavGraph.Main.route}/bookmark")
     object MyPage : Screen("${NavGraph.Main.route}/my_page")

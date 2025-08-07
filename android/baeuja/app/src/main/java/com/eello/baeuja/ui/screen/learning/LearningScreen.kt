@@ -13,7 +13,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.eello.baeuja.ui.component.ItemSeparator
+import com.eello.baeuja.ui.navigation.Screen
 import com.eello.baeuja.ui.theme.BaujaTheme
 import com.eello.baeuja.ui.theme.RobotoFamily
 import com.eello.baeuja.viewmodel.ContentClassification
@@ -96,18 +98,26 @@ private val tempLearningItems = mapOf(
 )
 
 @Composable
-fun LearningScreen() {
-    LearningRoute()
+fun LearningScreen(navController: NavController) {
+    val onNavigateToDetail: (Int) -> Unit = { itemId ->
+        navController.navigate(Screen.LearningItemDetailInfo.createRoute(itemId))
+    }
+
+    LearningRoute(onNavigateToDetail = onNavigateToDetail)
 }
 
 @Composable
-fun LearningRoute() {
-    LearningContent(tempLearningItems)
+fun LearningRoute(onNavigateToDetail: (Int) -> Unit = {}) {
+    LearningContent(
+        learningItems = tempLearningItems,
+        onNavigateToDetail = onNavigateToDetail
+    )
 }
 
 @Composable
 fun LearningContent(
     learningItems: Map<ContentClassification, List<LearningItem>>,
+    onNavigateToDetail: (Int) -> Unit = {},
     isPreview: Boolean = false
 ) {
     Column(
@@ -132,6 +142,7 @@ fun LearningContent(
             itemContainerLayoutType = LayoutType.Pager,
             classification = ContentClassification.POP,
             learningItems = learningItems[ContentClassification.POP] ?: emptyList(),
+            onNavigateToDetail = onNavigateToDetail,
             isPreview = isPreview
         )
 
@@ -141,6 +152,7 @@ fun LearningContent(
             itemContainerLayoutType = LayoutType.LazyRow,
             classification = ContentClassification.MOVIE,
             learningItems = learningItems[ContentClassification.MOVIE] ?: emptyList(),
+            onNavigateToDetail = onNavigateToDetail,
             isPreview = isPreview
         )
 
@@ -150,6 +162,7 @@ fun LearningContent(
             itemContainerLayoutType = LayoutType.LazyRow,
             classification = ContentClassification.DRAMA,
             learningItems = learningItems[ContentClassification.DRAMA] ?: emptyList(),
+            onNavigateToDetail = onNavigateToDetail,
             isPreview = isPreview
         )
     }

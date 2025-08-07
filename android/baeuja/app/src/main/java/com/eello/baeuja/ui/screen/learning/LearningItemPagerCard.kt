@@ -1,6 +1,7 @@
 package com.eello.baeuja.ui.screen.learning
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,7 @@ import com.eello.baeuja.viewmodel.LearningItem
 @Composable
 fun LearningItemPagerCard(
     item: LearningItem?,
+    onNavigateToDetail: (Int) -> Unit = {},
     isPreview: Boolean = false
 ) {
     Row(
@@ -111,7 +113,11 @@ fun LearningItemPagerCard(
                         painterResource(R.drawable.detail_info_icon_16dp),
                         contentDescription = "info",
                         tint = Color(0xFF797979),
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier
+                            .size(16.dp)
+                            .clickable {
+                                onNavigateToDetail(item.id)
+                            }
                     )
                 }
 

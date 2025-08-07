@@ -4,8 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.eello.baeuja.ui.screen.BookmarkScreen
 import com.eello.baeuja.ui.screen.MyPageScreen
@@ -14,6 +16,7 @@ import com.eello.baeuja.ui.screen.ReviewScreen
 import com.eello.baeuja.ui.screen.SignInScreen
 import com.eello.baeuja.ui.screen.SplashScreen
 import com.eello.baeuja.ui.screen.home.HomeScreen
+import com.eello.baeuja.ui.screen.learning.LearningItemInfo
 import com.eello.baeuja.ui.screen.learning.LearningScreen
 
 @Composable
@@ -26,6 +29,7 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
         composable(Screen.Splash.route) { SplashScreen(navController) }
         authGraph(navController)
         mainGraph(navController)
+        learnGraph(navController)
     }
 }
 
@@ -39,9 +43,24 @@ fun NavGraphBuilder.authGraph(navController: NavHostController) {
 fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     navigation(startDestination = Screen.Home.route, route = NavGraph.Main.route) {
         composable(Screen.Home.route) { HomeScreen() }
-        composable(Screen.Learning.route) { LearningScreen() }
+        composable(Screen.Learning.route) { LearningScreen(navController) }
         composable(Screen.Review.route) { ReviewScreen() }
         composable(Screen.Bookmark.route) { BookmarkScreen() }
         composable(Screen.MyPage.route) { MyPageScreen() }
+    }
+}
+
+fun NavGraphBuilder.learnGraph(navController: NavHostController) {
+    navigation(
+        startDestination = Screen.LearningItemDetailInfo.route,
+        route = NavGraph.Learn.route
+    ) {
+        composable(
+            route = Screen.LearningItemDetailInfo.route,
+            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val itemId = backStackEntry.arguments?.getInt("itemId") ?: -1
+            LearningItemInfo(itemId = itemId)
+        }
     }
 }

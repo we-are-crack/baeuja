@@ -25,6 +25,7 @@ import com.eello.baeuja.viewmodel.LearningItem
 fun LearningItemPagerContainer(
     modifier: Modifier = Modifier,
     items: List<LearningItem>,
+    onNavigateToDetail: (Int) -> Unit = {},
     isPreview: Boolean = false
 ) {
     val pagerState = rememberPagerState { (items.size / 2) + (items.size % 2) }
@@ -39,10 +40,22 @@ fun LearningItemPagerContainer(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             val index = pagerState.currentPage * 2
-            LearningItemPagerCard(item = items[index], isPreview = isPreview)
+            LearningItemPagerCard(
+                item = items[index],
+                onNavigateToDetail = onNavigateToDetail,
+                isPreview = isPreview
+            )
             if (index + 1 < items.size) {
-                LearningItemPagerCard(item = items[index + 1], isPreview = isPreview)
-            } else LearningItemPagerCard(item = null, isPreview = isPreview)
+                LearningItemPagerCard(
+                    item = items[index + 1],
+                    onNavigateToDetail = onNavigateToDetail,
+                    isPreview = isPreview
+                )
+            } else LearningItemPagerCard(
+                item = null,
+                onNavigateToDetail = onNavigateToDetail,
+                isPreview = isPreview
+            )
         }
     }
 

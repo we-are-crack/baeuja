@@ -22,6 +22,7 @@ fun LearningCategorySection(
     itemContainerLayoutType: LayoutType,
     classification: ContentClassification,
     learningItems: List<LearningItem>,
+    onNavigateToDetail: (Int) -> Unit = {},
     isPreview: Boolean = false
 ) {
     Column(
@@ -67,6 +68,7 @@ fun LearningCategorySection(
                 .fillMaxWidth()
                 .padding(vertical = 12.dp),
             items = learningItems,
+            onNavigateToDetail = onNavigateToDetail,
             isPreview = isPreview
         )
     }
