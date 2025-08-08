@@ -1,36 +1,12 @@
 package xyz.baeuja.api.content.repository;
 
-import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.JpaRepository;
+import xyz.baeuja.api.content.domain.Classification;
 import xyz.baeuja.api.content.domain.Content;
 
-import java.util.Optional;
+public interface ContentRepository extends JpaRepository<Content, Long> {
 
-@Repository
-@RequiredArgsConstructor
-public class ContentRepository {
-
-    private final EntityManager em;
-
-    /**
-     * content 저장
-     *
-     * @param content 저장할 content
-     * @return content id
-     */
-    public Long save(Content content) {
-        em.persist(content);
-        return content.getId();
-    }
-
-    /**
-     * id 로 content 조회
-     *
-     * @param id 조회할 content id
-     * @return null이 아닌 경우 Content를 포함한 Optional, 아니면 빈 Optional
-     */
-    public Optional<Content> findOne(long id) {
-        return Optional.ofNullable(em.find(Content.class, id));
-    }
+    Slice<Content> findAllByClassification(Classification classification, Pageable pageable);
 }

@@ -173,7 +173,7 @@ class HomeApiControllerTest {
         RequestSpecification spec = docsHelper.createSpecWithDocs(createQueryResponseWithAuthSnippet(
                 "home-get-words-success-exclude",
                 RestDocsSnippets.authorizationHeader(),
-                RestDocsSnippets.excludeIdsRequest(),
+                RestDocsSnippets.excludeIdsRequestParam(),
                 buildListResultResponseFields(RestDocsSnippets.homeRecommendWordsResponse())
         ));
 
@@ -192,7 +192,7 @@ class HomeApiControllerTest {
     }
 
     @Test
-    @DisplayName("추천 학습 단어 조회 실패 - 잘못된 쿼리 파라미터")
+    @DisplayName("추천 학습 단어 조회 실패 - 쿼리 파라미터 타입 불일치")
     void getWords_fail_invalid_query_param() {
         String accessToken = jwtProvider.createAccessToken(new JwtUserInfo(user.getId(), user.getTimezone(), user.getRole()));
 
@@ -201,7 +201,7 @@ class HomeApiControllerTest {
         RequestSpecification spec = docsHelper.createSpecWithDocs(createQueryResponseWithAuthSnippet(
                 "home-get-words-fail-invalid-query-param",
                 RestDocsSnippets.authorizationHeader(),
-                RestDocsSnippets.excludeIdsRequest(),
+                RestDocsSnippets.excludeIdsRequestParam(),
                 defaultResponse()
         ));
 
@@ -213,6 +213,6 @@ class HomeApiControllerTest {
                 .get("/api/home/words");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(response.jsonPath().getString("code")).isEqualTo(ErrorCode.INVALID_QUERY_PARAMETER.name());
+        assertThat(response.jsonPath().getString("code")).isEqualTo(ErrorCode.INVALID_QUERY_PARAMETER_TYPE.name());
     }
 }

@@ -71,7 +71,7 @@ class AuthApiControllerTest {
 
         RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
                         "auth-sign-in-success",
-                        signInRequest(),
+                        signInRequestBody(),
                         buildSingleResultResponseFields(authData()))
         );
 
@@ -96,7 +96,7 @@ class AuthApiControllerTest {
 
         RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
                 "auth-sign-in-fail",
-                signInRequest(),
+                signInRequestBody(),
                 defaultResponse())
         );
 
@@ -122,7 +122,7 @@ class AuthApiControllerTest {
 
         RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
                 "auth-sign-up-guest-success",
-                signUpGuestRequest(),
+                signUpGuestRequestBody(),
                 buildSingleResultResponseFields(authData()))
         );
 
@@ -151,7 +151,7 @@ class AuthApiControllerTest {
 
         RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
                 "auth-sign-up-google-success",
-                signUpGoogleRequest(),
+                signUpGoogleRequestBody(),
                 buildSingleResultResponseFields(authData())
         ));
 
@@ -179,7 +179,7 @@ class AuthApiControllerTest {
 
         RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
                 "auth-sign-up-google-fail-missing",
-                signUpGoogleRequestWithoutEmail(),
+                signUpGoogleRequestBodyWithoutEmail(),
                 defaultResponse())
         );
 
@@ -209,7 +209,7 @@ class AuthApiControllerTest {
 
         RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
                 "auth-sign-up-google-fail-duplicate",
-                signUpGoogleRequest(),
+                signUpGoogleRequestBody(),
                 defaultResponse())
         );
 
@@ -229,7 +229,7 @@ class AuthApiControllerTest {
     void checkNickname_success() {
         RequestSpecification spec = restDocsHelper.createSpecWithDocs(createQueryResponseSnippet(
                 "auth-check-nickname-success",
-                checkNicknameRequest(),
+                checkNicknameRequestParam(),
                 defaultResponse())
         );
 
@@ -250,7 +250,7 @@ class AuthApiControllerTest {
 
         RequestSpecification spec = restDocsHelper.createSpecWithDocs(createQueryResponseSnippet(
                 "auth-check-nickname-fail-duplicate",
-                checkNicknameRequest(),
+                checkNicknameRequestParam(),
                 defaultResponse())
         );
 
@@ -271,7 +271,7 @@ class AuthApiControllerTest {
 
         RequestSpecification spec = restDocsHelper.createSpecWithDocs(createQueryResponseSnippet(
                 "auth-check-nickname-fail-length",
-                checkNicknameRequest(),
+                checkNicknameRequestParam(),
                 defaultResponse())
         );
 

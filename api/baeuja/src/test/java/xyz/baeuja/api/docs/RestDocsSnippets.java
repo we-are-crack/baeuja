@@ -39,13 +39,13 @@ public class RestDocsSnippets {
 
     // ========================auth======================== //
 
-    public static FieldDescriptor[] signInRequest() {
+    public static FieldDescriptor[] signInRequestBody() {
         return new FieldDescriptor[]{
                 fieldWithPath("email").description("사용자 이메일").optional(),
         };
     }
 
-    public static FieldDescriptor[] signUpGuestRequest() {
+    public static FieldDescriptor[] signUpGuestRequestBody() {
         return new FieldDescriptor[]{
                 fieldWithPath("language").description("사용자 언어"),
                 fieldWithPath("timezone").description("사용자 타임존"),
@@ -53,7 +53,7 @@ public class RestDocsSnippets {
         };
     }
 
-    public static FieldDescriptor[] signUpGoogleRequest() {
+    public static FieldDescriptor[] signUpGoogleRequestBody() {
         return new FieldDescriptor[]{
                 fieldWithPath("email").description("사용자 이메일"),
                 fieldWithPath("nickname").description("사용자 닉네임"),
@@ -63,7 +63,7 @@ public class RestDocsSnippets {
         };
     }
 
-    public static FieldDescriptor[] signUpGoogleRequestWithoutEmail() {
+    public static FieldDescriptor[] signUpGoogleRequestBodyWithoutEmail() {
         return new FieldDescriptor[]{
                 fieldWithPath("nickname").description("사용자 닉네임"),
                 fieldWithPath("language").description("사용자 언어"),
@@ -79,7 +79,7 @@ public class RestDocsSnippets {
         };
     }
 
-    public static ParameterDescriptor[] checkNicknameRequest() {
+    public static ParameterDescriptor[] checkNicknameRequestParam() {
         return new ParameterDescriptor[]{
                 parameterWithName("nickname").description("검증할 닉네임").optional(),
         };
@@ -133,7 +133,7 @@ public class RestDocsSnippets {
         };
     }
 
-    public static ParameterDescriptor[] excludeIdsRequest() {
+    public static ParameterDescriptor[] excludeIdsRequestParam() {
         return new ParameterDescriptor[]{
                 parameterWithName("excludeIds").description("이미 추천받은 단어 id 리스트").optional(),
         };
@@ -152,6 +152,41 @@ public class RestDocsSnippets {
                 fieldWithPath("sentences[].englishSentence").description("영어 번역 문장"),
                 fieldWithPath("sentences[].koreanWordInSentence").description("한국어 문장에 포함된 한국어 단어 모양"),
                 fieldWithPath("sentences[].englishWordInSentence").description("영어 번역 문장에 포함된 영어 단어 모양")
+        };
+    }
+
+    // ========================learning======================== //
+
+    public static ParameterDescriptor[] learningContentsRequestParam(String description) {
+        return new ParameterDescriptor[]{
+                parameterWithName("size").description("콘텐츠 분류 별 개수. \n" + description).optional(),
+        };
+    }
+
+    public static FieldDescriptor[] learningContentsResponse() {
+        return new FieldDescriptor[]{
+                fieldWithPath("pop[]").description("POP 콘텐츠 리스트"),
+                fieldWithPath("movie[]").description("MOVIE 콘텐츠 리스트"),
+                fieldWithPath("drama[]").description("DRAMA 콘텐츠 리스트"),
+                fieldWithPath("pop[].id").description("content id"),
+                fieldWithPath("pop[].classification").description("content 분류 ex)POP, DRAMA, MOVIE"),
+                fieldWithPath("pop[].title").description("제목"),
+                fieldWithPath("pop[].artist").description("가수"),
+                fieldWithPath("pop[].thumbnailUrl").description("썸네일 주소"),
+                fieldWithPath("pop[].progressRate").description("학습률(0 ~ 100)"),
+                fieldWithPath("movie[].id").description("content id"),
+                fieldWithPath("movie[].classification").description("content 분류 ex)POP, DRAMA, MOVIE"),
+                fieldWithPath("movie[].title").description("제목"),
+                fieldWithPath("movie[].director").description("영화 감독"),
+                fieldWithPath("movie[].thumbnailUrl").description("썸네일 주소"),
+                fieldWithPath("movie[].progressRate").description("학습률(0 ~ 100)"),
+                fieldWithPath("drama[].id").description("content id"),
+                fieldWithPath("drama[].classification").description("content 분류 ex)POP, DRAMA, MOVIE"),
+                fieldWithPath("drama[].title").description("제목"),
+                fieldWithPath("drama[].director").description("드라마 감독"),
+                fieldWithPath("drama[].thumbnailUrl").description("썸네일 주소"),
+                fieldWithPath("drama[].progressRate").description("학습률(0 ~ 100)"),
+
         };
     }
 }
