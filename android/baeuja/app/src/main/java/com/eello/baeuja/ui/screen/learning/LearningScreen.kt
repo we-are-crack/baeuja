@@ -103,14 +103,25 @@ fun LearningScreen(navController: NavController) {
         navController.navigate(Screen.LearningItemDetailInfo.createRoute(itemId))
     }
 
-    LearningRoute(onNavigateToDetail = onNavigateToDetail)
+    val onMoreClick: (ContentClassification) -> Unit = { classification ->
+        navController.navigate(Screen.LearningItemMore.createRoute(classification))
+    }
+
+    LearningRoute(
+        onNavigateToDetail = onNavigateToDetail,
+        onMoreClick = onMoreClick
+    )
 }
 
 @Composable
-fun LearningRoute(onNavigateToDetail: (Int) -> Unit = {}) {
+fun LearningRoute(
+    onNavigateToDetail: (Int) -> Unit = {},
+    onMoreClick: (ContentClassification) -> Unit
+) {
     LearningContent(
         learningItems = tempLearningItems,
-        onNavigateToDetail = onNavigateToDetail
+        onNavigateToDetail = onNavigateToDetail,
+        onMoreClick = onMoreClick,
     )
 }
 
@@ -118,6 +129,7 @@ fun LearningRoute(onNavigateToDetail: (Int) -> Unit = {}) {
 fun LearningContent(
     learningItems: Map<ContentClassification, List<LearningItem>>,
     onNavigateToDetail: (Int) -> Unit = {},
+    onMoreClick: (ContentClassification) -> Unit = {},
     isPreview: Boolean = false
 ) {
     Column(
@@ -143,6 +155,7 @@ fun LearningContent(
             classification = ContentClassification.POP,
             learningItems = learningItems[ContentClassification.POP] ?: emptyList(),
             onNavigateToDetail = onNavigateToDetail,
+            onMoreClick = onMoreClick,
             isPreview = isPreview
         )
 
@@ -153,6 +166,7 @@ fun LearningContent(
             classification = ContentClassification.MOVIE,
             learningItems = learningItems[ContentClassification.MOVIE] ?: emptyList(),
             onNavigateToDetail = onNavigateToDetail,
+            onMoreClick = onMoreClick,
             isPreview = isPreview
         )
 
@@ -163,6 +177,7 @@ fun LearningContent(
             classification = ContentClassification.DRAMA,
             learningItems = learningItems[ContentClassification.DRAMA] ?: emptyList(),
             onNavigateToDetail = onNavigateToDetail,
+            onMoreClick = onMoreClick,
             isPreview = isPreview
         )
     }

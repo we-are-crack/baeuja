@@ -1,5 +1,6 @@
 package com.eello.baeuja.ui.screen.learning
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +24,7 @@ fun LearningCategorySection(
     classification: ContentClassification,
     learningItems: List<LearningItem>,
     onNavigateToDetail: (Int) -> Unit = {},
+    onMoreClick: (ContentClassification) -> Unit = {},
     isPreview: Boolean = false
 ) {
     Column(
@@ -58,7 +60,9 @@ fun LearningCategorySection(
                 fontSize = 16.sp,
                 color = Color(0xFFaaaaaa),
                 textAlign = TextAlign.Right,
-                modifier = Modifier.alignByBaseline()
+                modifier = Modifier
+                    .alignByBaseline()
+                    .clickable { onMoreClick(classification) },
             )
         }
 

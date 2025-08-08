@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 import com.eello.baeuja.ui.theme.BaujaTheme
 import com.eello.baeuja.ui.theme.RobotoFamily
 
-private val NavigationBarHeight = 107.dp
+private val NavigationBarHeight = 80.dp
 private val NavigationBarItemHeight = 83.dp
 
 @Composable
@@ -43,8 +43,8 @@ fun OneButtonBottomBar(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(NavigationBarItemHeight)
-                .padding(bottom = 24.dp)
+//                .height(NavigationBarItemHeight)
+                .padding(top = 12.dp, bottom = 24.dp)
         ) {
             Button(
                 enabled = enabled,

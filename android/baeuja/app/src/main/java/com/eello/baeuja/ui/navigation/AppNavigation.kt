@@ -18,6 +18,8 @@ import com.eello.baeuja.ui.screen.SplashScreen
 import com.eello.baeuja.ui.screen.home.HomeScreen
 import com.eello.baeuja.ui.screen.learning.LearningItemInfo
 import com.eello.baeuja.ui.screen.learning.LearningScreen
+import com.eello.baeuja.ui.screen.learning.MoreItemScreen
+import com.eello.baeuja.viewmodel.ContentClassification
 
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -47,6 +49,33 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         composable(Screen.Review.route) { ReviewScreen() }
         composable(Screen.Bookmark.route) { BookmarkScreen() }
         composable(Screen.MyPage.route) { MyPageScreen() }
+        composable(
+            route = Screen.LearningItemDetailInfo.route,
+            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val itemId = backStackEntry.arguments?.getInt("itemId") ?: -1
+            LearningItemInfo(
+                navController = navController,
+                itemId = itemId
+            )
+        }
+
+        composable(
+            route = Screen.LearningItemMore.route,
+            arguments = listOf(
+                navArgument("classification") {
+                    type = NavType.StringType
+                    defaultValue = ""  // 선택적 파라미터라면 기본값 설정 가능
+                    nullable = true
+                }
+            )
+        ) { backStackEntry ->
+            val classification = backStackEntry.arguments?.getString("classification") ?: ""
+            MoreItemScreen(
+                navController = navController,
+                classification = ContentClassification.valueOf(classification)
+            )
+        }
     }
 }
 
@@ -55,12 +84,5 @@ fun NavGraphBuilder.learnGraph(navController: NavHostController) {
         startDestination = Screen.LearningItemDetailInfo.route,
         route = NavGraph.Learn.route
     ) {
-        composable(
-            route = Screen.LearningItemDetailInfo.route,
-            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val itemId = backStackEntry.arguments?.getInt("itemId") ?: -1
-            LearningItemInfo(itemId = itemId)
-        }
     }
 }

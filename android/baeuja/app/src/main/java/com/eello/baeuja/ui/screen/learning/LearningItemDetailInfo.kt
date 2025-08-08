@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -18,9 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,15 +33,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.net.toUri
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.eello.baeuja.R
+import com.eello.baeuja.ui.component.BACK_BUTTON_START_MARGIN
+import com.eello.baeuja.ui.component.BACK_BUTTON_TOP_MARGIN
+import com.eello.baeuja.ui.component.BackButton
 import com.eello.baeuja.ui.component.OneButtonBottomBar
 import com.eello.baeuja.ui.theme.BaujaTheme
 import com.eello.baeuja.ui.theme.RobotoFamily
 import timber.log.Timber
 
 @Composable
-fun LearningItemInfo(itemId: Int, isPreview: Boolean = false) {
+fun LearningItemInfo(
+    navController: NavController? = null,
+    itemId: Int,
+    isPreview: Boolean = false
+) {
     val context = LocalContext.current
     val youtubeUrl = "https://youtu.be/WMweEpGlu_U?si=wc1JStDMN3j5YCnw"
 
@@ -77,7 +81,7 @@ fun LearningItemInfo(itemId: Int, isPreview: Boolean = false) {
                 .background(Color(0xFFfafafa))
         ) {
             val (
-                backIconRef,
+                backButtonRef,
                 thumbnailRef,
                 titleRef,
                 descriptionBoxRef
@@ -87,20 +91,16 @@ fun LearningItemInfo(itemId: Int, isPreview: Boolean = false) {
             val startGuideline = createGuidelineFromStart(22.dp)
             val endGuideline = createGuidelineFromEnd(22.dp)
 
-            Icon(
-                imageVector = Icons.Filled.ArrowBackIosNew,
-                contentDescription = "go back",
-                tint = Color(0xFF444444),
-                modifier = Modifier
-                    .constrainAs(backIconRef) {
-                        top.linkTo(parent.top, 54.dp)
-                        end.linkTo(textStartGuideLine)
-                    }
-                    .clickable { Timber.d("뒤로가기 클릭") }
+            BackButton(
+                navController = navController,
+                modifier = Modifier.constrainAs(backButtonRef) {
+                    top.linkTo(parent.top, BACK_BUTTON_TOP_MARGIN)
+                    end.linkTo(parent.start, BACK_BUTTON_START_MARGIN)
+                }
             )
 
             Box(modifier = Modifier.constrainAs(thumbnailRef) {
-                top.linkTo(backIconRef.bottom, 32.dp)
+                top.linkTo(backButtonRef.bottom, 32.dp)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }
@@ -139,16 +139,21 @@ fun LearningItemInfo(itemId: Int, isPreview: Boolean = false) {
                 }
             )
 
-            Box(modifier = Modifier
-                .constrainAs(descriptionBoxRef) {
-                    top.linkTo(titleRef.bottom, 20.dp)
-                    start.linkTo(startGuideline)
-                    end.linkTo(endGuideline)
-                }
-                .width(360.dp)
-                .height(340.dp)
-                .background(color = Color.White)
-                .border(width = 1.dp, color = Color(0xFFeeeeee), shape = RoundedCornerShape(10.dp))
+            Box(
+                modifier = Modifier
+                    .constrainAs(descriptionBoxRef) {
+                        top.linkTo(titleRef.bottom, 20.dp)
+                        start.linkTo(startGuideline)
+                        end.linkTo(endGuideline)
+                    }
+                    .width(360.dp)
+                    .height(340.dp)
+                    .background(color = Color.White)
+                    .border(
+                        width = 1.dp,
+                        color = Color(0xFFeeeeee),
+                        shape = RoundedCornerShape(10.dp)
+                    )
             ) {
                 Text(
                     text = "This is the title song of the 5th mini album \n" +
@@ -179,6 +184,6 @@ fun LearningItemInfo(itemId: Int, isPreview: Boolean = false) {
 @Composable
 fun PreviewLearningItemInfo() {
     BaujaTheme {
-        LearningItemInfo(1, isPreview = true)
+        LearningItemInfo(itemId = 1, isPreview = true)
     }
 }

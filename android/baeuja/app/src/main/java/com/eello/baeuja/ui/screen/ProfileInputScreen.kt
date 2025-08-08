@@ -72,12 +72,12 @@ fun ProfileInputRoute(
 ) {
     val gui by signInViewModel.googleSignInUserInfo.collectAsState()
     LaunchedEffect(gui) {
-        if (gui == null) {
-            Timber.d("GoogleSignInUserInfo 이 Null 이므로 SignInScreen 으로 이동")
-            navController.navigate(Screen.SignIn.route) {
-                popUpTo(NavGraph.Auth.route) { inclusive = true }
-            }
-        }
+//        if (gui == null) {
+//            Timber.d("GoogleSignInUserInfo 이 Null 이므로 SignInScreen 으로 이동")
+//            navController.navigate(Screen.SignIn.route) {
+//                popUpTo(NavGraph.Auth.route) { inclusive = true }
+//            }
+//        }
     }
 
     val displayName by signUpViewModel.displayName.collectAsState()

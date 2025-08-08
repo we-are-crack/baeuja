@@ -37,7 +37,7 @@ fun BottomNavigationContent(
         val navItems = BottomNavigationItem.items
 //        val navItems = BottomNavigationItemGiVer.items
         navItems.forEach { item ->
-            val selected = currentRoute == item.route
+            val selected = currentRoute?.startsWith(item.route) == true
             NavigationBarItem(
                 icon = {
                     Icon(
