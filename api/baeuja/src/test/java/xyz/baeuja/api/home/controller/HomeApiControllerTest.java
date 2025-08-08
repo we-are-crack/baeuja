@@ -20,6 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
 import xyz.baeuja.api.auth.security.exception.InvalidJwtException;
 import xyz.baeuja.api.content.cache.WordIdCache;
 import xyz.baeuja.api.docs.RestDocsSnippets;
+import xyz.baeuja.api.global.exception.ErrorCode;
 import xyz.baeuja.api.global.util.jwt.JwtProvider;
 import xyz.baeuja.api.global.util.jwt.JwtUserInfo;
 import xyz.baeuja.api.helper.RestDocsHelper;
@@ -212,6 +213,6 @@ class HomeApiControllerTest {
                 .get("/api/home/words");
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(response.jsonPath().getString("code")).isEqualTo("INVALID_PARAMETER");
+        assertThat(response.jsonPath().getString("code")).isEqualTo(ErrorCode.INVALID_QUERY_PARAMETER.name());
     }
 }

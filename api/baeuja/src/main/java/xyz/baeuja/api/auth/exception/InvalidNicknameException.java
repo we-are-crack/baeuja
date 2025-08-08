@@ -1,10 +1,11 @@
 package xyz.baeuja.api.auth.exception;
 
 import xyz.baeuja.api.global.exception.BaseException;
+import xyz.baeuja.api.global.exception.ErrorCode;
 
 public class InvalidNicknameException extends BaseException {
 
-    public static final String CODE = "INVALID_NICKNAME";
+    public static final String CODE = ErrorCode.INVALID_NICKNAME.name();
 
     public InvalidNicknameException() {
         super("Invalid nickname. Please check again.");

@@ -1,13 +1,14 @@
 package xyz.baeuja.api.auth.exception;
 
 import xyz.baeuja.api.global.exception.BaseException;
+import xyz.baeuja.api.global.exception.ErrorCode;
 
 public class InvalidSignUpRequestException extends BaseException {
 
-    public static final String CODE = "INVALID_SIGN_UP_REQUEST";
+    public static final String CODE = ErrorCode.INVALID_SIGN_UP_REQUEST_BODY.name();
 
     public InvalidSignUpRequestException() {
-        super("Please double check the membership request fields.");
+        super("Please double check the sign-up request fields.");
     }
 
     public InvalidSignUpRequestException(String message) {

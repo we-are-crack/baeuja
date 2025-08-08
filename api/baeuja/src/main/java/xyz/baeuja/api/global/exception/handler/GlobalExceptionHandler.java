@@ -9,6 +9,8 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import xyz.baeuja.api.global.exception.ErrorCode;
+import xyz.baeuja.api.global.exception.InvalidQueryParameterException;
 import xyz.baeuja.api.global.exception.UnexpectedException;
 import xyz.baeuja.api.auth.security.exception.ExpiredTokenException;
 import xyz.baeuja.api.auth.security.exception.InvalidJwtException;
@@ -38,7 +40,18 @@ public class GlobalExceptionHandler {
         log.info("🚫MethodArgumentNotValidExceptionHandler handled: {}", exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ResultResponse.failure("BAD_REQUEST_PARAM_OR_BODY", "The request parameter or body was invalid."));
+                .body(ResultResponse.failure(ErrorCode.INVALID_REQUEST_BODY.name(), "The request body is invalid."));
+    }
+
+    /**
+     * 잘못된 요청 쿼리 파라미터
+     */
+    @ExceptionHandler
+    public ResponseEntity<ResultResponse<Void>> handleInvalidQueryParameterException(InvalidQueryParameterException exception) {
+        log.info("🚫InvalidQueryParameterExceptionHandler handled: {} ", exception.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ResultResponse.failure(InvalidQueryParameterException.CODE, "The request query parameter is invalid."));
     }
 
     /**
@@ -49,7 +62,7 @@ public class GlobalExceptionHandler {
         log.info("🚫MissingServletRequestParameterExceptionHandler handled: {} ", exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ResultResponse.failure("MISSING_PARAMETER", "The request parameter was missing."));
+                .body(ResultResponse.failure(ErrorCode.MISSING_QUERY_PARAMETER.name(), "The request query parameter is missing."));
     }
 
     /**
@@ -60,7 +73,7 @@ public class GlobalExceptionHandler {
         log.info("🚫MethodArgumentTypeMismatchExceptionHandler handled: {} ", exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ResultResponse.failure("INVALID_PARAMETER", "The request parameter is invalid"));
+                .body(ResultResponse.failure(ErrorCode.INVALID_QUERY_PARAMETER_TYPE.name(), "The request query parameter type is invalid."));
     }
 
     /**

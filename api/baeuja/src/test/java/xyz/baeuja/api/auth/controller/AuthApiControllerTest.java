@@ -17,6 +17,7 @@ import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.restassured.RestAssuredRestDocumentation;
 import org.springframework.restdocs.restassured.RestAssuredRestDocumentationConfigurer;
 import xyz.baeuja.api.auth.exception.*;
+import xyz.baeuja.api.global.exception.ErrorCode;
 import xyz.baeuja.api.global.util.jwt.JwtProvider;
 import xyz.baeuja.api.global.util.jwt.JwtUserInfo;
 import xyz.baeuja.api.helper.RestDocsHelper;
@@ -338,6 +339,6 @@ class AuthApiControllerTest {
                 .post("/api/auth/token");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-        assertThat(response.jsonPath().getString("code")).isEqualTo("INVALID_TOKEN");
+        assertThat(response.jsonPath().getString("code")).isEqualTo(ErrorCode.INVALID_TOKEN.name());
     }
 }

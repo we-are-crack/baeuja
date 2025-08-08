@@ -22,6 +22,15 @@ public class TestDataHelper {
         em.createQuery("delete from User").executeUpdate();
     }
 
+    public User saveGuestUser() {
+        String nickname = "닉네임";
+        String language = "ko";
+        String timezone = "Asia/Seoul";
+        User user = new User(nickname, language, timezone, LoginType.GUEST);
+        em.persist(user);
+        return user;
+    }
+
     public User saveGuestUser(String nickname, String language, String timezone) {
         User user = new User(nickname, language, timezone, LoginType.GUEST);
         em.persist(user);
