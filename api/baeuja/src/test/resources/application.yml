@@ -1,0 +1,29 @@
+spring:
+  jackson:
+    time-zone: Asia/Seoul
+
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+#    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+
+jwt:
+  accessTokenExp: 3600  # 60 * 60 * 24(1일)
+  refreshTokenExp: 31536000  # 60 * 60 * 24 * 365 (1년)
+  secret: 3b784f4943b37ed6c0186635f91c84dd501c4862946ccf0c7cbbfc93f6c927b1
+
+logging:
+  level:
+    org.hibernate.SQL: debug           # SQL 출력 (이전 버전에서는 이것만 있어도 됨)
+    org.hibernate.sql.exec: debug      # SQL 실행 로그 (Hibernate 6 버전부터 필요)
+    org.hibernate.orm.jdbc.bind: trace # 파라미터 바인딩 로그

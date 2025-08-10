@@ -1,0 +1,145 @@
+= Auth API 문서
+:toc: left
+:toclevels: 2
+:source-highlighter: highlightjs
+:snippets: {projectdir}/build/generated-snippets
+:table-caption!:
+
+== POST /api/auth/sign-in
+
+로그인 요청(Guest는 요청할 필요 없음)
+
+=== *✅ 성공*
+
+==== 요청 필드
+include::{snippets}/auth-sign-in-success/request-fields.adoc[]
+
+==== 응답 필드
+include::{snippets}/auth-sign-in-success/response-fields.adoc[]
+
+include::{snippets}/auth-sign-in-success/http-request.adoc[]
+include::{snippets}/auth-sign-in-success/http-response.adoc[]
+
+=== *❌ 실패: 존재하지 않는 사용자*
+
+==== 요청 필드
+include::{snippets}/auth-sign-in-fail/request-fields.adoc[]
+
+==== 응답 필드
+
+include::{snippets}/auth-sign-in-fail/response-fields.adoc[]
+
+include::{snippets}/auth-sign-in-fail/http-response.adoc[]
+
+== POST /api/auth/sign-up
+
+회원가입 요청.
+회원가입은 Guest와 Google 총 2가지 방법으로 가능.
+
+=== *✅ 성공: GUEST 회원가입*
+
+==== 요청 필드
+include::{snippets}/auth-sign-up-guest-success/request-fields.adoc[]
+
+==== 응답 필드
+include::{snippets}/auth-sign-up-guest-success/response-fields.adoc[]
+
+include::{snippets}/auth-sign-up-guest-success/http-request.adoc[]
+include::{snippets}/auth-sign-up-guest-success/http-response.adoc[]
+
+=== *✅ 성공: GOOGLE 회원가입*
+
+==== 요청 필드
+include::{snippets}/auth-sign-up-google-success/request-fields.adoc[]
+
+==== 응답 필드
+
+include::{snippets}/auth-sign-up-google-success/response-fields.adoc[]
+
+include::{snippets}/auth-sign-up-google-success/http-response.adoc[]
+include::{snippets}/auth-sign-up-google-success/http-request.adoc[]
+
+=== *❌ 실패: 이메일 누락*
+==== 요청 필드
+include::{snippets}/auth-sign-up-google-fail-missing/request-fields.adoc[]
+==== 응답 필드
+include::{snippets}/auth-sign-up-google-fail-missing/response-fields.adoc[]
+
+include::{snippets}/auth-sign-up-google-fail-missing/http-response.adoc[]
+
+=== *❌ 실패: 중복 이메일*
+==== 요청 필드
+include::{snippets}/auth-sign-up-google-fail-duplicate/request-fields.adoc[]
+==== 응답 필드
+include::{snippets}/auth-sign-up-google-fail-duplicate/response-fields.adoc[]
+
+include::{snippets}/auth-sign-up-google-fail-duplicate/http-response.adoc[]
+
+
+== GET /api/auth/check-nickname
+
+회원가입을 위한 닉네임 유효성 검사.
+
+- 길이는 2 이상 20 이하
+
+- 사용 가능한 문자는 한국어, 영어, 숫자만 가능
+
+- 중복 안됨
+
+=== *✅ 성공*
+
+==== 요청 파라미터
+include::{snippets}/auth-check-nickname-success/query-parameters.adoc[]
+
+==== 응답 필드
+include::{snippets}/auth-check-nickname-success/response-fields.adoc[]
+
+include::{snippets}/auth-check-nickname-success/http-request.adoc[]
+include::{snippets}/auth-check-nickname-success/http-response.adoc[]
+
+=== *❌ 실패: 중복 닉네임*
+
+==== 요청 파라미터
+include::{snippets}/auth-check-nickname-fail-duplicate/query-parameters.adoc[]
+
+==== 응답 필드
+include::{snippets}/auth-check-nickname-fail-duplicate/response-fields.adoc[]
+
+include::{snippets}/auth-check-nickname-fail-duplicate/http-response.adoc[]
+
+=== *❌ 실패: 글자수 제한*
+
+==== 요청 파라미터
+include::{snippets}/auth-check-nickname-fail-length/query-parameters.adoc[]
+
+==== 응답 필드
+include::{snippets}/auth-check-nickname-fail-length/response-fields.adoc[]
+
+include::{snippets}/auth-check-nickname-fail-length/http-response.adoc[]
+
+
+== POST /api/auth/token
+
+만료된 Access Token 및 Refresh Token 재발급.
+
+=== *✅ 성공*
+
+==== 요청 필드
+include::{snippets}/auth-renew-token-success/request-fields.adoc[]
+
+==== 응답 필드
+include::{snippets}/auth-renew-token-success/response-fields.adoc[]
+
+include::{snippets}/auth-renew-token-success/http-request.adoc[]
+include::{snippets}/auth-renew-token-success/http-response.adoc[]
+
+=== *❌ 실패: 유효하지 않은 refresh or access 토큰*
+
+==== 요청 필드
+include::{snippets}/auth-renew-token-fail/request-fields.adoc[]
+
+==== 응답 필드
+include::{snippets}/auth-renew-token-fail/response-fields.adoc[]
+
+include::{snippets}/auth-renew-token-fail/http-request.adoc[]
+include::{snippets}/auth-renew-token-fail/http-response.adoc[]

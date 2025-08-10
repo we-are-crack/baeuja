@@ -1,37 +1,82 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.5.0'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+    id 'org.springframework.boot' version '3.5.0'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
 
-group = 'we-are-crack'
+group = 'xyz.baeuja'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-//	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation "org.springframework.boot:spring-boot-starter-security"
+
+    implementation 'org.postgresql:postgresql:42.7.3'
+
+    // jwt
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    testImplementation 'org.springframework.restdocs:spring-restdocs-core'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
+    testImplementation 'io.rest-assured:rest-assured:5.4.0'
+    testImplementation 'com.h2database:h2'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+ext {
+    snippetsDir = file('build/generated-snippets') // 테스트 실행 시 생성되는 REST Docs 스니펫(문서 조각)의 출력 위치
+    snippetsJarDir = file("src/docs/asciidoc/snippets")  // 스니펫 파일을 복사해 둘 위치 (예: Asciidoc 문서에서 참조할 수 있도록)
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
+
+// build/generated-snippets → src/docs/asciidoc/snippets로 복사
+tasks.register('copySnippets', Copy) {
+    from snippetsDir
+    into snippetsJarDir
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    dependsOn test
+    attributes 'snippets': snippetsDir
+}
+
+bootJar {
+    dependsOn asciidoctor
+
+    // Asciidoctor 결과물 (build/docs/asciidoc)을 static/docs/ 경로에 포함시켜 jar에 같이 패키징
+    from("${asciidoctor.outputDir}") {
+        into 'static/docs'
+    }
+}
+

@@ -1,0 +1,21 @@
+= 사용자 API 문서
+:toc: left
+:toclevels: 2
+:source-highlighter: highlightjs
+:snippets: {projectdir}/build/generated-snippets
+:table-caption!:
+
+== GET /api/users/me
+
+사용자 정보 상세 조회.
+
+=== *✅ 성공*
+
+==== 요청 헤더
+include::{snippets}/users-get-my-info-success/request-headers.adoc[]
+
+==== 응답 필드
+include::{snippets}/users-get-my-info-success/response-fields.adoc[]
+
+include::{snippets}/users-get-my-info-success/http-request.adoc[]
+include::{snippets}/users-get-my-info-success/http-response.adoc[]

@@ -1,0 +1,21 @@
+:basedir: src/docs/asciidoc
+:toc: left
+:toclevels: 2
+:source-highlighter: highlightjs
+
+= *Baeuja* API 문서
+
+이 문서는 Spring Boot에서 Spring REST Docs로 작성된 Baeuja API 문서입니다.
+
+토큰 인증 실패 같이 API 전반적으로 발생하는 실패 응답들은 맨 아래 *<<common,공통 실패 응답 모음>>* 섹션을 참고해 주세요.
+
+
+include::{basedir}/auth.adoc[]
+
+include::{basedir}/user.adoc[]
+
+include::{basedir}/home.adoc[]
+
+include::{basedir}/learning.adoc[]
+
+include::{basedir}/common.adoc[]
