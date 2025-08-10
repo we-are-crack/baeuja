@@ -3,8 +3,11 @@
 :toclevels: 2
 :source-highlighter: highlightjs
 :snippets: {projectdir}/build/generated-snippets
+:table-caption!:
 
 == POST /api/auth/sign-in
+
+로그인 요청(Guest는 요청할 필요 없음)
 
 === *✅ 성공*
 
@@ -29,6 +32,9 @@ include::{snippets}/auth-sign-in-fail/response-fields.adoc[]
 include::{snippets}/auth-sign-in-fail/http-response.adoc[]
 
 == POST /api/auth/sign-up
+
+회원가입 요청.
+회원가입은 Guest와 Google 총 2가지 방법으로 가능.
 
 === *✅ 성공: GUEST 회원가입*
 
@@ -72,6 +78,14 @@ include::{snippets}/auth-sign-up-google-fail-duplicate/http-response.adoc[]
 
 == GET /api/auth/check-nickname
 
+회원가입을 위한 닉네임 유효성 검사.
+
+- 길이는 2 이상 20 이하
+
+- 사용 가능한 문자는 한국어, 영어, 숫자만 가능
+
+- 중복 안됨
+
 === *✅ 성공*
 
 ==== 요청 파라미터
@@ -105,6 +119,8 @@ include::{snippets}/auth-check-nickname-fail-length/http-response.adoc[]
 
 
 == POST /api/auth/token
+
+만료된 Access Token 및 Refresh Token 재발급.
 
 === *✅ 성공*
 

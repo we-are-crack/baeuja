@@ -1,0 +1,30 @@
+[[common]]
+= 공통 실패 응답 모음
+:toc: left
+:toclevels: 2
+:source-highlighter: highlightjs
+:snippets: {projectdir}/build/generated-snippets
+:table-caption!:
+
+=== *❌ 실패: 인증 헤더 누락*
+
+==== 응답 필드
+include::{snippets}/users-get-my-info-fail-missing/response-fields.adoc[]
+
+include::{snippets}/users-get-my-info-fail-missing/http-response.adoc[]
+
+
+=== *❌ 실패: 유효하지 않은 토큰*
+
+==== 응답 필드
+include::{snippets}/users-get-my-info-fail-invalid/response-fields.adoc[]
+
+include::{snippets}/users-get-my-info-fail-invalid/http-response.adoc[]
+
+
+=== *❌ 실패: 만료된 토큰*
+
+==== 응답 필드
+include::{snippets}/users-get-my-info-fail-expired/response-fields.adoc[]
+
+include::{snippets}/users-get-my-info-fail-expired/http-response.adoc[]

@@ -1,0 +1,158 @@
+= learning API 문서
+:toc: left
+:toclevels: 2
+:source-highlighter: highlightjs
+:snippets: {projectdir}/build/generated-snippets
+:table-caption!:
+
+== GET /api/learning/contents
+
+전체 학습 콘텐츠 리스트를 분류 별로 5개씩 조회.
+
+=== *✅ 성공*
+
+==== 요청 헤더
+include::{snippets}/learning-contents-success/request-headers.adoc[]
+
+==== 요청 파라미터
+include::{snippets}/learning-contents-success/query-parameters.adoc[]
+
+==== 응답 필드
+include::{snippets}/learning-contents-success/response-fields.adoc[]
+
+include::{snippets}/learning-contents-success/http-request.adoc[]
+include::{snippets}/learning-contents-success/http-response.adoc[]
+
+=== *✅ 성공: 전체 학습 콘텐츠 리스트 조회 (size=10)*
+
+==== 요청 헤더
+include::{snippets}/learning-contents-success-size-10/request-headers.adoc[]
+
+==== 요청 파라미터
+include::{snippets}/learning-contents-success-size-10/query-parameters.adoc[]
+
+==== 응답 필드
+include::{snippets}/learning-contents-success-size-10/response-fields.adoc[]
+
+include::{snippets}/learning-contents-success-size-10/http-request.adoc[]
+include::{snippets}/learning-contents-success-size-10/http-response.adoc[]
+
+=== *❌ 실패: size=0*
+
+==== 요청 헤더
+include::{snippets}/learning-contents-success-size-0/request-headers.adoc[]
+
+==== 요청 파라미터
+include::{snippets}/learning-contents-success-size-0/query-parameters.adoc[]
+
+==== 응답 필드
+include::{snippets}/learning-contents-success-size-0/response-fields.adoc[]
+
+include::{snippets}/learning-contents-success-size-0/http-request.adoc[]
+include::{snippets}/learning-contents-success-size-0/http-response.adoc[]
+
+== GET /api/learning/contents/classification/{classification}
+
+특정 분류 학습 콘텐츠 리스트 조회.
+
+{classification}으로 가능한 값(대소문자 구분 x)
+
+- pop
+- movie
+- drama
+
+유효한 범위를 넘어서는 값을 page 또는 size에 넣을 경우, default 값으로 변경해서 응답.
+
+=== *✅ 성공*
+
+==== 요청 헤더
+include::{snippets}/learning-contents-by-classification-success/request-headers.adoc[]
+
+==== 경로 파라미터
+include::{snippets}/learning-contents-by-classification-success/path-parameters.adoc[]
+
+==== 응답 필드
+include::{snippets}/learning-contents-by-classification-success/response-fields.adoc[]
+
+include::{snippets}/learning-contents-by-classification-success/http-request.adoc[]
+include::{snippets}/learning-contents-by-classification-success/http-response.adoc[]
+
+=== *✅ 성공: page=1*
+
+==== 요청 헤더
+include::{snippets}/learning-contents-by-classification-page-1/request-headers.adoc[]
+
+==== 경로 파라미터
+include::{snippets}/learning-contents-by-classification-page-1/path-parameters.adoc[]
+
+==== 요청 파라미터
+include::{snippets}/learning-contents-by-classification-page-1/query-parameters.adoc[]
+
+==== 응답 필드
+include::{snippets}/learning-contents-by-classification-page-1/response-fields.adoc[]
+
+include::{snippets}/learning-contents-by-classification-page-1/http-request.adoc[]
+include::{snippets}/learning-contents-by-classification-page-1/http-response.adoc[]
+
+=== *✅ 성공: page=10000*
+
+==== 요청 헤더
+include::{snippets}/learning-contents-by-classification-page-10000/request-headers.adoc[]
+
+==== 경로 파라미터
+include::{snippets}/learning-contents-by-classification-page-10000/path-parameters.adoc[]
+
+==== 요청 파라미터
+include::{snippets}/learning-contents-by-classification-page-10000/query-parameters.adoc[]
+
+==== 응답 필드
+include::{snippets}/learning-contents-by-classification-page-10000/response-fields.adoc[]
+
+include::{snippets}/learning-contents-by-classification-page-10000/http-request.adoc[]
+include::{snippets}/learning-contents-by-classification-page-10000/http-response.adoc[]
+
+=== *❌ 실패: 잘못된 classification*
+
+==== 요청 헤더
+include::{snippets}/learning-contents-by-classification-fail-invalid-path-param/request-headers.adoc[]
+
+==== 경로 파라미터
+include::{snippets}/learning-contents-by-classification-fail-invalid-path-param/path-parameters.adoc[]
+
+==== 응답 필드
+include::{snippets}/learning-contents-by-classification-fail-invalid-path-param/response-fields.adoc[]
+
+include::{snippets}/learning-contents-by-classification-fail-invalid-path-param/http-request.adoc[]
+include::{snippets}/learning-contents-by-classification-fail-invalid-path-param/http-response.adoc[]
+
+== GET /api/learning/contents/{id}
+
+콘텐츠 상세 정보 조회.
+
+=== *✅ 성공*
+
+==== 요청 헤더
+include::{snippets}/learning-content-success/request-headers.adoc[]
+
+==== 경로 파라미터
+include::{snippets}/learning-content-success/path-parameters.adoc[]
+
+==== 응답 필드
+include::{snippets}/learning-content-success/response-fields.adoc[]
+
+include::{snippets}/learning-content-success/http-request.adoc[]
+include::{snippets}/learning-content-success/http-response.adoc[]
+
+=== *❌ 실패: NotFound*
+
+==== 요청 헤더
+include::{snippets}/learning-content-success/request-headers.adoc[]
+
+==== 경로 파라미터
+include::{snippets}/learning-content-success/path-parameters.adoc[]
+
+==== 응답 필드
+include::{snippets}/learning-content-success/response-fields.adoc[]
+
+include::{snippets}/learning-content-success/http-request.adoc[]
+include::{snippets}/learning-content-success/http-response.adoc[]
