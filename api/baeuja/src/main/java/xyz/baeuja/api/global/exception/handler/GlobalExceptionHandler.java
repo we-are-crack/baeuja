@@ -2,6 +2,7 @@ package xyz.baeuja.api.global.exception.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -66,14 +67,23 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 요청 쿼리 파라미터 타입 불일치
+     * 요청 파라미터 타입 불일치 <br>
+     * 쿼리 파리미터 타입 불일치 -> INVALID_QUERY_PARAMETER_TYPE <br>
+     * 경로 파라미터 타입 불일치 -> INVALID_PATH_PARAMETER
      */
     @ExceptionHandler
     public ResponseEntity<ResultResponse<Void>> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
         log.info("🚫MethodArgumentTypeMismatchExceptionHandler handled: {} ", exception.getMessage());
+
+        if (exception.getCause() instanceof ConversionFailedException) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ResultResponse.failure(ErrorCode.INVALID_PATH_PARAMETER.name(), "The request path parameter is invalid."));
+        }
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ResultResponse.failure(ErrorCode.INVALID_QUERY_PARAMETER_TYPE.name(), "The request query parameter type is invalid."));
+                .body(ResultResponse.failure(ErrorCode.INVALID_QUERY_PARAMETER_TYPE.name(), "The request query parameter is invalid."));
     }
 
     /**

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class LearningContentsResponse {
+public class LearningAllContentsResponse {
 
     private List<LearningContentDto> pop;
     private List<LearningContentDto> movie;

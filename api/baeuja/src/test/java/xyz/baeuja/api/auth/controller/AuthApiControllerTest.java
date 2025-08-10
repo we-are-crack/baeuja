@@ -69,7 +69,7 @@ class AuthApiControllerTest {
         requestBodyParams.put("email", email);
         String requestBody = buildRequestBody(requestBodyParams);
 
-        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestBodyAndResponseSnippet(
                         "auth-sign-in-success",
                         signInRequestBody(),
                         buildSingleResultResponseFields(authData()))
@@ -94,7 +94,7 @@ class AuthApiControllerTest {
         requestBodyParams.put("email", email);
         String requestBody = buildRequestBody(requestBodyParams);
 
-        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestBodyAndResponseSnippet(
                 "auth-sign-in-fail",
                 signInRequestBody(),
                 defaultResponse())
@@ -120,7 +120,7 @@ class AuthApiControllerTest {
         requestBodyParams.put("loginType", LoginType.GUEST.name());
         String requestBody = buildRequestBody(requestBodyParams);
 
-        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestBodyAndResponseSnippet(
                 "auth-sign-up-guest-success",
                 signUpGuestRequestBody(),
                 buildSingleResultResponseFields(authData()))
@@ -149,7 +149,7 @@ class AuthApiControllerTest {
         requestBodyParams.put("loginType", LoginType.GOOGLE.name());
         String requestBody = buildRequestBody(requestBodyParams);
 
-        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestBodyAndResponseSnippet(
                 "auth-sign-up-google-success",
                 signUpGoogleRequestBody(),
                 buildSingleResultResponseFields(authData())
@@ -177,7 +177,7 @@ class AuthApiControllerTest {
         requestBodyParams.put("loginType", LoginType.GOOGLE.name());
         String requestBody = buildRequestBody(requestBodyParams);
 
-        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestBodyAndResponseSnippet(
                 "auth-sign-up-google-fail-missing",
                 signUpGoogleRequestBodyWithoutEmail(),
                 defaultResponse())
@@ -207,7 +207,7 @@ class AuthApiControllerTest {
         requestBodyParams.put("loginType", LoginType.GOOGLE.name());
         String requestBody = buildRequestBody(requestBodyParams);
 
-        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestBodyAndResponseSnippet(
                 "auth-sign-up-google-fail-duplicate",
                 signUpGoogleRequestBody(),
                 defaultResponse())
@@ -227,7 +227,7 @@ class AuthApiControllerTest {
     @Test
     @DisplayName("닉네임 유효성 검사 성공")
     void checkNickname_success() {
-        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createQueryResponseSnippet(
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createQueryParamAndResponseSnippet(
                 "auth-check-nickname-success",
                 checkNicknameRequestParam(),
                 defaultResponse())
@@ -248,7 +248,7 @@ class AuthApiControllerTest {
     void checkNickname_fail_duplicate() {
         helper.saveGuestUser(nickname, language, timezone);
 
-        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createQueryResponseSnippet(
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createQueryParamAndResponseSnippet(
                 "auth-check-nickname-fail-duplicate",
                 checkNicknameRequestParam(),
                 defaultResponse())
@@ -269,7 +269,7 @@ class AuthApiControllerTest {
     void checkNickname_fail_length() {
         helper.saveGuestUser(nickname, language, timezone);
 
-        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createQueryResponseSnippet(
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createQueryParamAndResponseSnippet(
                 "auth-check-nickname-fail-length",
                 checkNicknameRequestParam(),
                 defaultResponse())
@@ -296,7 +296,7 @@ class AuthApiControllerTest {
         requestBodyParams.put("refreshToken", refreshToken);
         String requestBody = buildRequestBody(requestBodyParams);
 
-        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestBodyAndResponseSnippet(
                 "auth-renew-token-success",
                 authData(),
                 buildSingleResultResponseFields(authData()))
@@ -325,7 +325,7 @@ class AuthApiControllerTest {
         requestBodyParams.put("refreshToken", refreshToken);
         String requestBody = buildRequestBody(requestBodyParams);
 
-        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestResponseSnippet(
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createRequestBodyAndResponseSnippet(
                 "auth-renew-token-fail",
                 authData(),
                 defaultResponse())

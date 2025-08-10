@@ -20,12 +20,12 @@ public class ResultResponse<T> {
         return new ResultResponse<>("SUCCESS", "The request was successful.");
     }
 
-    public static <T> ResultResponse<T> success(T data) {
-        return new ResultResponse<>("SUCCESS", "The request was successful.", data);
-    }
-
     public static ResultResponse<Void> success(String message) {
         return new ResultResponse<>("SUCCESS", message);
+    }
+
+    public static <T> ResultResponse<T> success(T data) {
+        return new ResultResponse<>("SUCCESS", "The request was successful.", data);
     }
 
     public static ResultResponse<Void> failure(String code, String message) {
