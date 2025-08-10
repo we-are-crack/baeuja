@@ -68,12 +68,12 @@ class LearningApiControllerTest {
 
     @Test
     @DisplayName("학습 콘텐츠 리스트 조회 성공")
-    void allContentList_success() {
+    void contents_success() {
         RequestSpecification spec = docsHelper.createSpecWithDocs(RestDocsHelper.createQueryParamAndResponseSnippet(
-                "learning-all-content-list-success",
+                "learning-contents-success",
                 authorizationHeader(),
-                learningAllContentListQueryParam("default size = 5"),
-                buildSingleResultResponseFields(learningAllContentListResponse())
+                learningContentsQueryParam("default size = 5"),
+                buildSingleResultResponseFields(learningContentsResponse())
         ));
 
         Response response = RestAssured
@@ -91,12 +91,12 @@ class LearningApiControllerTest {
 
     @Test
     @DisplayName("학습 콘텐츠 리스트 조회 성공 - size = 10")
-    void allContentList_success_size_10() {
+    void contents_success_size_10() {
         RequestSpecification spec = docsHelper.createSpecWithDocs(RestDocsHelper.createQueryParamAndResponseSnippet(
-                "learning-all-content-success-size-10",
+                "learning-contents-success-size-10",
                 authorizationHeader(),
-                learningAllContentListQueryParam("size = 10(최소 1개 이상)"),
-                buildSingleResultResponseFields(learningAllContentListResponse())
+                learningContentsQueryParam("size = 10(최소 1개 이상)"),
+                buildSingleResultResponseFields(learningContentsResponse())
         ));
 
         Response response = RestAssured
@@ -115,11 +115,11 @@ class LearningApiControllerTest {
 
     @Test
     @DisplayName("학습 콘텐츠 리스트 조회 실패 - size = 0")
-    void allContentList_success_size_0() {
+    void contents_success_size_0() {
         RequestSpecification spec = docsHelper.createSpecWithDocs(RestDocsHelper.createQueryParamAndResponseSnippet(
-                "learning-all-content-success-size-0",
+                "learning-contents-success-size-0",
                 authorizationHeader(),
-                learningAllContentListQueryParam("size = 0"),
+                learningContentsQueryParam("size = 0"),
                 defaultResponse()
         ));
 
@@ -136,14 +136,14 @@ class LearningApiControllerTest {
 
     @Test
     @DisplayName("특정 분류 학습 콘텐츠 리스트 조회 성공")
-    void contentList_success() {
+    void contentsByClassification_success() {
         Classification classification = Classification.POP;
 
         RequestSpecification spec = docsHelper.createSpecWithDocs(RestDocsHelper.createPathParamAndResponseSnippet(
-                "learning-content-list-success",
+                "learning-contents-by-classification-success",
                 authorizationHeader(),
-                learningContentListPathParam("classification = pop"),
-                buildSingleResultResponseFields(mergeFields(learningContentListResponse(classification), pageInfoResponse())))
+                learningContentsByClassificationPathParam("classification = pop"),
+                buildSingleResultResponseFields(mergeFields(learningContentsByClassificationResponse(classification), pageInfoResponse())))
         );
 
         Response response = RestAssured
@@ -160,16 +160,16 @@ class LearningApiControllerTest {
 
     @Test
     @DisplayName("특정 분류 학습 콘텐츠 리스트 조회 성공 - 페이지 번호 지정")
-    void contentList_success_page_1() {
+    void contentsByClassification_success_page_1() {
         Classification classification = Classification.POP;
         int page = 1;
 
         RequestSpecification spec = docsHelper.createSpecWithDocs(RestDocsHelper.createPathAndQueryParamAndResponseSnippet(
-                "learning-content-list-page-1",
+                "learning-contents-by-classification-page-1",
                 authorizationHeader(),
-                learningContentListPathParam("classification = pop"),
+                learningContentsByClassificationPathParam("classification = pop"),
                 pagingQueryParam(),
-                buildSingleResultResponseFields(mergeFields(learningContentListResponse(classification), pageInfoResponse())))
+                buildSingleResultResponseFields(mergeFields(learningContentsByClassificationResponse(classification), pageInfoResponse())))
         );
 
         Response response = RestAssured
@@ -188,16 +188,16 @@ class LearningApiControllerTest {
 
     @Test
     @DisplayName("특정 분류 학습 콘텐츠 리스트 조회 성공 - 초괴 페이지 지정 시 빈 리스트 반환")
-    void contentList_success_page_10000() {
+    void contentsByClassification_success_page_10000() {
         Classification classification = Classification.POP;
         int page = 10000;
 
         RequestSpecification spec = docsHelper.createSpecWithDocs(RestDocsHelper.createPathAndQueryParamAndResponseSnippet(
-                "learning-content-list-page-10000",
+                "learning-contents-by-classification-page-10000",
                 authorizationHeader(),
-                learningContentListPathParam("classification = pop"),
+                learningContentsByClassificationPathParam("classification = pop"),
                 pagingQueryParam(),
-                buildSingleResultResponseFields(mergeFields(learningContentListResponse(), pageInfoResponse())))
+                buildSingleResultResponseFields(mergeFields(learningContentsByClassificationResponse(), pageInfoResponse())))
         );
 
         Response response = RestAssured
@@ -214,13 +214,13 @@ class LearningApiControllerTest {
 
     @Test
     @DisplayName("특정 분류 학습 콘텐츠 리스트 조회 실패 - 잘못된 classification")
-    void contentList_fail_invalid_path_param() {
+    void contentsByClassification_fail_invalid_path_param() {
         String classification = "invalid";
 
         RequestSpecification spec = docsHelper.createSpecWithDocs(RestDocsHelper.createPathParamAndResponseSnippet(
-                "learning-content-list-fail-invalid-path-param",
+                "learning-contents-by-classification-fail-invalid-path-param",
                 authorizationHeader(),
-                learningContentListPathParam("classification = invalid"),
+                learningContentsByClassificationPathParam("classification = invalid"),
                 defaultResponse())
         );
 

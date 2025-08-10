@@ -6,6 +6,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import xyz.baeuja.api.content.domain.Classification;
+import xyz.baeuja.api.content.dto.ContentDto;
 import xyz.baeuja.api.global.response.ResultResponse;
 import xyz.baeuja.api.global.response.page.PagedResponse;
 import xyz.baeuja.api.learning.dto.LearningContentDto;
@@ -26,9 +27,9 @@ public class LearningApiController {
      * @return data : LearningContentsResponse
      */
     @GetMapping("/contents")
-    public ResponseEntity<ResultResponse<LearningAllContentsResponse>> allContentList(
+    public ResponseEntity<ResultResponse<LearningAllContentsResponse>> contents(
             @RequestParam(name = "size", required = false, defaultValue = "5") int size) {
-        LearningAllContentsResponse learningAllContentsResponse = learningService.findAllContents(size);
+        LearningAllContentsResponse learningAllContentsResponse = learningService.findAllLearningContents(size);
         return ResponseEntity.ok(ResultResponse.success(learningAllContentsResponse));
     }
 
@@ -40,13 +41,16 @@ public class LearningApiController {
      * @return PagedResponse<LearningContentDto>
      */
     @GetMapping("/contents/{classification}")
-    public ResponseEntity<ResultResponse<PagedResponse<LearningContentDto>>> contentList(
+    public ResponseEntity<ResultResponse<PagedResponse<LearningContentDto>>> contentsByClassification(
             @PathVariable Classification classification,
             @PageableDefault(size = 5, page = 0) Pageable pageable
     ) {
-        PagedResponse<LearningContentDto> pagedContents = learningService.findContents(
+        PagedResponse<LearningContentDto> pagedContents = learningService.findLearningContents(
                 classification, pageable.getPageNumber(), pageable.getPageSize()
         );
         return ResponseEntity.ok(ResultResponse.success(pagedContents));
     }
+
+//    @GetMapping("/contents/{id}")
+//    public ResponseEntity<ResultResponse<ContentDto>> contentDetails
 }
