@@ -223,6 +223,32 @@ public class RestDocsSnippets {
         };
     }
 
+    public static ParameterDescriptor[] learningContentPathParam() {
+        return new ParameterDescriptor[]{
+                parameterWithName("id").description("content id")
+        };
+    }
+
+    public static FieldDescriptor[] learningContentResponse(Classification classification) {
+        FieldDescriptor optionalfieldDescriptor;
+
+        if (classification == Classification.POP) {
+            optionalfieldDescriptor = fieldWithPath("artist").description("가수");
+        } else {
+            optionalfieldDescriptor = fieldWithPath("director").description("감독");
+        }
+
+        return new FieldDescriptor[]{
+                fieldWithPath("id").description("content id"),
+                fieldWithPath("classification").description("content 분류 ex)POP, DRAMA, MOVIE"),
+                fieldWithPath("title").description("제목"),
+                optionalfieldDescriptor,
+                fieldWithPath("thumbnailUrl").description("썸네일 주소"),
+                fieldWithPath("youtubeId").description("유튜브 id"),
+                fieldWithPath("description").description("간단 설명"),
+        };
+    }
+
     // ========================paging======================== //
     public static ParameterDescriptor[] pagingQueryParam() {
         return new ParameterDescriptor[]{

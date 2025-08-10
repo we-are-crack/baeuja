@@ -40,7 +40,7 @@ public class LearningApiController {
      * @param pageable 페이징 정보 (page, size)
      * @return PagedResponse<LearningContentDto>
      */
-    @GetMapping("/contents/{classification}")
+    @GetMapping("/contents/classification/{classification}")
     public ResponseEntity<ResultResponse<PagedResponse<LearningContentDto>>> contentsByClassification(
             @PathVariable Classification classification,
             @PageableDefault(size = 5, page = 0) Pageable pageable
@@ -51,6 +51,17 @@ public class LearningApiController {
         return ResponseEntity.ok(ResultResponse.success(pagedContents));
     }
 
-//    @GetMapping("/contents/{id}")
-//    public ResponseEntity<ResultResponse<ContentDto>> contentDetails
+    /**
+     * 콘텐츠 상세 정보 조회
+     *
+     * @param contentId 조회할 content id
+     * @return ContentDto
+     */
+    @GetMapping("/contents/{id}")
+    public ResponseEntity<ResultResponse<ContentDto>> content(
+            @PathVariable(name = "id") Long contentId
+    ) {
+        ContentDto contentDto = learningService.findContent(contentId);
+        return ResponseEntity.ok(ResultResponse.success(contentDto));
+    }
 }

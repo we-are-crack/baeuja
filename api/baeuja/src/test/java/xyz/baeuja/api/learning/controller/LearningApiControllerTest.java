@@ -27,6 +27,7 @@ import xyz.baeuja.api.user.domain.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static xyz.baeuja.api.docs.RestDocsSnippets.*;
+import static xyz.baeuja.api.helper.RestDocsHelper.*;
 import static xyz.baeuja.api.helper.RestDocsHelper.buildSingleResultResponseFields;
 import static xyz.baeuja.api.helper.RestDocsHelper.mergeFields;
 
@@ -69,7 +70,7 @@ class LearningApiControllerTest {
     @Test
     @DisplayName("학습 콘텐츠 리스트 조회 성공")
     void contents_success() {
-        RequestSpecification spec = docsHelper.createSpecWithDocs(RestDocsHelper.createQueryParamAndResponseSnippet(
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createQueryParamAndResponseSnippet(
                 "learning-contents-success",
                 authorizationHeader(),
                 learningContentsQueryParam("default size = 5"),
@@ -92,7 +93,7 @@ class LearningApiControllerTest {
     @Test
     @DisplayName("학습 콘텐츠 리스트 조회 성공 - size = 10")
     void contents_success_size_10() {
-        RequestSpecification spec = docsHelper.createSpecWithDocs(RestDocsHelper.createQueryParamAndResponseSnippet(
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createQueryParamAndResponseSnippet(
                 "learning-contents-success-size-10",
                 authorizationHeader(),
                 learningContentsQueryParam("size = 10(최소 1개 이상)"),
@@ -116,7 +117,7 @@ class LearningApiControllerTest {
     @Test
     @DisplayName("학습 콘텐츠 리스트 조회 실패 - size = 0")
     void contents_success_size_0() {
-        RequestSpecification spec = docsHelper.createSpecWithDocs(RestDocsHelper.createQueryParamAndResponseSnippet(
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createQueryParamAndResponseSnippet(
                 "learning-contents-success-size-0",
                 authorizationHeader(),
                 learningContentsQueryParam("size = 0"),
@@ -139,7 +140,7 @@ class LearningApiControllerTest {
     void contentsByClassification_success() {
         Classification classification = Classification.POP;
 
-        RequestSpecification spec = docsHelper.createSpecWithDocs(RestDocsHelper.createPathParamAndResponseSnippet(
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathParamAndResponseSnippet(
                 "learning-contents-by-classification-success",
                 authorizationHeader(),
                 learningContentsByClassificationPathParam("classification = pop"),
@@ -150,7 +151,7 @@ class LearningApiControllerTest {
                 .given(spec)
                 .header("Authorization", "Bearer " + accessToken)
                 .when()
-                .get("/api/learning/contents/{classification}", classification);
+                .get("/api/learning/contents/classification/{classification}", classification);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getList("data.content")).isNotEmpty().hasSize(5);
@@ -164,7 +165,7 @@ class LearningApiControllerTest {
         Classification classification = Classification.POP;
         int page = 1;
 
-        RequestSpecification spec = docsHelper.createSpecWithDocs(RestDocsHelper.createPathAndQueryParamAndResponseSnippet(
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathAndQueryParamAndResponseSnippet(
                 "learning-contents-by-classification-page-1",
                 authorizationHeader(),
                 learningContentsByClassificationPathParam("classification = pop"),
@@ -178,7 +179,7 @@ class LearningApiControllerTest {
                 .queryParam("page", page)
                 .queryParam("size", 5)
                 .when()
-                .get("/api/learning/contents/{classification}", classification);
+                .get("/api/learning/contents/classification/{classification}", classification);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getList("data.content")).isNotEmpty().hasSize(5);
@@ -192,7 +193,7 @@ class LearningApiControllerTest {
         Classification classification = Classification.POP;
         int page = 10000;
 
-        RequestSpecification spec = docsHelper.createSpecWithDocs(RestDocsHelper.createPathAndQueryParamAndResponseSnippet(
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathAndQueryParamAndResponseSnippet(
                 "learning-contents-by-classification-page-10000",
                 authorizationHeader(),
                 learningContentsByClassificationPathParam("classification = pop"),
@@ -206,7 +207,7 @@ class LearningApiControllerTest {
                 .queryParam("page", page)
                 .queryParam("size", 5)
                 .when()
-                .get("/api/learning/contents/{classification}", classification);
+                .get("/api/learning/contents/classification/{classification}", classification);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getList("data.content")).isEmpty();
@@ -217,7 +218,7 @@ class LearningApiControllerTest {
     void contentsByClassification_fail_invalid_path_param() {
         String classification = "invalid";
 
-        RequestSpecification spec = docsHelper.createSpecWithDocs(RestDocsHelper.createPathParamAndResponseSnippet(
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathParamAndResponseSnippet(
                 "learning-contents-by-classification-fail-invalid-path-param",
                 authorizationHeader(),
                 learningContentsByClassificationPathParam("classification = invalid"),
@@ -228,9 +229,52 @@ class LearningApiControllerTest {
                 .given(spec)
                 .header("Authorization", "Bearer " + accessToken)
                 .when()
-                .get("/api/learning/contents/{classification}", classification);
+                .get("/api/learning/contents/classification/{classification}", classification);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(response.jsonPath().getString("code")).isEqualTo(ErrorCode.INVALID_PATH_PARAMETER.name());
+    }
+
+    @Test
+    @DisplayName("콘텐츠 상세 조회 성공")
+    void content_success() {
+        Long contentId = 1L;
+
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathParamAndResponseSnippet(
+                "learning-content-success",
+                authorizationHeader(),
+                learningContentPathParam(),
+                buildSingleResultResponseFields(learningContentResponse(Classification.POP))
+        ));
+
+        Response response = RestAssured
+                .given(spec)
+                .header("Authorization", "Bearer " + accessToken)
+                .when()
+                .get("/api/learning/contents/{id}", contentId);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.jsonPath().getLong("data.id")).isEqualTo(contentId);
+    }
+
+    @Test
+    @DisplayName("콘텐츠 상세 조회 실패 - NotFound")
+    void content_fail() {
+        Long contentId = 0L;
+
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathParamAndResponseSnippet(
+                "learning-content-success",
+                authorizationHeader(),
+                learningContentPathParam(),
+                defaultResponse())
+        );
+
+        Response response = RestAssured
+                .given(spec)
+                .header("Authorization", "Bearer " + accessToken)
+                .when()
+                .get("/api/learning/contents/{id}", contentId);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 }

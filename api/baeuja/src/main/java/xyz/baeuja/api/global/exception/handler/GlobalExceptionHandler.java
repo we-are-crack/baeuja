@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import xyz.baeuja.api.global.exception.ErrorCode;
 import xyz.baeuja.api.global.exception.InvalidQueryParameterException;
+import xyz.baeuja.api.global.exception.NotFoundException;
 import xyz.baeuja.api.global.exception.UnexpectedException;
 import xyz.baeuja.api.auth.security.exception.ExpiredTokenException;
 import xyz.baeuja.api.auth.security.exception.InvalidJwtException;
@@ -106,5 +107,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(ResultResponse.failure(InvalidJwtException.CODE, exception.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ResultResponse<Void>> handleNotFoundException(NotFoundException exception) {
+        log.info("🚫NotFoundExceptionHandler handled: {} ", exception.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ResultResponse.failure(NotFoundException.CODE, exception.getMessage()));
     }
 }

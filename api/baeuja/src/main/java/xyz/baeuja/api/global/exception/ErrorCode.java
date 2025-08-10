@@ -17,7 +17,6 @@ public enum ErrorCode {
     INVALID_PATH_PARAMETER,
     INVALID_NICKNAME,
 
-
     // 리소스 에러
     USER_NOT_FOUND,
     DUPLICATE_EMAIL,
