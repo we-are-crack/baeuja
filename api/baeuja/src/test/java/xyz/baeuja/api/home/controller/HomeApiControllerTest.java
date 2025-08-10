@@ -82,7 +82,7 @@ class HomeApiControllerTest {
     void getContents_success() {
         String accessToken = jwtProvider.createAccessToken(new JwtUserInfo(user.getId(), user.getTimezone(), user.getRole()));
 
-        RequestSpecification spec = docsHelper.createSpecWithDocs(createAuthHeaderSnippet(
+        RequestSpecification spec = docsHelper.createSpecWithDocs(RestDocsHelper.createResponseSnippet(
                 "home-get-contents-success",
                 RestDocsSnippets.authorizationHeader(),
                 buildListResultResponseFields(RestDocsSnippets.homeContentsResponse())
@@ -123,7 +123,7 @@ class HomeApiControllerTest {
     @Test
     @DisplayName("최신 콘텐츠 조회 실패 - 유효하지 않은 토큰")
     void getContents_fail_invalid_token() {
-        RequestSpecification spec = docsHelper.createSpecWithDocs(createAuthHeaderSnippet(
+        RequestSpecification spec = docsHelper.createSpecWithDocs(RestDocsHelper.createResponseSnippet(
                 "home-get-contents-fail_invalid",
                 authorizationHeader(),
                 defaultResponse())
@@ -144,7 +144,7 @@ class HomeApiControllerTest {
     void getWords_success() {
         String accessToken = jwtProvider.createAccessToken(new JwtUserInfo(user.getId(), user.getTimezone(), user.getRole()));
 
-        RequestSpecification spec = docsHelper.createSpecWithDocs(createAuthHeaderSnippet(
+        RequestSpecification spec = docsHelper.createSpecWithDocs(RestDocsHelper.createResponseSnippet(
                 "home-get-words-success",
                 RestDocsSnippets.authorizationHeader(),
                 buildListResultResponseFields(RestDocsSnippets.homeRecommendWordsResponse())
@@ -170,7 +170,7 @@ class HomeApiControllerTest {
 
         List<Long> excludeIds = LongStream.rangeClosed(0, 10).boxed().toList();
 
-        RequestSpecification spec = docsHelper.createSpecWithDocs(createQueryResponseWithAuthSnippet(
+        RequestSpecification spec = docsHelper.createSpecWithDocs(RestDocsHelper.createQueryParamAndResponseSnippet(
                 "home-get-words-success-exclude",
                 RestDocsSnippets.authorizationHeader(),
                 RestDocsSnippets.excludeIdsRequestParam(),
@@ -198,7 +198,7 @@ class HomeApiControllerTest {
 
         String excludeIds = "1&2&3&4&5";
 
-        RequestSpecification spec = docsHelper.createSpecWithDocs(createQueryResponseWithAuthSnippet(
+        RequestSpecification spec = docsHelper.createSpecWithDocs(RestDocsHelper.createQueryParamAndResponseSnippet(
                 "home-get-words-fail-invalid-query-param",
                 RestDocsSnippets.authorizationHeader(),
                 RestDocsSnippets.excludeIdsRequestParam(),

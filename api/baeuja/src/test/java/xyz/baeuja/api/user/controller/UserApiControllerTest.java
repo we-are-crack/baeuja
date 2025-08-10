@@ -25,7 +25,6 @@ import xyz.baeuja.api.helper.TestDataHelper;
 import xyz.baeuja.api.user.domain.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static xyz.baeuja.api.docs.RestDocsSnippets.*;
 import static xyz.baeuja.api.helper.RestDocsHelper.*;
 
@@ -65,7 +64,7 @@ class UserApiControllerTest {
 
         String accessToken = jwtProvider.createAccessToken(new JwtUserInfo(user.getId(), user.getTimezone(), user.getRole()));
 
-        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createAuthHeaderSnippet(
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(RestDocsHelper.createResponseSnippet(
                 "users-get-my-info-success",
                 authorizationHeader(),
                 buildSingleResultResponseFields(getMyInfoResponse()))
@@ -108,7 +107,7 @@ class UserApiControllerTest {
     void getMyInfo_fail_invalid_token() {
         helper.saveGoogleUser(email, nickname, language, timezone);
 
-        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createAuthHeaderSnippet(
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(RestDocsHelper.createResponseSnippet(
                 "users-get-my-info-fail-invalid",
                 authorizationHeader(),
                 defaultResponse())
@@ -134,7 +133,7 @@ class UserApiControllerTest {
                 new JwtUserInfo(user.getId(), user.getTimezone(), user.getRole()),
                 -1L);
 
-        RequestSpecification spec = restDocsHelper.createSpecWithDocs(createAuthHeaderSnippet(
+        RequestSpecification spec = restDocsHelper.createSpecWithDocs(RestDocsHelper.createResponseSnippet(
                 "users-get-my-info-fail-expired",
                 authorizationHeader(),
                 defaultResponse())

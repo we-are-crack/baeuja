@@ -9,6 +9,8 @@ import org.springframework.restdocs.restassured.RestAssuredRestDocumentationConf
 import org.springframework.restdocs.restassured.RestDocumentationFilter;
 import org.springframework.restdocs.snippet.Snippet;
 
+import java.util.Arrays;
+
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -35,7 +37,7 @@ public class RestDocsHelper {
                 .build();
     }
 
-    public static RestDocumentationFilter createRequestResponseSnippet(
+    public static RestDocumentationFilter createRequestBodyAndResponseSnippet(
             String identifier,
             FieldDescriptor[] requestFields,
             FieldDescriptor[] responseFields
@@ -47,7 +49,7 @@ public class RestDocsHelper {
         );
     }
 
-    public static RestDocumentationFilter createQueryResponseSnippet(
+    public static RestDocumentationFilter createQueryParamAndResponseSnippet(
             String identifier,
             ParameterDescriptor[] queryParams,
             FieldDescriptor[] responseFields
@@ -59,7 +61,7 @@ public class RestDocsHelper {
         );
     }
 
-    public static RestDocumentationFilter createQueryResponseWithAuthSnippet(
+    public static RestDocumentationFilter createQueryParamAndResponseSnippet(
             String identifier,
             RequestHeadersSnippet header,
             ParameterDescriptor[] queryParams,
@@ -73,14 +75,32 @@ public class RestDocsHelper {
         );
     }
 
-    public static RestDocumentationFilter createAuthHeaderSnippet(
+    public static RestDocumentationFilter createPathParamAndResponseSnippet(
             String identifier,
             RequestHeadersSnippet header,
+            ParameterDescriptor[] pathParams,
             FieldDescriptor[] responseFields
     ) {
         return buildSnippet(
                 identifier,
                 header,
+                pathParameters(pathParams),
+                responseFields(responseFields)
+        );
+    }
+
+    public static RestDocumentationFilter createPathAndQueryParamAndResponseSnippet(
+            String identifier,
+            RequestHeadersSnippet header,
+            ParameterDescriptor[] pathParams,
+            ParameterDescriptor[] queryParams,
+            FieldDescriptor[] responseFields
+    ) {
+        return buildSnippet(
+                identifier,
+                header,
+                pathParameters(pathParams),
+                queryParameters(queryParams),
                 responseFields(responseFields)
         );
     }
@@ -95,6 +115,18 @@ public class RestDocsHelper {
         );
     }
 
+    public static RestDocumentationFilter createResponseSnippet(
+            String identifier,
+            RequestHeadersSnippet header,
+            FieldDescriptor[] responseFields
+    ) {
+        return buildSnippet(
+                identifier,
+                header,
+                responseFields(responseFields)
+        );
+    }
+
     public static FieldDescriptor[] buildSingleResultResponseFields(FieldDescriptor... dataFields) {
         return buildResultResponseFields("data.", dataFields);
     }
@@ -103,16 +135,26 @@ public class RestDocsHelper {
         return buildResultResponseFields("data[].", dataFields);
     }
 
+    public static FieldDescriptor[] mergeFields(FieldDescriptor[]... arrays) {
+        return Arrays.stream(arrays)
+                .flatMap(Arrays::stream)
+                .toArray(FieldDescriptor[]::new);
+    }
+
+    private static RestDocumentationFilter buildSnippet(String identifier, Snippet... snippets) {
+        return document(identifier,
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                snippets
+        );
+    }
+
     private static FieldDescriptor[] buildResultResponseFields(String prefix, FieldDescriptor... dataFields) {
-        FieldDescriptor[] defaultFields = new FieldDescriptor[] {
+        FieldDescriptor[] defaultFields = new FieldDescriptor[]{
                 fieldWithPath("code").description("응답 코드"),
                 fieldWithPath("message").description("응답 메시지"),
                 fieldWithPath("data").description("응답 데이터").optional()
         };
-
-        if (dataFields == null || dataFields.length == 0) {
-            return defaultFields;
-        }
 
         FieldDescriptor[] combined = new FieldDescriptor[defaultFields.length + dataFields.length];
         System.arraycopy(defaultFields, 0, combined, 0, defaultFields.length);
@@ -125,20 +167,12 @@ public class RestDocsHelper {
                     .type(fd.getType());
 
             if (fd.isOptional()) {
-                newField = newField.optional();
+                newField.optional();
             }
 
             combined[defaultFields.length + i] = newField;
         }
 
         return combined;
-    }
-
-    private static RestDocumentationFilter buildSnippet(String identifier, Snippet... snippets) {
-        return document(identifier,
-                preprocessRequest(prettyPrint()),
-                preprocessResponse(prettyPrint()),
-                snippets
-        );
     }
 }

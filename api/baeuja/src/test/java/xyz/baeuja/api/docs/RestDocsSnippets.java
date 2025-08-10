@@ -3,6 +3,7 @@ package xyz.baeuja.api.docs;
 import org.springframework.restdocs.headers.RequestHeadersSnippet;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.request.ParameterDescriptor;
+import xyz.baeuja.api.content.domain.Classification;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -157,13 +158,13 @@ public class RestDocsSnippets {
 
     // ========================learning======================== //
 
-    public static ParameterDescriptor[] learningContentsRequestParam(String description) {
+    public static ParameterDescriptor[] learningAllContentListQueryParam(String description) {
         return new ParameterDescriptor[]{
                 parameterWithName("size").description("콘텐츠 분류 별 개수. \n" + description).optional(),
         };
     }
 
-    public static FieldDescriptor[] learningContentsResponse() {
+    public static FieldDescriptor[] learningAllContentListResponse() {
         return new FieldDescriptor[]{
                 fieldWithPath("pop[]").description("POP 콘텐츠 리스트"),
                 fieldWithPath("movie[]").description("MOVIE 콘텐츠 리스트"),
@@ -187,6 +188,56 @@ public class RestDocsSnippets {
                 fieldWithPath("drama[].thumbnailUrl").description("썸네일 주소"),
                 fieldWithPath("drama[].progressRate").description("학습률(0 ~ 100)"),
 
+        };
+    }
+
+    public static ParameterDescriptor[] learningContentListPathParam(String description) {
+        return new ParameterDescriptor[]{
+                parameterWithName("classification").description("콘텐츠 분류 (POP or MOVIE or DRAMA). \n" + description)
+        };
+    }
+
+    public static FieldDescriptor[] learningContentListResponse() {
+        return new FieldDescriptor[]{
+                fieldWithPath("content[]").description("페이징 된 콘텐츠 리스트")
+        };
+    }
+
+    public static FieldDescriptor[] learningContentListResponse(Classification classification) {
+        FieldDescriptor optionalfieldDescriptor;
+
+        if (classification == Classification.POP) {
+            optionalfieldDescriptor = fieldWithPath("content[].artist").description("가수");
+        } else {
+            optionalfieldDescriptor = fieldWithPath("content[].director").description("감독");
+        }
+
+        return new FieldDescriptor[]{
+                fieldWithPath("content[]").description("페이징 된 콘텐츠 리스트"),
+                fieldWithPath("content[].id").description("content id"),
+                fieldWithPath("content[].classification").description("content 분류 ex)POP, DRAMA, MOVIE"),
+                fieldWithPath("content[].title").description("제목"),
+                optionalfieldDescriptor,
+                fieldWithPath("content[].thumbnailUrl").description("썸네일 주소"),
+                fieldWithPath("content[].progressRate").description("학습률(0 ~ 100)"),
+        };
+    }
+
+    // ========================paging======================== //
+    public static ParameterDescriptor[] pagingQueryParam() {
+        return new ParameterDescriptor[]{
+                parameterWithName("page").description("페이지 시작 번호"),
+                parameterWithName("size").description("페이지 크기")
+        };
+    }
+
+    public static FieldDescriptor[] pageInfoResponse() {
+        return new FieldDescriptor[]{
+                fieldWithPath("pageInfo").description("페이지 정보"),
+                fieldWithPath("pageInfo.pageNumber").description("페이지 번호"),
+                fieldWithPath("pageInfo.pageSize").description("페이지 크기"),
+                fieldWithPath("pageInfo.hasNext").description("다음 페이지 존재 여부"),
+                fieldWithPath("pageInfo.hasPrevious").description("이전 페이지 존재 여부"),
         };
     }
 }
