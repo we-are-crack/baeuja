@@ -11,7 +11,7 @@ import com.eello.baeuja.viewmodel.LearningItem
 fun LearningItemLazyRowContainer(
     modifier: Modifier = Modifier,
     items: List<LearningItem>,
-    onNavigateToDetail: (Int) -> Unit = {},
+    onNavigateToDetail: (Long) -> Unit = {},
     isPreview: Boolean = false
 ) {
 

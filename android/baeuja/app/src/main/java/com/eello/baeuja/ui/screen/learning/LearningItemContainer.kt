@@ -11,7 +11,7 @@ fun LearningItemContainer(
     layoutType: LayoutType,
     modifier: Modifier = Modifier,
     items: List<LearningItem>,
-    onNavigateToDetail: (Int) -> Unit = {},
+    onNavigateToDetail: (Long) -> Unit = {},
     isPreview: Boolean = false
 ) {
     when (layoutType) {

@@ -9,18 +9,20 @@ sealed class Screen(val route: String) {
     object SignIn : Screen("${NavGraph.Auth.route}/sign_in")
     object ProfileInput : Screen("${NavGraph.Auth.route}/profile_input")
 
-    // Main Graph
     object Home : Screen("${NavGraph.Main.route}/home")
-    object Learning : Screen("${NavGraph.Main.route}/learning")
+
+    // Learn Graph
+    object Learning : Screen("${NavGraph.Learn.route}/main")
     object LearningItemDetailInfo :
-        Screen("${Learning.route}/learning_item_detail_info/{itemId}") {
-        fun createRoute(itemId: Int) =
-            "${Learning.route}/learning_item_detail_info/$itemId"
+        Screen("${NavGraph.Learn.route}/detail_info/{itemId}") {
+        fun createRoute(itemId: Long) =
+            "${NavGraph.Learn.route}/detail_info/$itemId"
     }
 
-    object LearningItemMore : Screen("${Learning.route}/more?classification={classification}") {
+    object LearningItemMore :
+        Screen("${NavGraph.Learn.route}/more?classification={classification}") {
         fun createRoute(classification: ContentClassification) =
-            "${Learning.route}/more?classification=${classification.name}"
+            "${NavGraph.Learn.route}/more?classification=${classification.name}"
     }
 
     object Review : Screen("${NavGraph.Main.route}/review")

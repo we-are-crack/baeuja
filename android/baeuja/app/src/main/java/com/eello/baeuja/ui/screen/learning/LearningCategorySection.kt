@@ -23,7 +23,7 @@ fun LearningCategorySection(
     itemContainerLayoutType: LayoutType,
     classification: ContentClassification,
     learningItems: List<LearningItem>,
-    onNavigateToDetail: (Int) -> Unit = {},
+    onNavigateToDetail: (Long) -> Unit = {},
     onMoreClick: (ContentClassification) -> Unit = {},
     isPreview: Boolean = false
 ) {

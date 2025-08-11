@@ -25,7 +25,7 @@ import com.eello.baeuja.viewmodel.LearningItem
 fun LearningItemPagerContainer(
     modifier: Modifier = Modifier,
     items: List<LearningItem>,
-    onNavigateToDetail: (Int) -> Unit = {},
+    onNavigateToDetail: (Long) -> Unit = {},
     isPreview: Boolean = false
 ) {
     val pagerState = rememberPagerState { (items.size / 2) + (items.size % 2) }

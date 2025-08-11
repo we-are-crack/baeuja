@@ -38,7 +38,7 @@ private val IMAGE_HEIGHT = 200.dp
 @Composable
 fun LearningItemLazyRowCard(
     item: LearningItem,
-    onNavigateToDetail: (Int) -> Unit = {},
+    onNavigateToDetail: (Long) -> Unit = {},
     isPreview: Boolean = false
 ) {
     Column(

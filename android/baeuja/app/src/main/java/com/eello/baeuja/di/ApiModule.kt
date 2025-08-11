@@ -2,6 +2,7 @@ package com.eello.baeuja.di
 
 import com.eello.baeuja.retrofit.api.AuthAPI
 import com.eello.baeuja.retrofit.api.ContentAPI
+import com.eello.baeuja.retrofit.api.LearningAPI
 import com.eello.baeuja.retrofit.api.UserAPI
 import dagger.Module
 import dagger.Provides
@@ -39,4 +40,9 @@ object ApiModule {
     @Singleton
     fun provideContentAPI(retrofit: Retrofit): ContentAPI =
         retrofit.create(ContentAPI::class.java)
+
+    @Provides
+    @Singleton
+    fun provideLearningAPI(retrofit: Retrofit): LearningAPI =
+        retrofit.create(LearningAPI::class.java)
 }

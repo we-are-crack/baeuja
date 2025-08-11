@@ -45,10 +45,18 @@ fun NavGraphBuilder.authGraph(navController: NavHostController) {
 fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     navigation(startDestination = Screen.Home.route, route = NavGraph.Main.route) {
         composable(Screen.Home.route) { HomeScreen() }
-        composable(Screen.Learning.route) { LearningScreen(navController) }
         composable(Screen.Review.route) { ReviewScreen() }
         composable(Screen.Bookmark.route) { BookmarkScreen() }
         composable(Screen.MyPage.route) { MyPageScreen() }
+    }
+}
+
+fun NavGraphBuilder.learnGraph(navController: NavHostController) {
+    navigation(
+        startDestination = Screen.Learning.route, route = NavGraph.Learn.route
+    ) {
+        composable(Screen.Learning.route) { LearningScreen(navController) }
+
         composable(
             route = Screen.LearningItemDetailInfo.route,
             arguments = listOf(navArgument("itemId") { type = NavType.IntType })
@@ -76,13 +84,5 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController) {
                 classification = ContentClassification.valueOf(classification)
             )
         }
-    }
-}
-
-fun NavGraphBuilder.learnGraph(navController: NavHostController) {
-    navigation(
-        startDestination = Screen.LearningItemDetailInfo.route,
-        route = NavGraph.Learn.route
-    ) {
     }
 }

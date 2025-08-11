@@ -3,8 +3,10 @@ package com.eello.baeuja.di
 import com.eello.baeuja.auth.TokenAuthInterceptor
 import com.eello.baeuja.auth.TokenAuthenticator
 import com.eello.baeuja.auth.TokenManager
+import com.eello.baeuja.retrofit.adapter.CaseInsensitiveEnumDeserializer
 import com.eello.baeuja.retrofit.core.ApiResponseCode
 import com.eello.baeuja.retrofit.core.ApiResponseCodeAdapter
+import com.eello.baeuja.viewmodel.ContentClassification
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -42,6 +44,10 @@ object RetrofitModule {
     @Singleton
     fun provideGsonWithAdapters(): Gson = GsonBuilder()
         .registerTypeAdapter(ApiResponseCode::class.java, ApiResponseCodeAdapter())
+        .registerTypeAdapter(
+            ContentClassification::class.java,
+            CaseInsensitiveEnumDeserializer(ContentClassification::class.java)
+        )
         .serializeNulls()
         .create()
 

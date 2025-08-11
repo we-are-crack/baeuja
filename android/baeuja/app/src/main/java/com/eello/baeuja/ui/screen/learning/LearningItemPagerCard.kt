@@ -36,7 +36,7 @@ import com.eello.baeuja.viewmodel.LearningItem
 @Composable
 fun LearningItemPagerCard(
     item: LearningItem?,
-    onNavigateToDetail: (Int) -> Unit = {},
+    onNavigateToDetail: (Long) -> Unit = {},
     isPreview: Boolean = false
 ) {
     Row(

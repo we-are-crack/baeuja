@@ -7,19 +7,28 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.eello.baeuja.ui.component.ItemSeparator
+import com.eello.baeuja.ui.component.LoadingComponent
+import com.eello.baeuja.ui.component.RetryComponent
+import com.eello.baeuja.ui.navigation.NavGraph
 import com.eello.baeuja.ui.navigation.Screen
 import com.eello.baeuja.ui.theme.BaujaTheme
 import com.eello.baeuja.ui.theme.RobotoFamily
 import com.eello.baeuja.viewmodel.ContentClassification
 import com.eello.baeuja.viewmodel.LearningItem
+import com.eello.baeuja.viewmodel.LearningMainViewModel
 
 val LEARNING_PADDING_HORIZONTAL = 16.dp
 
@@ -99,7 +108,29 @@ private val tempLearningItems = mapOf(
 
 @Composable
 fun LearningScreen(navController: NavController) {
-    val onNavigateToDetail: (Int) -> Unit = { itemId ->
+    val currentBackStackEntry = navController.currentBackStackEntryAsState()
+    val learnEntry = remember(currentBackStackEntry.value) {
+        navController.getBackStackEntry(NavGraph.Learn.route)
+    }
+
+    val learningViewModel: LearningMainViewModel = hiltViewModel(learnEntry)
+
+    LearningRoute(
+        navController = navController,
+        learningViewModel = learningViewModel,
+    )
+}
+
+@Composable
+fun LearningRoute(
+    navController: NavController,
+    learningViewModel: LearningMainViewModel,
+) {
+    val isLoading by learningViewModel.isLoading.collectAsState()
+    val isFailure by learningViewModel.isFailure.collectAsState()
+    val items by learningViewModel.items.collectAsState()
+
+    val onNavigateToDetail: (Long) -> Unit = { itemId ->
         navController.navigate(Screen.LearningItemDetailInfo.createRoute(itemId))
     }
 
@@ -107,28 +138,25 @@ fun LearningScreen(navController: NavController) {
         navController.navigate(Screen.LearningItemMore.createRoute(classification))
     }
 
-    LearningRoute(
-        onNavigateToDetail = onNavigateToDetail,
-        onMoreClick = onMoreClick
-    )
-}
-
-@Composable
-fun LearningRoute(
-    onNavigateToDetail: (Int) -> Unit = {},
-    onMoreClick: (ContentClassification) -> Unit
-) {
-    LearningContent(
-        learningItems = tempLearningItems,
-        onNavigateToDetail = onNavigateToDetail,
-        onMoreClick = onMoreClick,
-    )
+    if (isLoading) {
+        LoadingComponent()
+    } else {
+        if (isFailure) {
+            RetryComponent(onRetry = learningViewModel::loadLearningMainContents)
+        } else {
+            LearningContent(
+                learningItems = items,
+                onNavigateToDetail = onNavigateToDetail,
+                onMoreClick = onMoreClick,
+            )
+        }
+    }
 }
 
 @Composable
 fun LearningContent(
     learningItems: Map<ContentClassification, List<LearningItem>>,
-    onNavigateToDetail: (Int) -> Unit = {},
+    onNavigateToDetail: (Long) -> Unit = {},
     onMoreClick: (ContentClassification) -> Unit = {},
     isPreview: Boolean = false
 ) {

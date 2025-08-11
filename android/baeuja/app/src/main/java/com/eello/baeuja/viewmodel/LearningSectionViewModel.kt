@@ -5,7 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 data class LearningItem(
-    val id: Int = -1,
+    val id: Long = -1,
     val classification: ContentClassification,
     val title: String,
     val artist: String? = null,

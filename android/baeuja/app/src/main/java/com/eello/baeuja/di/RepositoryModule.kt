@@ -4,6 +4,8 @@ import com.eello.baeuja.retrofit.repository.AuthRepository
 import com.eello.baeuja.retrofit.repository.AuthRepositoryImpl
 import com.eello.baeuja.retrofit.repository.ContentRepository
 import com.eello.baeuja.retrofit.repository.ContentRepositoryImpl
+import com.eello.baeuja.retrofit.repository.LearningRepository
+import com.eello.baeuja.retrofit.repository.LearningRepositoryImpl
 import com.eello.baeuja.retrofit.repository.UserRepository
 import com.eello.baeuja.retrofit.repository.UserRepositoryImpl
 import dagger.Binds
@@ -27,4 +29,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindContentRepository(impl: ContentRepositoryImpl): ContentRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindLearningRepository(impl: LearningRepositoryImpl): LearningRepository
 }
