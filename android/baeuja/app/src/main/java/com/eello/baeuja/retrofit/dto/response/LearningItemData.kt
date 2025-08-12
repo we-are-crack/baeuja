@@ -3,7 +3,7 @@ package com.eello.baeuja.retrofit.dto.response
 import com.eello.baeuja.viewmodel.ContentClassification
 import com.eello.baeuja.viewmodel.LearningItem
 
-data class LearningMainContentsData(
+data class LearningItemData(
     val id: Long,
     val classification: ContentClassification,
     val title: String,
@@ -22,9 +22,3 @@ data class LearningMainContentsData(
         director = director
     )
 }
-
-data class LearningSectionData(
-    val pop: List<LearningMainContentsData>,
-    val movie: List<LearningMainContentsData>,
-    val drama: List<LearningMainContentsData>,
-)
