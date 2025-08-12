@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -19,8 +20,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -29,6 +32,7 @@ import com.eello.baeuja.ui.component.BACK_BUTTON_TOP_MARGIN
 import com.eello.baeuja.ui.component.BackButton
 import com.eello.baeuja.ui.navigation.Screen
 import com.eello.baeuja.ui.theme.BaujaTheme
+import com.eello.baeuja.ui.theme.RobotoFamily
 import com.eello.baeuja.viewmodel.ContentClassification
 import com.eello.baeuja.viewmodel.LearningItem
 import com.eello.baeuja.viewmodel.LearningMoreItemViewModel
@@ -148,22 +152,43 @@ fun MoreItemScreen(
 ) {
     val moreItemsViewModel: LearningMoreItemViewModel = hiltViewModel()
 
-    MoreItemsContent(
-        moreItemsViewModel = moreItemsViewModel,
+    MoreItemsRoute(
         navController = navController,
-        classification = classification
+        classification = classification,
+        moreItemsViewModel = moreItemsViewModel
+    )
+}
+
+@Composable
+fun MoreItemsRoute(
+    navController: NavController? = null,
+    classification: ContentClassification,
+    moreItemsViewModel: LearningMoreItemViewModel
+) {
+    val items by moreItemsViewModel.items.collectAsState()
+    val isLoading by moreItemsViewModel.isLoading.collectAsState()
+    val onEndOfContents: () -> Unit = {
+        moreItemsViewModel.loadMoreItems(classification)
+    }
+
+    MoreItemsContent(
+        navController = navController,
+        classification = classification,
+        items = items,
+        isLoading = isLoading,
+        onEndOfContents = onEndOfContents
     )
 }
 
 @Composable
 fun MoreItemsContent(
-    moreItemsViewModel: LearningMoreItemViewModel,
     navController: NavController? = null,
-    classification: ContentClassification
+    classification: ContentClassification,
+    items: List<LearningItem>,
+    isLoading: Boolean = false,
+    onEndOfContents: () -> Unit = {},
+    isPreview: Boolean = false
 ) {
-    val items by moreItemsViewModel.items.collectAsState()
-    val isLoading by moreItemsViewModel.isLoading.collectAsState()
-
     val listState = rememberLazyListState()
     val shouldLoadMore = remember {
         derivedStateOf {
@@ -176,12 +201,13 @@ fun MoreItemsContent(
 
     LaunchedEffect(shouldLoadMore.value, isLoading) {
         if (shouldLoadMore.value && !isLoading) {
-            moreItemsViewModel.loadMoreItems(classification)
+            onEndOfContents()
         }
     }
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (backButtonRef,
+            classificationTextRef,
             itemListRef) = createRefs()
 
         BackButton(
@@ -189,6 +215,19 @@ fun MoreItemsContent(
             modifier = Modifier.constrainAs(backButtonRef) {
                 top.linkTo(parent.top, BACK_BUTTON_TOP_MARGIN)
                 end.linkTo(parent.start, BACK_BUTTON_START_MARGIN)
+            }
+        )
+
+        Text(
+            text = "K-${classification.name}",
+            fontFamily = RobotoFamily,
+            fontWeight = FontWeight.W500,
+            fontSize = 18.sp,
+            letterSpacing = 2.sp,
+            modifier = Modifier.constrainAs(classificationTextRef) {
+                top.linkTo(parent.top, BACK_BUTTON_TOP_MARGIN)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
             }
         )
 
@@ -209,6 +248,7 @@ fun MoreItemsContent(
                     onNavigateToDetail = { itemId ->
                         navController?.navigate(Screen.LearningItemDetailInfo.createRoute(-1))
                     },
+                    isPreview = isPreview
                 )
             }
 
@@ -234,6 +274,10 @@ fun MoreItemsContent(
 @Composable
 fun PreviewMoreItems() {
     BaujaTheme {
-        MoreItemScreen(classification = ContentClassification.POP)
+        MoreItemsContent(
+            classification = ContentClassification.DRAMA,
+            items = tempLearningItems,
+            isPreview = true
+        )
     }
 }
