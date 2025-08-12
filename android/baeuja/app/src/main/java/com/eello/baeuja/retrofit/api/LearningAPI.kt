@@ -2,6 +2,7 @@ package com.eello.baeuja.retrofit.api
 
 import com.eello.baeuja.retrofit.core.ApiResponse
 import com.eello.baeuja.retrofit.dto.response.LearningItemData
+import com.eello.baeuja.retrofit.dto.response.LearningItemDetailInfoData
 import com.eello.baeuja.retrofit.dto.response.MoreLearningItemsData
 import com.eello.baeuja.viewmodel.ContentClassification
 import retrofit2.Response
@@ -22,4 +23,9 @@ interface LearningAPI {
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Response<ApiResponse<MoreLearningItemsData>>
+
+    @GET("learning/contents/{itemId}")
+    suspend fun fetchContentDetailInfo(
+        @Path("itemId") itemId: Long
+    ): Response<ApiResponse<LearningItemDetailInfoData>>
 }

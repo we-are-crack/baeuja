@@ -14,6 +14,17 @@ data class LearningItem(
     val thumbnailUrl: String
 )
 
+data class LearningItemDetail(
+    val id: Long,
+    val classification: ContentClassification,
+    val title: String,
+    val artist: String? = null,
+    val director: String? = null,
+    val thumbnailUrl: String,
+    val youtubeId: String,
+    val description: String
+)
+
 @HiltViewModel
 class LearningSectionViewModel @Inject constructor() : ViewModel() {
 }

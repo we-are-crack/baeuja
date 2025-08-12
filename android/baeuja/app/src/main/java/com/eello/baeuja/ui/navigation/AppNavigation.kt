@@ -59,9 +59,9 @@ fun NavGraphBuilder.learnGraph(navController: NavHostController) {
 
         composable(
             route = Screen.LearningItemDetailInfo.route,
-            arguments = listOf(navArgument("itemId") { type = NavType.IntType })
+            arguments = listOf(navArgument("itemId") { type = NavType.LongType })
         ) { backStackEntry ->
-            val itemId = backStackEntry.arguments?.getInt("itemId") ?: -1
+            val itemId = backStackEntry.arguments?.getLong("itemId") ?: -1
             LearningItemInfo(
                 navController = navController,
                 itemId = itemId

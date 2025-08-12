@@ -8,17 +8,21 @@ import com.eello.baeuja.retrofit.core.handle
 import com.eello.baeuja.retrofit.dto.response.Page
 import com.eello.baeuja.viewmodel.ContentClassification
 import com.eello.baeuja.viewmodel.LearningItem
+import com.eello.baeuja.viewmodel.LearningItemDetail
 import timber.log.Timber
 import javax.inject.Inject
 
 interface LearningRepository {
 
     suspend fun fetchMainContents(size: Int = 5): Map<ContentClassification, List<LearningItem>>
+
     suspend fun fetchContentsByClassification(
         classification: ContentClassification,
         page: Int,
         size: Int = 5
     ): Page<LearningItem>
+
+    suspend fun fetchContentDetailInfo(id: Long): LearningItemDetail
 }
 
 
@@ -62,6 +66,19 @@ class LearningRepositoryImpl @Inject constructor(
                         pageInfo = it.pageInfo
                     )
                 } ?: throw AppException(AppError.Api.EmptyResponse())
+            },
+            onFailure = { reason ->
+                throw AppException(reason)
+            }
+        )
+    }
+
+    override suspend fun fetchContentDetailInfo(id: Long): LearningItemDetail {
+        val apiResult = apiCaller.call { learningAPI.fetchContentDetailInfo(id) }
+        return apiResult.handle(
+            onSuccess = { body ->
+                body.data?.toLearningItemDetail()
+                    ?: throw AppException(AppError.Api.EmptyResponse())
             },
             onFailure = { reason ->
                 throw AppException(reason)
