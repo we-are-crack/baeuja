@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import com.eello.baeuja.R
+import com.eello.baeuja.ui.navigation.NavGraph
 import com.eello.baeuja.ui.navigation.Screen
 import com.eello.baeuja.ui.theme.BaujaTheme
 import com.eello.baeuja.ui.theme.RobotoFamily
@@ -81,7 +82,7 @@ sealed class BottomNavigationItemGiVer( // Google Icon Version
     val label: String
 ) {
     object Learning : BottomNavigationItemGiVer(
-        route = Screen.Learning.route,
+        route = NavGraph.Learn.route,
         unselectedIcon = R.drawable.nav_learning_unselected_gi,
         selectedIcon = R.drawable.nav_learning_selected_gi,
         label = "Learning"
@@ -127,7 +128,7 @@ sealed class BottomNavigationItem(
     val label: String
 ) {
     object Learning : BottomNavigationItem(
-        route = Screen.Learning.route,
+        route = NavGraph.Learn.route,
         unselectedIcon = R.drawable.nav_learning_unselected,
         selectedIcon = R.drawable.nav_learning_selected,
         label = "Learning"
