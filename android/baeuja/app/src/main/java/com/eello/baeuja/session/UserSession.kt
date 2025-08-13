@@ -2,28 +2,14 @@ package com.eello.baeuja.session
 
 import android.content.Context
 import com.eello.baeuja.di.AppEntryPoint
-import com.eello.baeuja.retrofit.repository.UserRepository
+import com.eello.baeuja.domain.model.user.UserInfo
+import com.eello.baeuja.domain.repository.UserRepository
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import timber.log.Timber
-import java.time.ZoneId
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
-
-enum class SignInType {
-    GUEST,
-    GOOGLE,
-}
-
-data class UserInfo(
-    val email: String?,
-    val displayName: String,
-    val language: Locale,
-    val timezone: ZoneId,
-    val loginType: SignInType
-)
 
 @Singleton
 class UserSession @Inject constructor() {

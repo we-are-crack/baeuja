@@ -2,6 +2,7 @@ package com.eello.baeuja.retrofit.repository
 
 import com.eello.baeuja.auth.AuthResult
 import com.eello.baeuja.auth.TokenManager
+import com.eello.baeuja.domain.model.user.SignInType
 import com.eello.baeuja.exception.AppError
 import com.eello.baeuja.exception.AppException
 import com.eello.baeuja.retrofit.api.AuthAPI
@@ -10,7 +11,6 @@ import com.eello.baeuja.retrofit.core.ApiResponseCode
 import com.eello.baeuja.retrofit.core.handle
 import com.eello.baeuja.retrofit.dto.request.SignInRequestDto
 import com.eello.baeuja.retrofit.dto.request.SignUpRequestDto
-import com.eello.baeuja.session.SignInType
 import com.eello.baeuja.viewmodel.DisplayNameAvailable
 import com.eello.baeuja.viewmodel.GoogleSignInUserInfo
 import timber.log.Timber

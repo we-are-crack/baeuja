@@ -1,6 +1,6 @@
 package com.eello.baeuja.retrofit.dto.request
 
-import com.eello.baeuja.session.SignInType
+import com.eello.baeuja.domain.model.user.SignInType
 import java.time.ZoneId
 import java.util.Locale
 
