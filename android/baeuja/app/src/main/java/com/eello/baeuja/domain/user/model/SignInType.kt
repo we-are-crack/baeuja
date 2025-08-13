@@ -1,4 +1,4 @@
-package com.eello.baeuja.domain.model.user
+package com.eello.baeuja.domain.user.model
 
 enum class SignInType {
     GUEST,

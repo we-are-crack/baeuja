@@ -1,6 +1,6 @@
-package com.eello.baeuja.data.dto.response
+package com.eello.baeuja.data.user.dto.response
 
-import com.eello.baeuja.domain.model.user.SignInType
+import com.eello.baeuja.domain.user.model.SignInType
 
 
 data class UserInfoResponse(

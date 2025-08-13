@@ -1,7 +1,7 @@
-package com.eello.baeuja.data.mapper
+package com.eello.baeuja.data.user.mapper
 
-import com.eello.baeuja.data.dto.response.UserInfoResponse
-import com.eello.baeuja.domain.model.user.UserInfo
+import com.eello.baeuja.data.user.dto.response.UserInfoResponse
+import com.eello.baeuja.domain.user.model.UserInfo
 import java.time.ZoneId
 import java.util.Locale
 

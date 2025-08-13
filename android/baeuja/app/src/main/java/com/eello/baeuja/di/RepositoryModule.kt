@@ -1,9 +1,9 @@
 package com.eello.baeuja.di
 
 import com.eello.baeuja.data.auth.repository.AuthRepositoryImpl
-import com.eello.baeuja.data.repository.UserRepositoryImpl
+import com.eello.baeuja.data.user.repository.UserRepositoryImpl
 import com.eello.baeuja.domain.auth.repository.AuthRepository
-import com.eello.baeuja.domain.repository.UserRepository
+import com.eello.baeuja.domain.user.repository.UserRepository
 import com.eello.baeuja.retrofit.repository.ContentRepository
 import com.eello.baeuja.retrofit.repository.ContentRepositoryImpl
 import com.eello.baeuja.retrofit.repository.LearningRepository

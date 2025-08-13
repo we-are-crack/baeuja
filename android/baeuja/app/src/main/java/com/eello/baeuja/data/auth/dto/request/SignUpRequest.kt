@@ -1,6 +1,6 @@
 package com.eello.baeuja.data.auth.dto.request
 
-import com.eello.baeuja.domain.model.user.SignInType
+import com.eello.baeuja.domain.user.model.SignInType
 import java.time.ZoneId
 import java.util.Locale
 

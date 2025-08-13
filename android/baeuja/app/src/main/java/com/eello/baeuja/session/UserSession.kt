@@ -2,8 +2,8 @@ package com.eello.baeuja.session
 
 import android.content.Context
 import com.eello.baeuja.di.AppEntryPoint
-import com.eello.baeuja.domain.model.user.UserInfo
-import com.eello.baeuja.domain.repository.UserRepository
+import com.eello.baeuja.domain.user.model.UserInfo
+import com.eello.baeuja.domain.user.repository.UserRepository
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

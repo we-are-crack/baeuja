@@ -1,4 +1,4 @@
-package com.eello.baeuja.domain.model.user
+package com.eello.baeuja.domain.user.model
 
 import java.time.ZoneId
 import java.util.Locale

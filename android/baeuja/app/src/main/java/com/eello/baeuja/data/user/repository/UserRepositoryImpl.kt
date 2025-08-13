@@ -1,8 +1,8 @@
-package com.eello.baeuja.data.repository
+package com.eello.baeuja.data.user.repository
 
-import com.eello.baeuja.data.mapper.toDomain
-import com.eello.baeuja.domain.model.user.UserInfo
-import com.eello.baeuja.domain.repository.UserRepository
+import com.eello.baeuja.data.user.mapper.toDomain
+import com.eello.baeuja.domain.user.model.UserInfo
+import com.eello.baeuja.domain.user.repository.UserRepository
 import com.eello.baeuja.exception.AppError
 import com.eello.baeuja.exception.AppException
 import com.eello.baeuja.retrofit.api.UserAPI
