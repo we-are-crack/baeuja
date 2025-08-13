@@ -2,7 +2,7 @@ package com.eello.baeuja.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eello.baeuja.auth.TokenManager
+import com.eello.baeuja.domain.auth.service.TokenManager
 import com.eello.baeuja.exception.AppException
 import com.eello.baeuja.session.HomeContentSessionInitializer
 import com.eello.baeuja.session.UserSessionInitializer

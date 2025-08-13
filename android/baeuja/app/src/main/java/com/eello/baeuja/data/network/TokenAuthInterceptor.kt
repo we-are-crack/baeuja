@@ -1,4 +1,4 @@
-package com.eello.baeuja.auth
+package com.eello.baeuja.data.network
 
 import okhttp3.Interceptor
 import okhttp3.Response

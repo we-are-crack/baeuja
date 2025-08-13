@@ -1,6 +1,7 @@
 package com.eello.baeuja.fake
 
-import com.eello.baeuja.auth.TokenManager
+import com.eello.baeuja.domain.auth.service.TokenManager
+
 
 abstract class BaseFakeTokenManager : TokenManager {
     override val accessToken: String?

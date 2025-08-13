@@ -1,9 +1,11 @@
 package com.eello.baeuja.auth
 
+import com.eello.baeuja.data.auth.dto.response.TokenResponse
+import com.eello.baeuja.data.network.TokenAuthenticator
+import com.eello.baeuja.domain.auth.service.TokenRefresher
 import com.eello.baeuja.fake.BaseFakeTokenManager
 import com.eello.baeuja.retrofit.core.ApiResponse
 import com.eello.baeuja.retrofit.core.ApiResponseCode
-import com.eello.baeuja.retrofit.dto.response.TokenRefreshResponseData
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -42,10 +44,10 @@ class TokenAuthenticatorTest {
         mockWebServer.enqueue(MockResponse().setResponseCode(401))
 
         // 2차 응답: 200 OK
-        val refreshTokenResponse = ApiResponse<TokenRefreshResponseData>(
+        val refreshTokenResponse = ApiResponse<TokenResponse>(
             code = ApiResponseCode.SUCCESS,
             message = "success",
-            data = TokenRefreshResponseData("reissued_access_token", "valid_refresh_token")
+            data = TokenResponse("reissued_access_token", "valid_refresh_token")
         )
 
         val jsonBody = gson.toJson(refreshTokenResponse)
@@ -63,8 +65,8 @@ class TokenAuthenticatorTest {
 
         val response = okHttpClient.newCall(request).execute()
 
-        assert(response.code() == 200)
-        println(response.body())
+        assert(response.code == 200)
+        println(response.body)
 
         val recordedRequests = mockWebServer.requestCount
         assert(recordedRequests == 2) // 401 + retry

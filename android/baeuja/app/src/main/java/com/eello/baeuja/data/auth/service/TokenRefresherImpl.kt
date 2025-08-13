@@ -1,18 +1,16 @@
-package com.eello.baeuja.auth
+package com.eello.baeuja.data.auth.service
 
+import com.eello.baeuja.data.auth.dto.request.TokenRefreshRequest
+import com.eello.baeuja.domain.auth.service.TokenManager
+import com.eello.baeuja.domain.auth.service.TokenRefresher
 import com.eello.baeuja.exception.AppError
 import com.eello.baeuja.exception.AppException
 import com.eello.baeuja.retrofit.api.AuthAPI
 import com.eello.baeuja.retrofit.core.ApiCaller
 import com.eello.baeuja.retrofit.core.handle
-import com.eello.baeuja.retrofit.dto.request.TokenRefreshRequestDto
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
-
-interface TokenRefresher {
-    suspend fun refreshAccessToken(accessToken: String, refreshToken: String): String?
-}
 
 class TokenRefresherImpl @Inject constructor(
     @Named("refresh") private val authAPI: AuthAPI,
@@ -25,7 +23,7 @@ class TokenRefresherImpl @Inject constructor(
         refreshToken: String
     ): String {
         Timber.d("액세스 토큰 재발급 요청 시도...")
-        val requestDto = TokenRefreshRequestDto(accessToken, refreshToken)
+        val requestDto = TokenRefreshRequest(accessToken, refreshToken)
         val apiResult = apiCaller.call { authAPI.refreshAccessToken(requestDto) }
         return apiResult.handle(
             onSuccess = {

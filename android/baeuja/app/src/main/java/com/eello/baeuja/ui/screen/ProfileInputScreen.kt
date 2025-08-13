@@ -41,7 +41,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.eello.baeuja.R
-import com.eello.baeuja.auth.AuthResult
+import com.eello.baeuja.domain.auth.model.AuthResult
 import com.eello.baeuja.ui.component.OneButtonBottomBar
 import com.eello.baeuja.ui.navigation.NavGraph
 import com.eello.baeuja.ui.navigation.Screen

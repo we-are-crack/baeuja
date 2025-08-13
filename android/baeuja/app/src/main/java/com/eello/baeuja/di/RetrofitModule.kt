@@ -1,8 +1,8 @@
 package com.eello.baeuja.di
 
-import com.eello.baeuja.auth.TokenAuthInterceptor
-import com.eello.baeuja.auth.TokenAuthenticator
-import com.eello.baeuja.auth.TokenManager
+import com.eello.baeuja.data.network.TokenAuthInterceptor
+import com.eello.baeuja.data.network.TokenAuthenticator
+import com.eello.baeuja.domain.auth.service.TokenManager
 import com.eello.baeuja.retrofit.adapter.CaseInsensitiveEnumDeserializer
 import com.eello.baeuja.retrofit.core.ApiResponseCode
 import com.eello.baeuja.retrofit.core.ApiResponseCodeAdapter

@@ -2,8 +2,8 @@ package com.eello.baeuja.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eello.baeuja.auth.AuthResult
-import com.eello.baeuja.retrofit.repository.AuthRepository
+import com.eello.baeuja.domain.auth.model.AuthResult
+import com.eello.baeuja.domain.auth.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow

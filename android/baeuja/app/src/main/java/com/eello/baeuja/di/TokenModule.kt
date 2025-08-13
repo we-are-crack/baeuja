@@ -1,9 +1,9 @@
 package com.eello.baeuja.di
 
-import com.eello.baeuja.auth.TokenManager
-import com.eello.baeuja.auth.TokenManagerImpl
-import com.eello.baeuja.auth.TokenRefresher
-import com.eello.baeuja.auth.TokenRefresherImpl
+import com.eello.baeuja.data.auth.service.TokenManagerImpl
+import com.eello.baeuja.data.auth.service.TokenRefresherImpl
+import com.eello.baeuja.domain.auth.service.TokenManager
+import com.eello.baeuja.domain.auth.service.TokenRefresher
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

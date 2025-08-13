@@ -1,7 +1,7 @@
 package com.eello.baeuja
 
 import android.app.Application
-import com.eello.baeuja.auth.TokenManager
+import com.eello.baeuja.domain.auth.service.TokenManager
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

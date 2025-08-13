@@ -1,4 +1,4 @@
-package com.eello.baeuja.auth
+package com.eello.baeuja.domain.auth.model
 
 sealed class AuthResult {
     object Idle : AuthResult()

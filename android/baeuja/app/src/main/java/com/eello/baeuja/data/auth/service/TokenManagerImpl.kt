@@ -1,9 +1,10 @@
-package com.eello.baeuja.auth
+package com.eello.baeuja.data.auth.service
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.eello.baeuja.domain.auth.service.TokenManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
@@ -11,18 +12,6 @@ import javax.inject.Inject
 
 val Context.dataStore by preferencesDataStore(name = "auth_prefs")
 
-interface TokenManager {
-    val accessToken: String?
-    val refreshToken: String?
-
-    suspend fun loadTokensToMemory()
-    suspend fun saveAccessToken(accessToken: String)
-    suspend fun saveRefreshToken(refreshToken: String)
-    suspend fun saveTokens(accessToken: String, refreshToken: String)
-    suspend fun clearTokens()
-}
-
-//@Singleton
 class TokenManagerImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : TokenManager {

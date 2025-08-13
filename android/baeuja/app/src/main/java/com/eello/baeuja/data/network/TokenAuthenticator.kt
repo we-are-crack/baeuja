@@ -1,5 +1,7 @@
-package com.eello.baeuja.auth
+package com.eello.baeuja.data.network
 
+import com.eello.baeuja.domain.auth.service.TokenManager
+import com.eello.baeuja.domain.auth.service.TokenRefresher
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
