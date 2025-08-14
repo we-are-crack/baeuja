@@ -1,4 +1,4 @@
-package com.eello.baeuja.ui.screen.home
+package com.eello.baeuja.ui.screen.home.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,12 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.eello.baeuja.R
+import com.eello.baeuja.ui.screen.home.model.HomeSentenceUnitUiModel
 import com.eello.baeuja.ui.theme.NotoSansKrFamily
 import com.eello.baeuja.ui.theme.RobotoFamily
-import com.eello.baeuja.viewmodel.LearningContentItem
 
 @Composable
-fun HomeLearningContentCard(item: LearningContentItem, isPreview: Boolean = false) {
+fun HomeSentenceUnitCard(item: HomeSentenceUnitUiModel, isPreview: Boolean = false) {
 
     Column(
         modifier = Modifier
@@ -58,17 +58,6 @@ fun HomeLearningContentCard(item: LearningContentItem, isPreview: Boolean = fals
             )
         }
 
-//        Text( // sentence
-//            text = item.koreanSentence,
-//            fontFamily = NotoSansKrFamily,
-//            fontWeight = FontWeight.W500,
-//            fontSize = 16.sp,
-//            color = Color(0xFF444444),
-//            modifier = Modifier
-//                .padding(top = 16.dp),
-//            maxLines = 1,
-//            overflow = TextOverflow.Ellipsis
-//        )
         MaskedWordText(item.koreanSentence, item.koreanWordInSentence)
 
         Text( // means

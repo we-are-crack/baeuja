@@ -1,12 +1,12 @@
 package com.eello.baeuja.data.auth.service
 
 import com.eello.baeuja.data.auth.dto.request.TokenRefreshRequest
+import com.eello.baeuja.data.network.ApiCaller
 import com.eello.baeuja.domain.auth.service.TokenManager
 import com.eello.baeuja.domain.auth.service.TokenRefresher
 import com.eello.baeuja.exception.AppError
 import com.eello.baeuja.exception.AppException
 import com.eello.baeuja.retrofit.api.AuthAPI
-import com.eello.baeuja.retrofit.core.ApiCaller
 import com.eello.baeuja.retrofit.core.handle
 import timber.log.Timber
 import javax.inject.Inject

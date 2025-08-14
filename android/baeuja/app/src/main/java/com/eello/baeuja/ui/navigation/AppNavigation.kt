@@ -15,7 +15,7 @@ import com.eello.baeuja.ui.screen.ProfileInputScreen
 import com.eello.baeuja.ui.screen.ReviewScreen
 import com.eello.baeuja.ui.screen.SignInScreen
 import com.eello.baeuja.ui.screen.SplashScreen
-import com.eello.baeuja.ui.screen.home.HomeScreen
+import com.eello.baeuja.ui.screen.home.view.HomeScreen
 import com.eello.baeuja.ui.screen.learning.LearningItemInfo
 import com.eello.baeuja.ui.screen.learning.LearningScreen
 import com.eello.baeuja.ui.screen.learning.MoreItemScreen

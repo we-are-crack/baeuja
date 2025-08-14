@@ -1,4 +1,4 @@
-package com.eello.baeuja.ui.screen.home
+package com.eello.baeuja.ui.screen.home.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -21,13 +21,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.eello.baeuja.R
+import com.eello.baeuja.domain.content.model.Classification
+import com.eello.baeuja.ui.screen.home.model.HomeNewContentUiModel
 import com.eello.baeuja.ui.theme.BaujaTheme
 import com.eello.baeuja.ui.theme.RobotoFamily
-import com.eello.baeuja.viewmodel.ContentClassification
-import com.eello.baeuja.viewmodel.NewContentItem
 
 @Composable
-fun HomeNewContentCard(item: NewContentItem, isPreview: Boolean = false) {
+fun HomeNewContentCard(item: HomeNewContentUiModel, isPreview: Boolean = false) {
 
     Column(
         modifier = Modifier
@@ -53,7 +53,7 @@ fun HomeNewContentCard(item: NewContentItem, isPreview: Boolean = false) {
                     .height(200.dp)
                     .clip(RoundedCornerShape(10.dp)),
                 contentScale = ContentScale.FillBounds,
-                error = if (item.classification == ContentClassification.POP)
+                error = if (item.classification == Classification.POP)
                     painterResource(R.drawable.default_pop)
                 else painterResource(R.drawable.default_movie)
             )
@@ -86,13 +86,14 @@ fun HomeNewContentCard(item: NewContentItem, isPreview: Boolean = false) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewNewContentItem() {
-    val item = NewContentItem(
+fun PreviewNewContentCard() {
+    val item = HomeNewContentUiModel(
+        id = -1,
         title = "BTS - Dynamic",
-        unitCount = 10,
-        wordCount = 123,
         thumbnailUrl = "",
-        classification = ContentClassification.POP
+        classification = Classification.POP,
+        unitCount = 10,
+        wordCount = 123
     )
     BaujaTheme {
         HomeNewContentCard(item, isPreview = true)

@@ -1,4 +1,4 @@
-package com.eello.baeuja.ui.screen.home
+package com.eello.baeuja.ui.screen.home.view
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -23,10 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.eello.baeuja.ui.component.ItemSeparator
 import com.eello.baeuja.ui.component.RetryComponent
+import com.eello.baeuja.ui.screen.home.model.HomeNewContentUiModel
+import com.eello.baeuja.ui.screen.home.model.HomeWordContentUiModel
+import com.eello.baeuja.ui.screen.home.viewmodel.HomeViewModel
 import com.eello.baeuja.ui.theme.BaujaTheme
-import com.eello.baeuja.viewmodel.HomeLearningContent
-import com.eello.baeuja.viewmodel.HomeViewModel
-import com.eello.baeuja.viewmodel.NewContentItem
 import timber.log.Timber
 
 @Composable
@@ -63,8 +63,8 @@ fun HomeRoute(homeViewModel: HomeViewModel) {
 
 @Composable
 fun HomeContent(
-    newContents: List<NewContentItem> = emptyList(),
-    homeLearningContents: List<HomeLearningContent> = emptyList(),
+    newContents: List<HomeNewContentUiModel> = emptyList(),
+    homeLearningContents: List<HomeWordContentUiModel> = emptyList(),
     isLoading: Boolean = false,
     onEndOfContents: () -> Unit = {}
 ) {
@@ -94,13 +94,13 @@ fun HomeContent(
         ) {
             if (newContents.isNotEmpty()) {
                 item {
-                    HomeNewContentItem(newContents)
+                    HomeNewContentList(newContents)
                     ItemSeparator(4.dp)
                 }
             }
 
             itemsIndexed(homeLearningContents) { index, content ->
-                HomeLearningContentItem(content)
+                HomeWordContentList(content)
                 if (index < homeLearningContents.size - 1) {
                     ItemSeparator(2.dp)
                 }

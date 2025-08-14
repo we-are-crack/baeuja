@@ -2,6 +2,7 @@ package com.eello.baeuja.data.auth.repository
 
 import com.eello.baeuja.data.auth.dto.request.SignInRequest
 import com.eello.baeuja.data.auth.dto.request.SignUpRequest
+import com.eello.baeuja.data.network.ApiCaller
 import com.eello.baeuja.domain.auth.model.AuthResult
 import com.eello.baeuja.domain.auth.repository.AuthRepository
 import com.eello.baeuja.domain.auth.service.TokenManager
@@ -9,7 +10,6 @@ import com.eello.baeuja.domain.user.model.SignInType
 import com.eello.baeuja.exception.AppError
 import com.eello.baeuja.exception.AppException
 import com.eello.baeuja.retrofit.api.AuthAPI
-import com.eello.baeuja.retrofit.core.ApiCaller
 import com.eello.baeuja.retrofit.core.ApiResponseCode
 import com.eello.baeuja.retrofit.core.handle
 import com.eello.baeuja.viewmodel.DisplayNameAvailable

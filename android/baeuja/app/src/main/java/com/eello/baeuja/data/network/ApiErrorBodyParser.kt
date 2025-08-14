@@ -1,6 +1,8 @@
-package com.eello.baeuja.retrofit.core
+package com.eello.baeuja.data.network
 
 import android.util.Log
+import com.eello.baeuja.retrofit.core.ApiResponse
+import com.eello.baeuja.retrofit.core.ApiResponseCode
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.ResponseBody
@@ -24,7 +26,7 @@ class ApiErrorBodyParserImpl @Inject constructor(
                 parsed
             } ?: run {
                 Log.w("parseErrorBody", "에러 본문이 없거나 null입니다. 기본 응답으로 대체합니다.")
-                ApiResponse.empty()
+                ApiResponse.Companion.empty()
             }
         } catch (e: Exception) {
             Log.e("parseErrorBody", "에러 본문 파싱 중 예외 발생", e)

@@ -1,9 +1,9 @@
 package com.eello.baeuja.retrofit.repository
 
+import com.eello.baeuja.data.network.ApiCaller
 import com.eello.baeuja.exception.AppError
 import com.eello.baeuja.exception.AppException
 import com.eello.baeuja.retrofit.api.LearningAPI
-import com.eello.baeuja.retrofit.core.ApiCaller
 import com.eello.baeuja.retrofit.core.handle
 import com.eello.baeuja.retrofit.dto.response.Page
 import com.eello.baeuja.viewmodel.ContentClassification

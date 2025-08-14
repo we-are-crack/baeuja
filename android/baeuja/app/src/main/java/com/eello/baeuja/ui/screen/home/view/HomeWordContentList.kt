@@ -1,4 +1,4 @@
-package com.eello.baeuja.ui.screen.home
+package com.eello.baeuja.ui.screen.home.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,12 +18,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.eello.baeuja.ui.screen.home.model.HomeWordContentUiModel
 import com.eello.baeuja.ui.theme.NotoSansKrFamily
 import com.eello.baeuja.ui.theme.RobotoFamily
-import com.eello.baeuja.viewmodel.HomeLearningContent
 
 @Composable
-fun HomeLearningContentItem(learningContent: HomeLearningContent) {
+fun HomeWordContentList(wordContent: HomeWordContentUiModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -34,7 +34,7 @@ fun HomeLearningContentItem(learningContent: HomeLearningContent) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "#${learningContent.koreanWord}",
+                text = "#${wordContent.koreanWord}",
                 fontFamily = NotoSansKrFamily,
                 fontWeight = FontWeight.W500,
                 fontSize = 20.sp,
@@ -58,7 +58,7 @@ fun HomeLearningContentItem(learningContent: HomeLearningContent) {
                             fontWeight = FontWeight.Bold,
                         )
                     ) {
-                        append(learningContent.importance)
+                        append(wordContent.importance)
                     }
                 },
                 fontFamily = RobotoFamily,
@@ -73,8 +73,8 @@ fun HomeLearningContentItem(learningContent: HomeLearningContent) {
         }
 
         LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            items(learningContent.sentences) { item ->
-                HomeLearningContentCard(item)
+            items(wordContent.sentences) { item ->
+                HomeSentenceUnitCard(item)
             }
         }
     }

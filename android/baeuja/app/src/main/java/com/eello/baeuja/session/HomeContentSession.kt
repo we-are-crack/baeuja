@@ -1,8 +1,10 @@
 package com.eello.baeuja.session
 
-import com.eello.baeuja.retrofit.repository.ContentRepository
-import com.eello.baeuja.viewmodel.HomeLearningContent
-import com.eello.baeuja.viewmodel.NewContentItem
+import com.eello.baeuja.domain.content.repository.ContentRepository
+import com.eello.baeuja.ui.screen.home.mapper.toHomeNewContentUiModel
+import com.eello.baeuja.ui.screen.home.mapper.toHomeWordContentUiModel
+import com.eello.baeuja.ui.screen.home.model.HomeNewContentUiModel
+import com.eello.baeuja.ui.screen.home.model.HomeWordContentUiModel
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -10,12 +12,12 @@ import javax.inject.Singleton
 @Singleton
 class HomeContentSession @Inject constructor() {
 
-    private val _cachedNewContents = mutableListOf<NewContentItem>()
-    val cachedNewContents: List<NewContentItem> = _cachedNewContents
+    private val _cachedNewContents = mutableListOf<HomeNewContentUiModel>()
+    val cachedNewContents: List<HomeNewContentUiModel> = _cachedNewContents
 
     private val _cachedLearningContents =
-        mutableListOf<List<HomeLearningContent>>()
-    val cachedLearningContents: List<List<HomeLearningContent>> = _cachedLearningContents
+        mutableListOf<List<HomeWordContentUiModel>>()
+    val cachedLearningContents: List<List<HomeWordContentUiModel>> = _cachedLearningContents
 
     private val _usedWordId = mutableListOf<Int>()
     val usedWordId: List<Int> = _usedWordId
@@ -24,8 +26,8 @@ class HomeContentSession @Inject constructor() {
         private set
 
     fun initialize(
-        newContents: List<NewContentItem> = emptyList(),
-        learningContents: List<HomeLearningContent> = emptyList()
+        newContents: List<HomeNewContentUiModel> = emptyList(),
+        learningContents: List<HomeWordContentUiModel> = emptyList()
     ) {
         clear()
 
@@ -41,7 +43,7 @@ class HomeContentSession @Inject constructor() {
         })
     }
 
-    fun addLearningContents(learningContents: List<HomeLearningContent>) {
+    fun addLearningContents(learningContents: List<HomeWordContentUiModel>) {
         _cachedLearningContents.add(learningContents)
         _usedWordId.addAll(learningContents.map { it.wordId })
     }
@@ -69,12 +71,15 @@ class HomeContentSessionInitializer @Inject constructor(
 ) : Initializer {
     override suspend fun initialize() {
         Timber.d("HomeContentSession 초기화 시도...")
-        var newContents: List<NewContentItem> = emptyList()
-        var learningContents: List<HomeLearningContent> = emptyList()
+        var newContents: List<HomeNewContentUiModel> = emptyList()
+        var learningContents: List<HomeWordContentUiModel> = emptyList()
 
         runCatching {
-            newContents = contentRepository.fetchHomeNewContents()
-            learningContents = contentRepository.fetchHomeLearningContents()
+            newContents =
+                contentRepository.getNewContents().map { it.toHomeNewContentUiModel() }
+
+            learningContents =
+                contentRepository.getWordContents().map { it.toHomeWordContentUiModel() }
         }.onSuccess {
             homeContentSession.initialize(newContents, learningContents)
         }.onFailure {

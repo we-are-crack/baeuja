@@ -1,4 +1,4 @@
-package com.eello.baeuja.ui.screen.home
+package com.eello.baeuja.ui.screen.home.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,14 +13,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.eello.baeuja.ui.screen.home.model.HomeNewContentUiModel
 import com.eello.baeuja.ui.theme.BaujaTheme
-import com.eello.baeuja.viewmodel.NewContentItem
 
 
 @Composable
-fun HomeNewContentItem(items: List<NewContentItem> = emptyList()) {
-//    val viewModel: HomeNewContentViewModel = hiltViewModel()
-//    val items by viewModel.items.collectAsState()
+fun HomeNewContentList(items: List<HomeNewContentUiModel> = emptyList()) {
 
     Column(
         modifier = Modifier
@@ -44,8 +42,8 @@ fun HomeNewContentItem(items: List<NewContentItem> = emptyList()) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewHomeNewContentItem() {
+fun PreviewHomeNewContentList() {
     BaujaTheme {
-        HomeNewContentItem()
+        HomeNewContentList()
     }
 }
