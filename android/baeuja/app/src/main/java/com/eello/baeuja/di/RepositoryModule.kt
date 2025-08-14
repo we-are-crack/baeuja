@@ -6,8 +6,6 @@ import com.eello.baeuja.data.user.repository.UserRepositoryImpl
 import com.eello.baeuja.domain.auth.repository.AuthRepository
 import com.eello.baeuja.domain.content.repository.ContentRepository
 import com.eello.baeuja.domain.user.repository.UserRepository
-import com.eello.baeuja.retrofit.repository.LearningRepository
-import com.eello.baeuja.retrofit.repository.LearningRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -29,8 +27,4 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindContentRepository(impl: ContentRepositoryImpl): ContentRepository
-
-    @Binds
-    @Singleton
-    abstract fun bindLearningRepository(impl: LearningRepositoryImpl): LearningRepository
 }

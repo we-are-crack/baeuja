@@ -1,5 +1,7 @@
 package com.eello.baeuja.data.content.mapper
 
+import com.eello.baeuja.data.content.dto.response.ContentDetailResponse
+import com.eello.baeuja.data.content.dto.response.ContentResponse
 import com.eello.baeuja.data.content.dto.response.NewContentResponse
 import com.eello.baeuja.data.content.dto.response.WordContentResponse
 import com.eello.baeuja.domain.content.model.ContentMeta
@@ -31,4 +33,25 @@ fun WordContentResponse.SentenceUnitResponse.toDomainModel() = SentenceUnit(
     englishSentence = englishSentence,
     englishWordInSentence = englishWordInSentence,
     unitThumbnailUrl = unitThumbnailUrl
+)
+
+fun ContentResponse.toDomainModel() = ContentMeta(
+    id = id,
+    classification = classification,
+    title = title,
+    thumbnailUrl = thumbnailUrl,
+    progressRate = progressRate,
+    artist = artist,
+    director = director
+)
+
+fun ContentDetailResponse.toDomainModel() = ContentMeta(
+    id = id,
+    classification = classification,
+    title = title,
+    artist = artist,
+    director = director,
+    thumbnailUrl = thumbnailUrl,
+    youtubeId = youtubeId,
+    description = description
 )

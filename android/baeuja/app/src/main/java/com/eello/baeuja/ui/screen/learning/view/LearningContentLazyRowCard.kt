@@ -1,4 +1,4 @@
-package com.eello.baeuja.ui.screen.learning
+package com.eello.baeuja.ui.screen.learning.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -27,17 +27,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.eello.baeuja.R
+import com.eello.baeuja.domain.content.model.Classification
+import com.eello.baeuja.ui.screen.learning.model.LearningContentUiModel
 import com.eello.baeuja.ui.theme.BaujaTheme
 import com.eello.baeuja.ui.theme.RobotoFamily
-import com.eello.baeuja.viewmodel.ContentClassification
-import com.eello.baeuja.viewmodel.LearningItem
 
 private val IMAGE_WIDTH = 170.dp
 private val IMAGE_HEIGHT = 200.dp
 
 @Composable
-fun LearningItemLazyRowCard(
-    item: LearningItem,
+fun LearningContentLazyRowCard(
+    content: LearningContentUiModel,
     onNavigateToDetail: (Long) -> Unit = {},
     isPreview: Boolean = false
 ) {
@@ -47,7 +47,7 @@ fun LearningItemLazyRowCard(
 
         if (isPreview) {
             Image(
-                painter = if (item.classification == ContentClassification.POP)
+                painter = if (content.classification == Classification.POP)
                     painterResource(R.drawable.default_pop)
                 else painterResource(R.drawable.default_movie),
                 contentDescription = "content thumbnail",
@@ -59,14 +59,14 @@ fun LearningItemLazyRowCard(
             )
         } else {
             AsyncImage(
-                model = item.thumbnailUrl,
+                model = content.thumbnailUrl,
                 contentDescription = "content thumbnail",
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(IMAGE_HEIGHT)
                     .clip(shape = RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.FillBounds,
-                error = if (item.classification == ContentClassification.POP)
+                error = if (content.classification == Classification.POP)
                     painterResource(R.drawable.default_pop)
                 else painterResource(R.drawable.default_movie)
             )
@@ -80,7 +80,7 @@ fun LearningItemLazyRowCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = item.title,
+                text = content.title,
                 fontFamily = RobotoFamily,
                 fontWeight = FontWeight.W500,
                 fontSize = 16.sp,
@@ -98,25 +98,26 @@ fun LearningItemLazyRowCard(
                 tint = Color(0xFF797979),
                 modifier = Modifier
                     .size(16.dp)
-                    .clickable { onNavigateToDetail(item.id) }
+                    .clickable { onNavigateToDetail(content.id) }
             )
         }
 
-        LearningProgressRate(item.progressRate)
+        LearningProgressRate(content.progressRate)
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewLearningItemLazyRowCard() {
-    val learningItem = LearningItem(
-        classification = ContentClassification.MOVIE,
+fun PreviewLearningContentLazyRowCard() {
+    val content = LearningContentUiModel(
+        id = 1,
+        classification = Classification.MOVIE,
         title = "Parasite",
         progressRate = 11,
         thumbnailUrl = ""
     )
 
     BaujaTheme {
-        LearningItemLazyRowCard(item = learningItem, isPreview = true)
+        LearningContentLazyRowCard(content = content, isPreview = true)
     }
 }

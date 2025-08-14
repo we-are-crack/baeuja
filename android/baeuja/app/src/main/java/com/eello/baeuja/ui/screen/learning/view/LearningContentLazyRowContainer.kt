@@ -1,16 +1,16 @@
-package com.eello.baeuja.ui.screen.learning
+package com.eello.baeuja.ui.screen.learning.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.eello.baeuja.viewmodel.LearningItem
+import com.eello.baeuja.ui.screen.learning.model.LearningContentUiModel
 
 @Composable
-fun LearningItemLazyRowContainer(
+fun LearningContentLazyRowContainer(
     modifier: Modifier = Modifier,
-    items: List<LearningItem>,
+    contents: List<LearningContentUiModel>,
     onNavigateToDetail: (Long) -> Unit = {},
     isPreview: Boolean = false
 ) {
@@ -19,9 +19,9 @@ fun LearningItemLazyRowContainer(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        items(items.size) { index ->
-            LearningItemLazyRowCard(
-                item = items[index],
+        items(contents.size) { index ->
+            LearningContentLazyRowCard(
+                content = contents[index],
                 onNavigateToDetail = onNavigateToDetail,
                 isPreview = isPreview
             )

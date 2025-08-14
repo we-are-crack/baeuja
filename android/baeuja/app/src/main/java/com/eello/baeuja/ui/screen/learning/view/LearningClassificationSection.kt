@@ -1,4 +1,4 @@
-package com.eello.baeuja.ui.screen.learning
+package com.eello.baeuja.ui.screen.learning.view
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,17 +14,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.eello.baeuja.domain.content.model.Classification
+import com.eello.baeuja.ui.screen.learning.model.LearningContentUiModel
 import com.eello.baeuja.ui.theme.RobotoFamily
-import com.eello.baeuja.viewmodel.ContentClassification
-import com.eello.baeuja.viewmodel.LearningItem
 
 @Composable
-fun LearningCategorySection(
+fun LearningClassificationSection(
     itemContainerLayoutType: LayoutType,
-    classification: ContentClassification,
-    learningItems: List<LearningItem>,
+    classification: Classification,
+    contents: List<LearningContentUiModel>,
     onNavigateToDetail: (Long) -> Unit = {},
-    onMoreClick: (ContentClassification) -> Unit = {},
+    onMoreClick: (Classification) -> Unit = {},
     isPreview: Boolean = false
 ) {
     Column(
@@ -41,9 +41,9 @@ fun LearningCategorySection(
         ) {
             Text(
                 text = when (classification) {
-                    ContentClassification.POP -> "K-Pop"
-                    ContentClassification.MOVIE -> "K-Movie"
-                    ContentClassification.DRAMA -> "K-Drama"
+                    Classification.POP -> "K-Pop"
+                    Classification.MOVIE -> "K-Movie"
+                    Classification.DRAMA -> "K-Drama"
                 },
                 fontFamily = RobotoFamily,
                 fontWeight = FontWeight.W500,
@@ -66,12 +66,12 @@ fun LearningCategorySection(
             )
         }
 
-        LearningItemContainer(
+        LearningContentContainer(
             layoutType = itemContainerLayoutType,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 12.dp),
-            items = learningItems,
+            items = contents,
             onNavigateToDetail = onNavigateToDetail,
             isPreview = isPreview
         )

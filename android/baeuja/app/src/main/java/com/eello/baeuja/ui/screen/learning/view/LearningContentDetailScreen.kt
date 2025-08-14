@@ -1,4 +1,4 @@
-package com.eello.baeuja.ui.screen.learning
+package com.eello.baeuja.ui.screen.learning.view
 
 import android.content.Context
 import android.content.Intent
@@ -41,41 +41,41 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.eello.baeuja.R
+import com.eello.baeuja.domain.content.model.Classification
 import com.eello.baeuja.ui.component.BACK_BUTTON_START_MARGIN
 import com.eello.baeuja.ui.component.BACK_BUTTON_TOP_MARGIN
 import com.eello.baeuja.ui.component.BackButton
 import com.eello.baeuja.ui.component.LoadingComponent
 import com.eello.baeuja.ui.component.OneButtonBottomBar
 import com.eello.baeuja.ui.component.RetryComponent
+import com.eello.baeuja.ui.screen.learning.model.LearningContentDetailUiModel
+import com.eello.baeuja.ui.screen.learning.viewmodel.LearningContentDetailViewModel
 import com.eello.baeuja.ui.theme.BaujaTheme
 import com.eello.baeuja.ui.theme.RobotoFamily
-import com.eello.baeuja.viewmodel.ContentClassification
-import com.eello.baeuja.viewmodel.LearningItemDetail
-import com.eello.baeuja.viewmodel.LearningItemDetailInfoViewModel
 import timber.log.Timber
 
 @Composable
-fun LearningItemInfo(
+fun LearningContentDetailScreen(
     navController: NavController? = null,
-    itemId: Long,
+    contentId: Long,
 ) {
-    val detailInfoViewModel: LearningItemDetailInfoViewModel = hiltViewModel()
+    val detailInfoViewModel: LearningContentDetailViewModel = hiltViewModel()
     val context = LocalContext.current
 
-    LearningItemInfoRoute(
+    LearningContentDetailRoute(
         navController = navController,
         context = context,
-        itemId = itemId,
+        itemId = contentId,
         detailInfoViewModel = detailInfoViewModel
     )
 }
 
 @Composable
-fun LearningItemInfoRoute(
+fun LearningContentDetailRoute(
     navController: NavController? = null,
     context: Context,
     itemId: Long,
-    detailInfoViewModel: LearningItemDetailInfoViewModel,
+    detailInfoViewModel: LearningContentDetailViewModel,
 ) {
     LaunchedEffect(Unit) {
         detailInfoViewModel.loadDetailInfo(itemId)
@@ -83,7 +83,7 @@ fun LearningItemInfoRoute(
 
     val isLoading by detailInfoViewModel.isLoading.collectAsState()
     val isFailure by detailInfoViewModel.isFailure.collectAsState()
-    val detailInfo by detailInfoViewModel.detailInfo.collectAsState()
+    val detailInfo by detailInfoViewModel.detail.collectAsState()
 
     val watchOnYoutubeOnClick: () -> Unit = {
         val youtubeUrl = "https://www.youtube.com/watch?v=${detailInfo?.youtubeId}"
@@ -99,20 +99,20 @@ fun LearningItemInfoRoute(
         if (detailInfo == null || isFailure) {
             RetryComponent { detailInfoViewModel.loadDetailInfo(itemId) }
         } else {
-            LearningItemInfoContent(
+            LearningContentDetailUi(
                 navController = navController,
                 buttonOnClick = watchOnYoutubeOnClick,
-                detailInfo = detailInfo!!
+                detail = detailInfo!!
             )
         }
     }
 }
 
 @Composable
-fun LearningItemInfoContent(
+fun LearningContentDetailUi(
     navController: NavController? = null,
     buttonOnClick: () -> Unit = {},
-    detailInfo: LearningItemDetail,
+    detail: LearningContentDetailUiModel,
     isPreview: Boolean = false
 ) {
     Scaffold(
@@ -162,7 +162,7 @@ fun LearningItemInfoContent(
             }) {
                 if (isPreview) {
                     Image(
-                        painter = if (detailInfo.classification == ContentClassification.POP)
+                        painter = if (detail.classification == Classification.POP)
                             painterResource(R.drawable.default_pop)
                         else painterResource(R.drawable.default_movie),
                         contentDescription = "content thumbnail",
@@ -173,13 +173,13 @@ fun LearningItemInfoContent(
                     )
                 } else {
                     AsyncImage(
-                        model = detailInfo.thumbnailUrl,
+                        model = detail.thumbnailUrl,
                         modifier = Modifier
                             .size(200.dp)
                             .clip(shape = RoundedCornerShape(12.dp)),
                         contentDescription = "content thumbnail",
                         contentScale = ContentScale.FillBounds,
-                        error = if (detailInfo.classification == ContentClassification.POP)
+                        error = if (detail.classification == Classification.POP)
                             painterResource(R.drawable.default_pop)
                         else painterResource(R.drawable.default_movie)
                     )
@@ -188,9 +188,9 @@ fun LearningItemInfoContent(
 
             Text(
                 text = "${
-                    if (detailInfo.classification == ContentClassification.POP) detailInfo.artist
-                    else detailInfo.director
-                } - ${detailInfo.title}",
+                    if (detail.classification == Classification.POP) detail.artist
+                    else detail.director
+                } - ${detail.title}",
                 fontFamily = RobotoFamily,
                 fontWeight = FontWeight.W500,
                 fontSize = 18.sp,
@@ -218,7 +218,7 @@ fun LearningItemInfoContent(
                     )
             ) {
                 Text(
-                    text = detailInfo.description,
+                    text = detail.description,
                     fontFamily = RobotoFamily,
                     fontWeight = FontWeight.Normal,
                     fontSize = 15.sp,
@@ -236,9 +236,9 @@ fun LearningItemInfoContent(
 @Preview(showBackground = true)
 @Composable
 fun PreviewLearningItemInfo() {
-    val tempDetailInfo = LearningItemDetail(
+    val tempDetailInfo = LearningContentDetailUiModel(
         id = 1,
-        classification = ContentClassification.POP,
+        classification = Classification.POP,
         title = "뛰어",
         artist = "BLACKPINK",
         youtubeId = "CgCVZdcKcqY",
@@ -247,8 +247,8 @@ fun PreviewLearningItemInfo() {
     )
 
     BaujaTheme {
-        LearningItemInfoContent(
-            detailInfo = tempDetailInfo,
+        LearningContentDetailUi(
+            detail = tempDetailInfo,
             buttonOnClick = {},
             isPreview = true
         )

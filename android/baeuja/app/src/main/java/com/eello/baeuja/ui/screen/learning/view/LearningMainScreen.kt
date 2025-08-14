@@ -1,4 +1,4 @@
-package com.eello.baeuja.ui.screen.learning
+package com.eello.baeuja.ui.screen.learning.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,86 +19,96 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.eello.baeuja.domain.content.model.Classification
 import com.eello.baeuja.ui.component.ItemSeparator
 import com.eello.baeuja.ui.component.LoadingComponent
 import com.eello.baeuja.ui.component.RetryComponent
 import com.eello.baeuja.ui.navigation.NavGraph
 import com.eello.baeuja.ui.navigation.Screen
+import com.eello.baeuja.ui.screen.learning.model.LearningContentUiModel
+import com.eello.baeuja.ui.screen.learning.viewmodel.LearningMainViewModel
 import com.eello.baeuja.ui.theme.BaujaTheme
 import com.eello.baeuja.ui.theme.RobotoFamily
-import com.eello.baeuja.viewmodel.ContentClassification
-import com.eello.baeuja.viewmodel.LearningItem
-import com.eello.baeuja.viewmodel.LearningMainViewModel
 
 val LEARNING_PADDING_HORIZONTAL = 16.dp
 
-private val tempLearningItems = mapOf(
-    ContentClassification.POP to listOf(
-        LearningItem(
-            classification = ContentClassification.POP,
+private val tempLearningContentUiModels = mapOf(
+    Classification.POP to listOf(
+        LearningContentUiModel(
+            id = 1,
+            classification = Classification.POP,
             title = "Ice Cream",
             artist = "BLACKPINK",
             progressRate = 11,
             thumbnailUrl = ""
         ),
-        LearningItem(
-            classification = ContentClassification.POP,
+        LearningContentUiModel(
+            id = 1,
+            classification = Classification.POP,
             title = "Believer",
             artist = "Imagine Dragons",
             progressRate = 85,
             thumbnailUrl = ""
         ),
-        LearningItem(
-            classification = ContentClassification.POP,
+        LearningContentUiModel(
+            id = 1,
+            classification = Classification.POP,
             title = "Dynamite",
             artist = "BTS",
             progressRate = 77,
             thumbnailUrl = ""
         ),
-        LearningItem(
-            classification = ContentClassification.POP,
+        LearningContentUiModel(
+            id = 1,
+            classification = Classification.POP,
             title = "HOME SWEET HOME(feat. TAEYANG, DAESUNG)",
             artist = "G-DRAGON",
             progressRate = 54,
             thumbnailUrl = ""
         ),
-        LearningItem(
-            classification = ContentClassification.POP,
+        LearningContentUiModel(
+            id = 1,
+            classification = Classification.POP,
             title = "Drowning",
             artist = "WOODZ",
             progressRate = 100,
             thumbnailUrl = ""
         ),
     ),
-    ContentClassification.MOVIE to listOf(
-        LearningItem(
-            classification = ContentClassification.MOVIE,
+    Classification.MOVIE to listOf(
+        LearningContentUiModel(
+            id = 1,
+            classification = Classification.MOVIE,
             title = "Parasite",
             progressRate = 11,
             thumbnailUrl = ""
         ),
-        LearningItem(
-            classification = ContentClassification.MOVIE,
+        LearningContentUiModel(
+            id = 1,
+            classification = Classification.MOVIE,
             title = "The Batman",
             progressRate = 85,
             thumbnailUrl = ""
         ),
-        LearningItem(
-            classification = ContentClassification.MOVIE,
+        LearningContentUiModel(
+            id = 1,
+            classification = Classification.MOVIE,
             title = "The Shawshank Redemption",
             progressRate = 77,
             thumbnailUrl = ""
         )
     ),
-    ContentClassification.DRAMA to listOf(
-        LearningItem(
-            classification = ContentClassification.DRAMA,
+    Classification.DRAMA to listOf(
+        LearningContentUiModel(
+            id = 1,
+            classification = Classification.DRAMA,
             title = "Kingdom",
             progressRate = 11,
             thumbnailUrl = ""
         ),
-        LearningItem(
-            classification = ContentClassification.DRAMA,
+        LearningContentUiModel(
+            id = 1,
+            classification = Classification.DRAMA,
             title = "Itaewon Class",
             progressRate = 85,
             thumbnailUrl = ""
@@ -107,7 +117,7 @@ private val tempLearningItems = mapOf(
 )
 
 @Composable
-fun LearningScreen(navController: NavController) {
+fun LearningMainScreen(navController: NavController) {
     val currentBackStackEntry = navController.currentBackStackEntryAsState()
     val learnEntry = remember(currentBackStackEntry.value) {
         navController.getBackStackEntry(NavGraph.Learn.route)
@@ -115,14 +125,14 @@ fun LearningScreen(navController: NavController) {
 
     val learningViewModel: LearningMainViewModel = hiltViewModel(learnEntry)
 
-    LearningRoute(
+    LearningMainRoute(
         navController = navController,
         learningViewModel = learningViewModel,
     )
 }
 
 @Composable
-fun LearningRoute(
+fun LearningMainRoute(
     navController: NavController,
     learningViewModel: LearningMainViewModel,
 ) {
@@ -131,11 +141,11 @@ fun LearningRoute(
     val items by learningViewModel.items.collectAsState()
 
     val onNavigateToDetail: (Long) -> Unit = { itemId ->
-        navController.navigate(Screen.LearningItemDetailInfo.createRoute(itemId))
+        navController.navigate(Screen.LearningContentDetail.createRoute(itemId))
     }
 
-    val onMoreClick: (ContentClassification) -> Unit = { classification ->
-        navController.navigate(Screen.LearningItemMore.createRoute(classification))
+    val onMoreClick: (Classification) -> Unit = { classification ->
+        navController.navigate(Screen.LearningContentMore.createRoute(classification))
     }
 
     if (isLoading) {
@@ -144,8 +154,8 @@ fun LearningRoute(
         if (isFailure) {
             RetryComponent(onRetry = learningViewModel::loadLearningMainContents)
         } else {
-            LearningContent(
-                learningItems = items,
+            LearningMainUi(
+                contents = items,
                 onNavigateToDetail = onNavigateToDetail,
                 onMoreClick = onMoreClick,
             )
@@ -154,10 +164,10 @@ fun LearningRoute(
 }
 
 @Composable
-fun LearningContent(
-    learningItems: Map<ContentClassification, List<LearningItem>>,
+fun LearningMainUi(
+    contents: Map<Classification, List<LearningContentUiModel>>,
     onNavigateToDetail: (Long) -> Unit = {},
-    onMoreClick: (ContentClassification) -> Unit = {},
+    onMoreClick: (Classification) -> Unit = {},
     isPreview: Boolean = false
 ) {
     Column(
@@ -178,10 +188,10 @@ fun LearningContent(
 
         ItemSeparator(height = 2.dp)
 
-        LearningCategorySection(
+        LearningClassificationSection(
             itemContainerLayoutType = LayoutType.Pager,
-            classification = ContentClassification.POP,
-            learningItems = learningItems[ContentClassification.POP] ?: emptyList(),
+            classification = Classification.POP,
+            contents = contents[Classification.POP] ?: emptyList(),
             onNavigateToDetail = onNavigateToDetail,
             onMoreClick = onMoreClick,
             isPreview = isPreview
@@ -189,10 +199,10 @@ fun LearningContent(
 
         ItemSeparator(height = 2.dp)
 
-        LearningCategorySection(
+        LearningClassificationSection(
             itemContainerLayoutType = LayoutType.LazyRow,
-            classification = ContentClassification.MOVIE,
-            learningItems = learningItems[ContentClassification.MOVIE] ?: emptyList(),
+            classification = Classification.MOVIE,
+            contents = contents[Classification.MOVIE] ?: emptyList(),
             onNavigateToDetail = onNavigateToDetail,
             onMoreClick = onMoreClick,
             isPreview = isPreview
@@ -200,10 +210,10 @@ fun LearningContent(
 
         ItemSeparator(height = 2.dp)
 
-        LearningCategorySection(
+        LearningClassificationSection(
             itemContainerLayoutType = LayoutType.LazyRow,
-            classification = ContentClassification.DRAMA,
-            learningItems = learningItems[ContentClassification.DRAMA] ?: emptyList(),
+            classification = Classification.DRAMA,
+            contents = contents[Classification.DRAMA] ?: emptyList(),
             onNavigateToDetail = onNavigateToDetail,
             onMoreClick = onMoreClick,
             isPreview = isPreview
@@ -215,6 +225,6 @@ fun LearningContent(
 @Composable
 fun PreviewLearningContent() {
     BaujaTheme {
-        LearningContent(learningItems = tempLearningItems, isPreview = true)
+        LearningMainUi(contents = tempLearningContentUiModels, isPreview = true)
     }
 }

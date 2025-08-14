@@ -21,7 +21,7 @@ fun MainScreen(navController: NavHostController) {
                 Screen.Splash.route,
                 Screen.SignIn.route,
                 Screen.ProfileInput.route,
-                Screen.LearningItemDetailInfo.route -> {
+                Screen.LearningContentDetail.route -> {
                 }
 
                 else -> {

@@ -1,8 +1,11 @@
-package com.eello.baeuja.viewmodel
+package com.eello.baeuja.ui.screen.learning.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eello.baeuja.retrofit.repository.LearningRepository
+import com.eello.baeuja.domain.content.model.Classification
+import com.eello.baeuja.domain.content.repository.ContentRepository
+import com.eello.baeuja.ui.screen.learning.mapper.toLearningMainContentsUiModel
+import com.eello.baeuja.ui.screen.learning.model.LearningContentUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,12 +15,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LearningMainViewModel @Inject constructor(
-    private val learningRepository: LearningRepository
+    private val contentRepository: ContentRepository
 ) : ViewModel() {
 
     private val _items =
-        MutableStateFlow<Map<ContentClassification, List<LearningItem>>>(emptyMap())
-    val items: StateFlow<Map<ContentClassification, List<LearningItem>>> = _items
+        MutableStateFlow<Map<Classification, List<LearningContentUiModel>>>(emptyMap())
+    val items: StateFlow<Map<Classification, List<LearningContentUiModel>>> = _items
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
@@ -35,7 +38,8 @@ class LearningMainViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                _items.value = learningRepository.fetchMainContents(size)
+                _items.value =
+                    contentRepository.getMainContents(size).toLearningMainContentsUiModel()
                 Timber.d(
                     buildString {
                         append("학습 메인 콘텐츠 로딩 성공: \n")

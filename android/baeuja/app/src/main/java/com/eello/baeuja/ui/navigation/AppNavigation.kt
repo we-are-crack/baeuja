@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.eello.baeuja.domain.content.model.Classification
 import com.eello.baeuja.ui.screen.BookmarkScreen
 import com.eello.baeuja.ui.screen.MyPageScreen
 import com.eello.baeuja.ui.screen.ProfileInputScreen
@@ -16,10 +17,9 @@ import com.eello.baeuja.ui.screen.ReviewScreen
 import com.eello.baeuja.ui.screen.SignInScreen
 import com.eello.baeuja.ui.screen.SplashScreen
 import com.eello.baeuja.ui.screen.home.view.HomeScreen
-import com.eello.baeuja.ui.screen.learning.LearningItemInfo
-import com.eello.baeuja.ui.screen.learning.LearningScreen
-import com.eello.baeuja.ui.screen.learning.MoreItemScreen
-import com.eello.baeuja.viewmodel.ContentClassification
+import com.eello.baeuja.ui.screen.learning.view.LearningContentDetailScreen
+import com.eello.baeuja.ui.screen.learning.view.LearningContentMoreScreen
+import com.eello.baeuja.ui.screen.learning.view.LearningMainScreen
 
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -53,23 +53,23 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController) {
 
 fun NavGraphBuilder.learnGraph(navController: NavHostController) {
     navigation(
-        startDestination = Screen.Learning.route, route = NavGraph.Learn.route
+        startDestination = Screen.LearningMain.route, route = NavGraph.Learn.route
     ) {
-        composable(Screen.Learning.route) { LearningScreen(navController) }
+        composable(Screen.LearningMain.route) { LearningMainScreen(navController) }
 
         composable(
-            route = Screen.LearningItemDetailInfo.route,
-            arguments = listOf(navArgument("itemId") { type = NavType.LongType })
+            route = Screen.LearningContentDetail.route,
+            arguments = listOf(navArgument("contentId") { type = NavType.LongType })
         ) { backStackEntry ->
-            val itemId = backStackEntry.arguments?.getLong("itemId") ?: -1
-            LearningItemInfo(
+            val contentId = backStackEntry.arguments?.getLong("contentId") ?: -1
+            LearningContentDetailScreen(
                 navController = navController,
-                itemId = itemId
+                contentId = contentId
             )
         }
 
         composable(
-            route = Screen.LearningItemMore.route,
+            route = Screen.LearningContentMore.route,
             arguments = listOf(
                 navArgument("classification") {
                     type = NavType.StringType
@@ -79,9 +79,9 @@ fun NavGraphBuilder.learnGraph(navController: NavHostController) {
             )
         ) { backStackEntry ->
             val classification = backStackEntry.arguments?.getString("classification") ?: ""
-            MoreItemScreen(
+            LearningContentMoreScreen(
                 navController = navController,
-                classification = ContentClassification.valueOf(classification)
+                classification = Classification.valueOf(classification)
             )
         }
     }

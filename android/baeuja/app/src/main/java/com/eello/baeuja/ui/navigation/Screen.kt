@@ -1,6 +1,6 @@
 package com.eello.baeuja.ui.navigation
 
-import com.eello.baeuja.viewmodel.ContentClassification
+import com.eello.baeuja.domain.content.model.Classification
 
 sealed class Screen(val route: String) {
     object Splash : Screen("splash")
@@ -12,16 +12,16 @@ sealed class Screen(val route: String) {
     object Home : Screen("${NavGraph.Main.route}/home")
 
     // Learn Graph
-    object Learning : Screen("${NavGraph.Learn.route}/main")
-    object LearningItemDetailInfo :
-        Screen("${NavGraph.Learn.route}/detail_info/{itemId}") {
-        fun createRoute(itemId: Long) =
-            "${NavGraph.Learn.route}/detail_info/$itemId"
+    object LearningMain : Screen("${NavGraph.Learn.route}/main")
+    object LearningContentDetail :
+        Screen("${NavGraph.Learn.route}/detail/{contentId}") {
+        fun createRoute(contentId: Long) =
+            "${NavGraph.Learn.route}/detail/$contentId"
     }
 
-    object LearningItemMore :
+    object LearningContentMore :
         Screen("${NavGraph.Learn.route}/more?classification={classification}") {
-        fun createRoute(classification: ContentClassification) =
+        fun createRoute(classification: Classification) =
             "${NavGraph.Learn.route}/more?classification=${classification.name}"
     }
 

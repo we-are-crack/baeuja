@@ -1,30 +1,30 @@
-package com.eello.baeuja.ui.screen.learning
+package com.eello.baeuja.ui.screen.learning.view
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.eello.baeuja.viewmodel.LearningItem
+import com.eello.baeuja.ui.screen.learning.model.LearningContentUiModel
 
 enum class LayoutType { Pager, LazyRow }
 
 @Composable
-fun LearningItemContainer(
+fun LearningContentContainer(
     layoutType: LayoutType,
     modifier: Modifier = Modifier,
-    items: List<LearningItem>,
+    items: List<LearningContentUiModel>,
     onNavigateToDetail: (Long) -> Unit = {},
     isPreview: Boolean = false
 ) {
     when (layoutType) {
-        LayoutType.Pager -> LearningItemPagerContainer(
+        LayoutType.Pager -> LearningContentPagerContainer(
             modifier = modifier,
-            items = items,
+            contents = items,
             onNavigateToDetail = onNavigateToDetail,
             isPreview = isPreview
         )
 
-        LayoutType.LazyRow -> LearningItemLazyRowContainer(
+        LayoutType.LazyRow -> LearningContentLazyRowContainer(
             modifier = modifier,
-            items = items,
+            contents = items,
             onNavigateToDetail = onNavigateToDetail,
             isPreview = isPreview
         )

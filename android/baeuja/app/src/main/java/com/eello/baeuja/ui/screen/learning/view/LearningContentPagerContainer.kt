@@ -1,4 +1,4 @@
-package com.eello.baeuja.ui.screen.learning
+package com.eello.baeuja.ui.screen.learning.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,18 +17,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.eello.baeuja.domain.content.model.Classification
+import com.eello.baeuja.ui.screen.learning.model.LearningContentUiModel
 import com.eello.baeuja.ui.theme.BaujaTheme
-import com.eello.baeuja.viewmodel.ContentClassification
-import com.eello.baeuja.viewmodel.LearningItem
 
 @Composable
-fun LearningItemPagerContainer(
+fun LearningContentPagerContainer(
     modifier: Modifier = Modifier,
-    items: List<LearningItem>,
+    contents: List<LearningContentUiModel>,
     onNavigateToDetail: (Long) -> Unit = {},
     isPreview: Boolean = false
 ) {
-    val pagerState = rememberPagerState { (items.size / 2) + (items.size % 2) }
+    val pagerState = rememberPagerState { (contents.size / 2) + (contents.size % 2) }
 
     HorizontalPager(
         state = pagerState,
@@ -40,19 +40,19 @@ fun LearningItemPagerContainer(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             val index = pagerState.currentPage * 2
-            LearningItemPagerCard(
-                item = items[index],
+            LearningContentPagerCard(
+                content = contents[index],
                 onNavigateToDetail = onNavigateToDetail,
                 isPreview = isPreview
             )
-            if (index + 1 < items.size) {
-                LearningItemPagerCard(
-                    item = items[index + 1],
+            if (index + 1 < contents.size) {
+                LearningContentPagerCard(
+                    content = contents[index + 1],
                     onNavigateToDetail = onNavigateToDetail,
                     isPreview = isPreview
                 )
-            } else LearningItemPagerCard(
-                item = null,
+            } else LearningContentPagerCard(
+                content = null,
                 onNavigateToDetail = onNavigateToDetail,
                 isPreview = isPreview
             )
@@ -80,38 +80,43 @@ fun LearningItemPagerContainer(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewLearningItemPagerContainer() {
+fun PreviewLearningContentPagerContainer() {
     val tempLearningItems = listOf(
-        LearningItem(
-            classification = ContentClassification.POP,
+        LearningContentUiModel(
+            id = 1,
+            classification = Classification.POP,
             title = "Ice Cream",
             artist = "BLACKPINK",
             progressRate = 11,
             thumbnailUrl = ""
         ),
-        LearningItem(
-            classification = ContentClassification.POP,
+        LearningContentUiModel(
+            id = 1,
+            classification = Classification.POP,
             title = "Believer",
             artist = "Imagine Dragons",
             progressRate = 85,
             thumbnailUrl = ""
         ),
-        LearningItem(
-            classification = ContentClassification.POP,
+        LearningContentUiModel(
+            id = 1,
+            classification = Classification.POP,
             title = "Dynamite",
             artist = "BTS",
             progressRate = 77,
             thumbnailUrl = ""
         ),
-        LearningItem(
-            classification = ContentClassification.POP,
+        LearningContentUiModel(
+            id = 1,
+            classification = Classification.POP,
             title = "HOME SWEET HOME(feat. TAEYANG, DAESUNG)",
             artist = "G-DRAGON",
             progressRate = 54,
             thumbnailUrl = ""
         ),
-        LearningItem(
-            classification = ContentClassification.POP,
+        LearningContentUiModel(
+            id = 1,
+            classification = Classification.POP,
             title = "Drowning",
             artist = "WOODZ",
             progressRate = 100,
@@ -120,6 +125,6 @@ fun PreviewLearningItemPagerContainer() {
     )
 
     BaujaTheme {
-        LearningItemPagerContainer(items = tempLearningItems, isPreview = true)
+        LearningContentPagerContainer(contents = tempLearningItems, isPreview = true)
     }
 }

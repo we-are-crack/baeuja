@@ -1,4 +1,4 @@
-package com.eello.baeuja.ui.screen.learning
+package com.eello.baeuja.ui.screen.learning.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -29,13 +29,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.eello.baeuja.R
+import com.eello.baeuja.domain.content.model.Classification
+import com.eello.baeuja.ui.screen.learning.model.LearningContentUiModel
 import com.eello.baeuja.ui.theme.RobotoFamily
-import com.eello.baeuja.viewmodel.ContentClassification
-import com.eello.baeuja.viewmodel.LearningItem
 
 @Composable
-fun LearningItemPagerCard(
-    item: LearningItem?,
+fun LearningContentPagerCard(
+    content: LearningContentUiModel?,
     onNavigateToDetail: (Long) -> Unit = {},
     isPreview: Boolean = false
 ) {
@@ -44,12 +44,12 @@ fun LearningItemPagerCard(
             .fillMaxWidth()
             .height(84.dp),
     ) {
-        if (item == null) {
+        if (content == null) {
             Box(modifier = Modifier.fillMaxSize())
         } else {
             if (isPreview) {
                 Image(
-                    painter = if (item.classification == ContentClassification.POP)
+                    painter = if (content.classification == Classification.POP)
                         painterResource(R.drawable.default_pop)
                     else painterResource(R.drawable.default_movie),
                     contentDescription = "content thumbnail",
@@ -59,13 +59,13 @@ fun LearningItemPagerCard(
                 )
             } else {
                 AsyncImage(
-                    model = item.thumbnailUrl,
+                    model = content.thumbnailUrl,
                     contentDescription = "content thumbnail",
                     modifier = Modifier
                         .size(84.dp)
                         .clip(shape = RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.FillBounds,
-                    error = if (item.classification == ContentClassification.POP)
+                    error = if (content.classification == Classification.POP)
                         painterResource(R.drawable.default_pop)
                     else painterResource(R.drawable.default_movie)
                 )
@@ -78,7 +78,7 @@ fun LearningItemPagerCard(
                     .fillMaxWidth(),
             ) {
                 Text(
-                    text = item.title,
+                    text = content.title,
                     fontFamily = RobotoFamily,
                     fontWeight = FontWeight.W500,
                     fontSize = 16.sp,
@@ -94,9 +94,9 @@ fun LearningItemPagerCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = when (item.classification) {
-                            ContentClassification.POP -> item.artist
-                            else -> item.director
+                        text = when (content.classification) {
+                            Classification.POP -> content.artist
+                            else -> content.director
                         } ?: "",
                         fontFamily = RobotoFamily,
                         fontWeight = FontWeight.Normal,
@@ -116,12 +116,12 @@ fun LearningItemPagerCard(
                         modifier = Modifier
                             .size(16.dp)
                             .clickable {
-                                onNavigateToDetail(item.id)
+                                onNavigateToDetail(content.id)
                             }
                     )
                 }
 
-                LearningProgressRate(item.progressRate)
+                LearningProgressRate(content.progressRate)
             }
         }
     }
