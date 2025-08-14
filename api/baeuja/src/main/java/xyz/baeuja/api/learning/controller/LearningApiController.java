@@ -26,8 +26,8 @@ public class LearningApiController {
      * @param size 각 분류별 콘텐츠 개수. default = 5.
      * @return data : LearningContentsResponse
      */
-    @GetMapping("/contents")
-    public ResponseEntity<ResultResponse<LearningAllContentsResponse>> contents(
+    @GetMapping("/contents/all")
+    public ResponseEntity<ResultResponse<LearningAllContentsResponse>> contentsAll(
             @RequestParam(name = "size", required = false, defaultValue = "5") int size) {
         LearningAllContentsResponse learningAllContentsResponse = learningService.findAllLearningContents(size);
         return ResponseEntity.ok(ResultResponse.success(learningAllContentsResponse));
@@ -40,9 +40,9 @@ public class LearningApiController {
      * @param pageable 페이징 정보 (page, size)
      * @return PagedResponse<LearningContentDto>
      */
-    @GetMapping("/contents/classification/{classification}")
-    public ResponseEntity<ResultResponse<PagedResponse<LearningContentDto>>> contentsByClassification(
-            @PathVariable Classification classification,
+    @GetMapping("/contents")
+    public ResponseEntity<ResultResponse<PagedResponse<LearningContentDto>>> contents(
+            @RequestParam Classification classification,
             @PageableDefault(size = 5, page = 0) Pageable pageable
     ) {
         PagedResponse<LearningContentDto> pagedContents = learningService.findLearningContents(

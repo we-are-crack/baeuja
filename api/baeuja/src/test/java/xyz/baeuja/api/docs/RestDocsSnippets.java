@@ -158,13 +158,13 @@ public class RestDocsSnippets {
 
     // ========================learning======================== //
 
-    public static ParameterDescriptor[] learningContentsQueryParam(String description) {
+    public static ParameterDescriptor[] learningContentsAllQueryParam(String description) {
         return new ParameterDescriptor[]{
                 parameterWithName("size").description("콘텐츠 분류 별 개수. \n" + description).optional(),
         };
     }
 
-    public static FieldDescriptor[] learningContentsResponse() {
+    public static FieldDescriptor[] learningContentsAllResponse() {
         return new FieldDescriptor[]{
                 fieldWithPath("pop[]").description("POP 콘텐츠 리스트"),
                 fieldWithPath("movie[]").description("MOVIE 콘텐츠 리스트"),
@@ -191,19 +191,19 @@ public class RestDocsSnippets {
         };
     }
 
-    public static ParameterDescriptor[] learningContentsByClassificationPathParam(String description) {
+    public static ParameterDescriptor[] learningContentsQueryParam(String description) {
         return new ParameterDescriptor[]{
                 parameterWithName("classification").description("콘텐츠 분류 (POP or MOVIE or DRAMA). \n" + description)
         };
     }
 
-    public static FieldDescriptor[] learningContentsByClassificationResponse() {
+    public static FieldDescriptor[] learningContentsResponse() {
         return new FieldDescriptor[]{
                 fieldWithPath("content[]").description("페이징 된 콘텐츠 리스트")
         };
     }
 
-    public static FieldDescriptor[] learningContentsByClassificationResponse(Classification classification) {
+    public static FieldDescriptor[] learningContentsResponse(Classification classification) {
         FieldDescriptor optionalfieldDescriptor;
 
         if (classification == Classification.POP) {
