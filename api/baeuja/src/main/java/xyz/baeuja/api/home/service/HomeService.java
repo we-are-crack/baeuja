@@ -1,6 +1,8 @@
 package xyz.baeuja.api.home.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.baeuja.api.content.cache.WordIdCache;
@@ -29,7 +31,7 @@ public class HomeService {
      * @return HomeContentResponse list
      */
     public List<HomeContentsResponse> getLatestContents() {
-        return contentRepository.findTop10ByOrderByCreatedAtDesc();
+        return contentRepository.findHomeContents(PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "updatedAt")));
     }
 
     /**
