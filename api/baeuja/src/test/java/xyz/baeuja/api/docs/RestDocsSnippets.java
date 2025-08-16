@@ -124,6 +124,7 @@ public class RestDocsSnippets {
      */
     public static FieldDescriptor[] homeContentsResponse() {
         return new FieldDescriptor[]{
+                fieldWithPath("id").description("content id"),
                 fieldWithPath("classification").description("content 분류 ex)POP, DRAMA, MOVIE"),
                 fieldWithPath("title").description("제목"),
                 fieldWithPath("artist").description("가수").optional(),

@@ -10,6 +10,7 @@ import xyz.baeuja.api.content.domain.Classification;
 @AllArgsConstructor
 public class HomeContentsResponse {
 
+    private Long id;
     private Classification classification;
     private String title;
     private String artist;

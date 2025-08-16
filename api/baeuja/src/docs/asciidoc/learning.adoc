@@ -5,7 +5,7 @@
 :snippets: {projectdir}/build/generated-snippets
 :table-caption!:
 
-== GET /api/learning/contents
+== GET /api/learning/contents/all
 
 전체 학습 콘텐츠 리스트를 분류 별로 5개씩 조회.
 
@@ -51,17 +51,17 @@ include::{snippets}/learning-contents-success-size-0/response-fields.adoc[]
 include::{snippets}/learning-contents-success-size-0/http-request.adoc[]
 include::{snippets}/learning-contents-success-size-0/http-response.adoc[]
 
-== GET /api/learning/contents/classification/{classification}
+== GET /api/learning/contents
 
 특정 분류 학습 콘텐츠 리스트 조회.
 
-{classification}으로 가능한 값(대소문자 구분 x)
+쿼리 파라미터 `classification` 으로 가능한 값(대소문자 구분 x)
 
 - pop
 - movie
 - drama
 
-유효한 범위를 넘어서는 값을 page 또는 size에 넣을 경우, default 값으로 변경해서 응답.
+_유효한 범위를 넘어서는 값을 `page` 또는 `size` 에 넣을 경우, 유효한 default 값으로 변경해서 응답_
 
 === *✅ 성공*
 

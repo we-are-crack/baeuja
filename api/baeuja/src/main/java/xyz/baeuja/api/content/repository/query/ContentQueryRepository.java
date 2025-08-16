@@ -20,7 +20,7 @@ public class ContentQueryRepository {
      */
     public List<HomeContentsResponse> findTop10ByOrderByCreatedAtDesc() {
         return em.createQuery("select new xyz.baeuja.api.home.dto.HomeContentsResponse(" +
-                        "c.classification, c.title, c.artist, c.director, c.thumbnailUrl, " +
+                        "c.id, c.classification, c.title, c.artist, c.director, c.thumbnailUrl, " +
                         "(select count(u) from Unit u where u.content.id = c.id), " +
                         "(select count(sw.word) from SentenceWord sw where sw.sentence.unit.content.id = c.id))" +
                         "from Content c " +
