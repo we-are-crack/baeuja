@@ -16,10 +16,10 @@ import com.eello.baeuja.ui.screen.ProfileInputScreen
 import com.eello.baeuja.ui.screen.ReviewScreen
 import com.eello.baeuja.ui.screen.SignInScreen
 import com.eello.baeuja.ui.screen.SplashScreen
-import com.eello.baeuja.ui.screen.home.view.HomeScreen
-import com.eello.baeuja.ui.screen.learning.view.LearningContentDetailScreen
-import com.eello.baeuja.ui.screen.learning.view.LearningContentMoreScreen
-import com.eello.baeuja.ui.screen.learning.view.LearningMainScreen
+import com.eello.baeuja.ui.screen.home.HomeScreen
+import com.eello.baeuja.ui.screen.learning.detail.LearningContentDetailScreen
+import com.eello.baeuja.ui.screen.learning.main.LearningMainScreen
+import com.eello.baeuja.ui.screen.learning.more.LearningContentMoreScreen
 
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {

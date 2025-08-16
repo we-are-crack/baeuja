@@ -1,10 +1,10 @@
 package com.eello.baeuja.session
 
 import com.eello.baeuja.domain.content.repository.ContentRepository
-import com.eello.baeuja.ui.screen.home.mapper.toHomeNewContentUiModel
-import com.eello.baeuja.ui.screen.home.mapper.toHomeWordContentUiModel
-import com.eello.baeuja.ui.screen.home.model.HomeNewContentUiModel
-import com.eello.baeuja.ui.screen.home.model.HomeWordContentUiModel
+import com.eello.baeuja.ui.screen.home.HomeNewContentUiModel
+import com.eello.baeuja.ui.screen.home.HomeWordContentUiModel
+import com.eello.baeuja.ui.screen.home.common.mapper.toHomeNewContentUiModel
+import com.eello.baeuja.ui.screen.home.common.mapper.toHomeWordContentUiModel
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
