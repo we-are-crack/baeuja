@@ -9,10 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import xyz.baeuja.api.helper.TestDataHelper;
-import xyz.baeuja.api.learning.dto.unit.LearningUnitResponse;
+import xyz.baeuja.api.learning.dto.sentence.SentenceSummaryDto;
 import xyz.baeuja.api.user.domain.User;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,10 +25,10 @@ import static org.junit.jupiter.api.Assertions.*;
         "/sql/sentence_word.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @SpringBootTest
-class UnitQueryRepositoryTest {
+class SentenceQueryRepositoryTest {
 
     @Autowired
-    UnitQueryRepository unitQueryRepository;
+    SentenceQueryRepository sentenceQueryRepository;
 
     @Autowired
     TestDataHelper testDataHelper;
@@ -44,20 +42,17 @@ class UnitQueryRepositoryTest {
     }
 
     @Test
-    @DisplayName("학습 유닛 리스트 조회 성공")
-    void findLearningUnit_success() {
-        // given
-        Long contentId = 1L;
+    @DisplayName("즐겨찾기를 포함한 문장 요약 정보 조회 성공")
+    void findSentenceWithBookmark() {
+        //given
+        Long unitId = 54L; // 사랑의 불시착 회화 표현
 
-        // when
-        List<LearningUnitResponse> findLearningUnits = unitQueryRepository.findLearningUnit(contentId, user.getId());
+        //when
+        SentenceSummaryDto findSentence = sentenceQueryRepository.findSentenceWithBookmark(unitId, user.getId());
 
-        // then
-        assertThat(findLearningUnits).isNotEmpty();
-        assertThat(findLearningUnits.get(0).getId()).isEqualTo(1);
-        assertThat(findLearningUnits.get(0).getSentencesCount()).isNotZero();
-        assertThat(findLearningUnits.get(0).getWordsCount()).isNotZero();
-        assertThat(findLearningUnits.get(0).getProgressRate()).isZero();
-        assertThat(findLearningUnits.get(0).getLastLearned()).isNull();
+        //then
+        assertThat(findSentence.isConversation()).isTrue();
+        assertThat(findSentence.isFamousLine()).isFalse();
+        assertThat(findSentence.getIsBookmark()).isFalse();
     }
 }

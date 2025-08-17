@@ -1,30 +1,25 @@
-package xyz.baeuja.api.content.dto;
+package xyz.baeuja.api.learning.dto.sentence;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import xyz.baeuja.api.content.domain.Sentence;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class SentenceDto {
+public class SentenceSummaryDto {
 
     private final Long id;
     private final String korean;
     private final String english;
     private final boolean isConversation;
     private final boolean isFamousLine;
-    private final boolean isBookmark;
+    private final Boolean isBookmark;
 
-    public SentenceDto of(Sentence sentence, boolean isBookmark) {
-        return new SentenceDto(
-                sentence.getId(),
-                sentence.getKorean(),
-                sentence.getEnglish(),
-                sentence.isConversation(),
-                sentence.isFamousLine(),
-                isBookmark);
+    public SentenceSummaryDto(Long id, String korean, String english, boolean isConversation, boolean isFamousLine, Boolean isBookmark) {
+        this.id = id;
+        this.korean = korean;
+        this.english = english;
+        this.isConversation = isConversation;
+        this.isFamousLine = isFamousLine;
+        this.isBookmark = isBookmark != null && isBookmark; // null → false
     }
 }
