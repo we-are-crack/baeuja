@@ -9,8 +9,8 @@ import xyz.baeuja.api.content.domain.Classification;
 import xyz.baeuja.api.content.dto.ContentDto;
 import xyz.baeuja.api.global.response.ResultResponse;
 import xyz.baeuja.api.global.response.page.PagedResponse;
-import xyz.baeuja.api.learning.dto.LearningContentDto;
-import xyz.baeuja.api.learning.dto.LearningAllContentsResponse;
+import xyz.baeuja.api.learning.dto.content.LearningContentDto;
+import xyz.baeuja.api.learning.dto.content.LearningAllContentsResponse;
 import xyz.baeuja.api.learning.service.LearningService;
 
 @RestController

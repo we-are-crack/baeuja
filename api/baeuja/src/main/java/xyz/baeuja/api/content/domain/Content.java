@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import xyz.baeuja.api.global.entity.BaseEntity;
+import xyz.baeuja.api.learning.domain.UserContentActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,9 @@ public class Content extends BaseEntity {
 
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL)
     private List<Unit> units = new ArrayList<>();
+
+    @OneToMany(mappedBy = "content")
+    private List<UserContentActivity> userContentActivities = new ArrayList<>();
 
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)

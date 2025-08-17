@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import xyz.baeuja.api.global.entity.BaseEntity;
+import xyz.baeuja.api.learning.domain.UserUnitActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,9 @@ public class Unit extends BaseEntity {
 
     @OneToMany(mappedBy = "unit")
     private List<Sentence> sentences = new ArrayList<>();
+
+    @OneToMany(mappedBy = "unit")
+    private List<UserUnitActivity> userUnitActivities = new ArrayList<>();
 
     @Column(nullable = false, length = 500)
     private String thumbnailUrl;

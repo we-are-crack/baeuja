@@ -14,8 +14,8 @@ import xyz.baeuja.api.global.exception.InvalidQueryParameterException;
 import xyz.baeuja.api.global.exception.NotFoundException;
 import xyz.baeuja.api.global.response.page.PageInfo;
 import xyz.baeuja.api.global.response.page.PagedResponse;
-import xyz.baeuja.api.learning.dto.LearningContentDto;
-import xyz.baeuja.api.learning.dto.LearningAllContentsResponse;
+import xyz.baeuja.api.learning.dto.content.LearningContentDto;
+import xyz.baeuja.api.learning.dto.content.LearningAllContentsResponse;
 
 import java.util.EnumMap;
 import java.util.List;
