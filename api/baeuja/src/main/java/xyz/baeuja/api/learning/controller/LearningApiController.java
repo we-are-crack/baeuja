@@ -33,8 +33,10 @@ public class LearningApiController {
      */
     @GetMapping("/contents/all")
     public ResponseEntity<ResultResponse<LearningAllContentsResponse>> contentsAll(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam(name = "size", required = false, defaultValue = "5") int size) {
-        LearningAllContentsResponse learningAllContentsResponse = learningService.findAllLearningContents(size);
+        LearningAllContentsResponse learningAllContentsResponse = learningService
+                .findAllLearningContents(userDetails.getUserId(), size);
         return ResponseEntity.ok(ResultResponse.success(learningAllContentsResponse));
     }
 
@@ -47,12 +49,12 @@ public class LearningApiController {
      */
     @GetMapping("/contents")
     public ResponseEntity<ResultResponse<PagedResponse<LearningContentDto>>> contents(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam Classification classification,
             @PageableDefault(size = 5, page = 0) Pageable pageable
     ) {
-        PagedResponse<LearningContentDto> pagedContents = learningService.findLearningContents(
-                classification, pageable.getPageNumber(), pageable.getPageSize()
-        );
+        PagedResponse<LearningContentDto> pagedContents = learningService
+                .findLearningContents(userDetails.getUserId(), classification, pageable.getPageNumber(), pageable.getPageSize());
         return ResponseEntity.ok(ResultResponse.success(pagedContents));
     }
 
@@ -73,8 +75,8 @@ public class LearningApiController {
     /**
      * 학습 유닛 리스트 조회
      *
-     * @param userDetails 인증된 사용자 정보. user id 조회.
-     * @param contentId content id
+     * @param userDetails    인증된 사용자 정보. user id 조회.
+     * @param contentId      content id
      * @param classification content classification
      * @return LearningUnitResponse list
      */

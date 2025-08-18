@@ -1,10 +1,14 @@
 package xyz.baeuja.api.content.repository.query;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import xyz.baeuja.api.content.domain.Classification;
 import xyz.baeuja.api.content.domain.Content;
 import xyz.baeuja.api.home.dto.HomeContentsResponse;
+import xyz.baeuja.api.learning.dto.content.LearningContentDto;
 
 import java.util.List;
 
@@ -25,6 +29,18 @@ public interface ContentQueryRepository extends JpaRepository<Content, Long> {
             """)
     List<HomeContentsResponse> findHomeContents(Pageable pageable);
 
-
+    @Query("""
+            select new xyz.baeuja.api.learning.dto.content.LearningContentDto(
+                c.id, c.classification, c.title, c.thumbnailUrl, c.artist, c.director, uca.progressRate
+            )
+            from Content c
+            left join UserContentActivity uca
+            on c.id = uca.content.id and uca.user.id = :userId
+            where c.classification = :classification
+            """)
+    Slice<LearningContentDto> findLearningContents(
+            @Param("userId") Long userId,
+            @Param("classification") Classification classification,
+            Pageable pageable);
 
 }
