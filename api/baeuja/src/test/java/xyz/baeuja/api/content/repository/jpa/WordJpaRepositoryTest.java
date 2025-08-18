@@ -7,22 +7,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import xyz.baeuja.api.content.domain.Word;
+import xyz.baeuja.api.global.util.annotation.RepositoryTest;
 
 import java.util.List;
 import java.util.stream.LongStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ActiveProfiles("test")
-@Sql(scripts = {
-        "/sql/truncate_all.sql",
-        "/sql/content.sql",
-        "/sql/unit.sql",
-        "/sql/sentence.sql",
-        "/sql/word.sql",
-        "/sql/sentence_word.sql"},
-        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-@SpringBootTest
+@RepositoryTest
 class WordJpaRepositoryTest {
 
     @Autowired

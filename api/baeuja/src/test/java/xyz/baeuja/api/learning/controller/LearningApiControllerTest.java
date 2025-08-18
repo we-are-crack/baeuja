@@ -19,6 +19,7 @@ import org.springframework.test.context.jdbc.Sql;
 import xyz.baeuja.api.content.domain.Classification;
 import xyz.baeuja.api.global.exception.ErrorCode;
 import xyz.baeuja.api.global.exception.InvalidQueryParameterException;
+import xyz.baeuja.api.global.util.annotation.ApiControllerTest;
 import xyz.baeuja.api.global.util.jwt.JwtProvider;
 import xyz.baeuja.api.global.util.jwt.JwtUserInfo;
 import xyz.baeuja.api.helper.RestDocsHelper;
@@ -32,17 +33,7 @@ import static xyz.baeuja.api.helper.RestDocsHelper.*;
 import static xyz.baeuja.api.helper.RestDocsHelper.buildSingleResultResponseFields;
 import static xyz.baeuja.api.helper.RestDocsHelper.mergeFields;
 
-@ActiveProfiles("test")
-@Sql(scripts = {
-        "/sql/truncate_all.sql",
-        "/sql/content.sql",
-        "/sql/unit.sql",
-        "/sql/sentence.sql",
-        "/sql/word.sql",
-        "/sql/sentence_word.sql"},
-        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ExtendWith(RestDocumentationExtension.class)
+@ApiControllerTest
 class LearningApiControllerTest {
 
     @LocalServerPort
