@@ -1,6 +1,5 @@
 package xyz.baeuja.api.content.repository.query;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,11 +8,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import xyz.baeuja.api.helper.TestDataHelper;
-import xyz.baeuja.api.learning.dto.sentence.SentenceSummaryDto;
+import xyz.baeuja.api.learning.dto.sentence.RepresentativeSentenceDto;
 import xyz.baeuja.api.user.domain.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @Sql(scripts = {
@@ -48,11 +46,11 @@ class SentenceQueryRepositoryTest {
         Long unitId = 54L; // 사랑의 불시착 회화 표현
 
         //when
-        SentenceSummaryDto findSentence = sentenceQueryRepository.findSentenceWithBookmark(unitId, user.getId());
+        RepresentativeSentenceDto findSentence = sentenceQueryRepository.findSentenceWithBookmark(unitId, user.getId());
 
         //then
-        assertThat(findSentence.isConversation()).isTrue();
-        assertThat(findSentence.isFamousLine()).isFalse();
+        assertThat(findSentence.getIsConversation()).isTrue();
+        assertThat(findSentence.getIsFamousLine()).isFalse();
         assertThat(findSentence.getIsBookmark()).isFalse();
     }
 }

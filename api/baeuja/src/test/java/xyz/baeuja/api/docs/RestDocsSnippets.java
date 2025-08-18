@@ -9,6 +9,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static xyz.baeuja.api.helper.RestDocsHelper.mergeFields;
 
 public class RestDocsSnippets {
 
@@ -248,6 +249,33 @@ public class RestDocsSnippets {
                 fieldWithPath("youtubeId").description("유튜브 id"),
                 fieldWithPath("description").description("간단 설명"),
         };
+    }
+
+    public static FieldDescriptor[] learningUnitsResponse(Classification classification) {
+        FieldDescriptor[] unitDescriptor = {
+                fieldWithPath("id").description("unit id"),
+                fieldWithPath("thumbnail").description("유닛 썸네일 url"),
+                fieldWithPath("sentencesCount").description("유닛에서 학습할 수 있는 문장 개수"),
+                fieldWithPath("wordsCount").description("유닛에서 학습할 수 있는 단어 개수"),
+                fieldWithPath("progressRate").description("진행률(0 ~ 100)"),
+                fieldWithPath("lastLearned").description("최근 학습 날짜"),
+        };
+
+        FieldDescriptor[] sentenceDescriptor = {
+                fieldWithPath("sentence").description("대표 문장 정보(POP 제외)").optional(),
+                fieldWithPath("sentence.id").description("sentence id"),
+                fieldWithPath("sentence.korean").description("한국어 문장"),
+                fieldWithPath("sentence.english").description("영어 문장"),
+                fieldWithPath("sentence.isConversation").description("회화 표현 여부"),
+                fieldWithPath("sentence.isFamousLine").description("면대사 여부"),
+                fieldWithPath("sentence.isBookmark").description("즐겨찾기 여부"),
+        };
+
+        if (classification == Classification.POP) {
+            return unitDescriptor;
+        }
+
+        return mergeFields(unitDescriptor, sentenceDescriptor);
     }
 
     // ========================paging======================== //

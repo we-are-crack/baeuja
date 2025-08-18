@@ -10,12 +10,15 @@ import xyz.baeuja.api.content.domain.Classification;
 import xyz.baeuja.api.content.domain.Content;
 import xyz.baeuja.api.content.dto.ContentDto;
 import xyz.baeuja.api.content.repository.ContentRepository;
+import xyz.baeuja.api.content.repository.query.SentenceQueryRepository;
+import xyz.baeuja.api.content.repository.query.UnitQueryRepository;
 import xyz.baeuja.api.global.exception.InvalidQueryParameterException;
 import xyz.baeuja.api.global.exception.NotFoundException;
 import xyz.baeuja.api.global.response.page.PageInfo;
 import xyz.baeuja.api.global.response.page.PagedResponse;
 import xyz.baeuja.api.learning.dto.content.LearningContentDto;
 import xyz.baeuja.api.learning.dto.content.LearningAllContentsResponse;
+import xyz.baeuja.api.learning.dto.unit.LearningUnitResponse;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -27,6 +30,8 @@ import java.util.Map;
 public class LearningService {
 
     private final ContentRepository contentRepository;
+    private final UnitQueryRepository unitQueryRepository;
+    private final SentenceQueryRepository sentenceQueryRepository;
 
     /**
      * 학습 컨텐츠 리스트를 분류 별로 조회
@@ -59,7 +64,7 @@ public class LearningService {
     }
 
     /**
-     * * 콘텐츠 상세 조회
+     * 콘텐츠 상세 조회
      *
      * @param contentId 조회하고자 하는 content id
      * @return ContentDto
@@ -69,6 +74,33 @@ public class LearningService {
         Content findContent = contentRepository.findById(contentId)
                 .orElseThrow(() -> new NotFoundException("Learning content not found."));
         return ContentDto.from(findContent);
+    }
+
+    /**
+     * 학습 유닛 리스트 조회
+     *
+     * @param userId         user id
+     * @param contentId      content id
+     * @param classification content classification
+     * @return LearningUnitResponse list
+     */
+    public List<LearningUnitResponse> findUnits(Long userId, Long contentId, Classification classification)
+            throws NotFoundException {
+        List<LearningUnitResponse> learningUnits = unitQueryRepository.findLearningUnit(contentId, userId);
+
+        if (learningUnits.isEmpty()) {
+            throw new NotFoundException("Learning content not found.");
+        }
+
+        if (classification != Classification.POP) {
+            learningUnits.forEach(
+                    unit -> unit.setSentence(
+                            sentenceQueryRepository.findSentenceWithBookmark(unit.getId(), userId)
+                    )
+            );
+        }
+
+        return learningUnits;
     }
 
     /**

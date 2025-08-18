@@ -2,8 +2,9 @@ package xyz.baeuja.api.learning.dto.unit;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import xyz.baeuja.api.learning.dto.sentence.SentenceSummaryDto;
+import lombok.Setter;
+import xyz.baeuja.api.global.util.date.DateUtils;
+import xyz.baeuja.api.learning.dto.sentence.RepresentativeSentenceDto;
 
 import java.time.LocalDateTime;
 
@@ -18,9 +19,10 @@ public class LearningUnitResponse {
     private final Long wordsCount;
 
     private final Integer progressRate;
-    private final LocalDateTime lastLearned;
+    private final String lastLearned;
 
-    private SentenceSummaryDto sentence;
+    @Setter
+    private RepresentativeSentenceDto sentence;
 
     public LearningUnitResponse(Long id, String thumbnail, Long sentencesCount, Long wordsCount, Integer progressRate, LocalDateTime lastLearned) {
         this.id = id;
@@ -28,6 +30,6 @@ public class LearningUnitResponse {
         this.sentencesCount = sentencesCount;
         this.wordsCount = wordsCount;
         this.progressRate = progressRate != null ? progressRate : 0;
-        this.lastLearned = lastLearned;
+        this.lastLearned = lastLearned != null ? DateUtils.toDateTimeString(lastLearned) : "";
     }
 }

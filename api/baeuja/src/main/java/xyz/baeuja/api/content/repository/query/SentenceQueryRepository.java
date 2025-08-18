@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import xyz.baeuja.api.content.domain.Sentence;
-import xyz.baeuja.api.learning.dto.sentence.SentenceSummaryDto;
+import xyz.baeuja.api.learning.dto.sentence.RepresentativeSentenceDto;
 
 public interface SentenceQueryRepository extends JpaRepository<Sentence, Long> {
 
@@ -16,7 +16,7 @@ public interface SentenceQueryRepository extends JpaRepository<Sentence, Long> {
      * @return SentenceSummaryDto
      */
     @Query("""
-            select new xyz.baeuja.api.learning.dto.sentence.SentenceSummaryDto(
+            select new xyz.baeuja.api.learning.dto.sentence.RepresentativeSentenceDto(
                 s.id, s.korean, s.english, s.isConversation, s.isFamousLine, usb.isBookmark
             )
             from Sentence s
@@ -24,7 +24,7 @@ public interface SentenceQueryRepository extends JpaRepository<Sentence, Long> {
             on s.id = usb.sentence.id and usb.user.id = :userId
             where s.unit.id = :unitId and (s.isFamousLine = true or s.isConversation = true)
             """)
-    SentenceSummaryDto findSentenceWithBookmark(
+    RepresentativeSentenceDto findSentenceWithBookmark(
             @Param("unitId") Long unitId,
             @Param("userId") Long userId
     );

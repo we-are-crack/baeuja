@@ -146,13 +146,91 @@ include::{snippets}/learning-content-success/http-response.adoc[]
 === *❌ 실패: NotFound*
 
 ==== 요청 헤더
-include::{snippets}/learning-content-success/request-headers.adoc[]
+include::{snippets}/learning-content-fail/request-headers.adoc[]
 
 ==== 경로 파라미터
-include::{snippets}/learning-content-success/path-parameters.adoc[]
+include::{snippets}/learning-content-fail/path-parameters.adoc[]
 
 ==== 응답 필드
-include::{snippets}/learning-content-success/response-fields.adoc[]
+include::{snippets}/learning-content-fail/response-fields.adoc[]
 
-include::{snippets}/learning-content-success/http-request.adoc[]
-include::{snippets}/learning-content-success/http-response.adoc[]
+include::{snippets}/learning-content-fail/http-request.adoc[]
+include::{snippets}/learning-content-fail/http-response.adoc[]
+
+== GET /api/learning/contents/{id}/units
+
+학습 유닛 리스트 조회.
+
+쿼리 파라미터 `classification` 으로 가능한 값(대소문자 구분 x)
+
+- pop
+- movie
+- drama
+
+=== *✅ 성공: POP*
+
+==== 요청 헤더
+include::{snippets}/learning-units-pop-success/request-headers.adoc[]
+
+==== 경로 파라미터
+include::{snippets}/learning-units-pop-success/path-parameters.adoc[]
+
+==== 요청 파라미터
+include::{snippets}/learning-units-pop-success/query-parameters.adoc[]
+
+==== 응답 필드
+include::{snippets}/learning-units-pop-success/response-fields.adoc[]
+
+include::{snippets}/learning-units-pop-success/http-request.adoc[]
+include::{snippets}/learning-units-pop-success/http-response.adoc[]
+
+=== *✅ 성공: DRAMA*
+
+==== 요청 헤더
+include::{snippets}/learning-units-drama-success/request-headers.adoc[]
+
+==== 경로 파라미터
+include::{snippets}/learning-units-drama-success/path-parameters.adoc[]
+
+==== 요청 파라미터
+include::{snippets}/learning-units-drama-success/query-parameters.adoc[]
+
+==== 응답 필드
+include::{snippets}/learning-units-drama-success/response-fields.adoc[]
+
+include::{snippets}/learning-units-drama-success/http-request.adoc[]
+include::{snippets}/learning-units-drama-success/http-response.adoc[]
+
+=== *❌ 실패: NotFound*
+
+==== 요청 헤더
+include::{snippets}/learning-units-fail-not-found/request-headers.adoc[]
+
+==== 경로 파라미터
+include::{snippets}/learning-units-fail-not-found/path-parameters.adoc[]
+
+==== 요청 파라미터
+include::{snippets}/learning-units-fail-not-found/query-parameters.adoc[]
+
+==== 응답 필드
+include::{snippets}/learning-units-fail-not-found/response-fields.adoc[]
+
+include::{snippets}/learning-units-fail-not-found/http-request.adoc[]
+include::{snippets}/learning-units-fail-not-found/http-response.adoc[]
+
+=== *❌ 실패: 잘못된 classification*
+
+==== 요청 헤더
+include::{snippets}/learning-units-fail-invalid-classification/request-headers.adoc[]
+
+==== 경로 파라미터
+include::{snippets}/learning-units-fail-invalid-classification/path-parameters.adoc[]
+
+==== 요청 파라미터
+include::{snippets}/learning-units-fail-invalid-classification/query-parameters.adoc[]
+
+==== 응답 필드
+include::{snippets}/learning-units-fail-invalid-classification/response-fields.adoc[]
+
+include::{snippets}/learning-units-fail-invalid-classification/http-request.adoc[]
+include::{snippets}/learning-units-fail-invalid-classification/http-response.adoc[]

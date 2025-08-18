@@ -50,7 +50,8 @@ class UnitQueryRepositoryTest {
         Long contentId = 1L;
 
         // when
-        List<LearningUnitResponse> findLearningUnits = unitQueryRepository.findLearningUnit(contentId, user.getId());
+        List<LearningUnitResponse> findLearningUnits =
+                unitQueryRepository.findLearningUnit(contentId, user.getId());
 
         // then
         assertThat(findLearningUnits).isNotEmpty();
@@ -58,6 +59,20 @@ class UnitQueryRepositoryTest {
         assertThat(findLearningUnits.get(0).getSentencesCount()).isNotZero();
         assertThat(findLearningUnits.get(0).getWordsCount()).isNotZero();
         assertThat(findLearningUnits.get(0).getProgressRate()).isZero();
-        assertThat(findLearningUnits.get(0).getLastLearned()).isNull();
+        assertThat(findLearningUnits.get(0).getLastLearned()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("학습 유닛 리스트 조회 성공 - 빈 리스트 반환")
+    void findLearningUnit_empty_success() {
+        // given
+        Long contentId = 0L;
+
+        // when
+        List<LearningUnitResponse> findLearningUnits =
+                unitQueryRepository.findLearningUnit(contentId, user.getId());
+
+        // then
+        assertThat(findLearningUnits).isEmpty();
     }
 }

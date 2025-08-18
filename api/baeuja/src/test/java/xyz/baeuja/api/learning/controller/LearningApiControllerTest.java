@@ -23,6 +23,7 @@ import xyz.baeuja.api.global.util.jwt.JwtProvider;
 import xyz.baeuja.api.global.util.jwt.JwtUserInfo;
 import xyz.baeuja.api.helper.RestDocsHelper;
 import xyz.baeuja.api.helper.TestDataHelper;
+import xyz.baeuja.api.learning.dto.sentence.RepresentativeSentenceDto;
 import xyz.baeuja.api.user.domain.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -66,6 +67,8 @@ class LearningApiControllerTest {
         docsHelper = new RestDocsHelper(port,
                 RestAssuredRestDocumentation.documentationConfiguration(provider));
     }
+
+    //===============================contentsAll api test===============================//
 
     @Test
     @DisplayName("학습 콘텐츠 리스트 조회 성공")
@@ -134,6 +137,8 @@ class LearningApiControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(response.jsonPath().getString("code")).isEqualTo(InvalidQueryParameterException.CODE);
     }
+
+    //===============================contents api test===============================//
 
     @Test
     @DisplayName("특정 분류 학습 콘텐츠 리스트 조회 성공")
@@ -237,6 +242,8 @@ class LearningApiControllerTest {
         assertThat(response.jsonPath().getString("code")).isEqualTo(ErrorCode.INVALID_PATH_PARAMETER.name());
     }
 
+    //===============================content api test===============================//
+
     @Test
     @DisplayName("콘텐츠 상세 조회 성공")
     void content_success() {
@@ -265,7 +272,7 @@ class LearningApiControllerTest {
         Long contentId = 0L;
 
         RequestSpecification spec = docsHelper.createSpecWithDocs(createPathParamAndResponseSnippet(
-                "learning-content-success",
+                "learning-content-fail",
                 authorizationHeader(),
                 learningContentPathParam(),
                 defaultResponse())
@@ -278,5 +285,111 @@ class LearningApiControllerTest {
                 .get("/api/learning/contents/{id}", contentId);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    //===============================units api test===============================//
+
+    @Test
+    @DisplayName("학습 유닛 리스트 조회 성공 - POP")
+    void units_pop_success() {
+        Long contentId = 1L;
+        Classification classification = Classification.POP;
+
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathAndQueryParamAndResponseSnippet(
+                "learning-units-pop-success",
+                authorizationHeader(),
+                learningContentPathParam(),
+                learningContentsQueryParam("classification = POP"),
+                buildListResultResponseFields(learningUnitsResponse(classification))
+        ));
+
+        Response response = RestAssured
+                .given(spec)
+                .header("Authorization", "Bearer " + accessToken)
+                .queryParam("classification", classification)
+                .when()
+                .get("/api/learning/contents/{id}/units", contentId);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.jsonPath().getList("data")).isNotEmpty();
+        assertThat(response.jsonPath().getString("data[0].lastLearned")).isEmpty();
+        assertThat(response.jsonPath().getObject("data[0].sentence", RepresentativeSentenceDto.class)).isNull();
+    }
+
+    @Test
+    @DisplayName("학습 유닛 리스트 조회 성공 - DRAMA")
+    void units_drama_success() {
+        Long contentId = 11L;
+        Classification classification = Classification.DRAMA;
+
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathAndQueryParamAndResponseSnippet(
+                "learning-units-drama-success",
+                authorizationHeader(),
+                learningContentPathParam(),
+                learningContentsQueryParam("classification = DRAMA"),
+                buildListResultResponseFields(learningUnitsResponse(classification))
+        ));
+
+        Response response = RestAssured
+                .given(spec)
+                .header("Authorization", "Bearer " + accessToken)
+                .queryParam("classification", classification)
+                .when()
+                .get("/api/learning/contents/{id}/units", contentId);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.jsonPath().getList("data")).isNotEmpty();
+        assertThat(response.jsonPath().getString("data[0].lastLearned")).isEmpty();
+        assertThat(response.jsonPath().getObject("data[0].sentence", RepresentativeSentenceDto.class)).isNotNull();
+        assertThat(response.jsonPath().getBoolean("data[0].sentence.isBookmark")).isFalse();
+    }
+
+    @Test
+    @DisplayName("학습 유닛 리스트 조회 실패 - NotFound")
+    void units_fail_not_found() {
+        Long contentId = 0L;
+        Classification classification = Classification.DRAMA;
+
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathAndQueryParamAndResponseSnippet(
+                "learning-units-fail-not-found",
+                authorizationHeader(),
+                learningContentPathParam(),
+                learningContentsQueryParam("classification = DRAMA"),
+                defaultResponse())
+        );
+
+        Response response = RestAssured
+                .given(spec)
+                .header("Authorization", "Bearer " + accessToken)
+                .queryParam("classification", classification)
+                .when()
+                .get("/api/learning/contents/{id}/units", contentId);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    @DisplayName("학습 유닛 리스트 조회 실패 - 잘못된 classification")
+    void units_fail_invalid_classification() {
+        Long contentId = 1L;
+        String classification = "invalid";
+
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathAndQueryParamAndResponseSnippet(
+                "learning-units-fail-invalid-classification",
+                authorizationHeader(),
+                learningContentPathParam(),
+                learningContentsQueryParam("classification = invalid"),
+                defaultResponse())
+        );
+
+        Response response = RestAssured
+                .given(spec)
+                .header("Authorization", "Bearer " + accessToken)
+                .queryParam("classification", classification)
+                .when()
+                .get("/api/learning/contents/{id}/units", contentId);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.jsonPath().getString("code")).isEqualTo(ErrorCode.INVALID_PATH_PARAMETER.name());
     }
 }
