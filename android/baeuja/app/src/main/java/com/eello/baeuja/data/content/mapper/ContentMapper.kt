@@ -9,6 +9,7 @@ import com.eello.baeuja.domain.content.model.SentenceUnit
 import com.eello.baeuja.domain.content.model.WordContent
 
 fun NewContentResponse.toDomainModel() = ContentMeta(
+    id = id,
     classification = classification,
     title = title,
     artist = artist,

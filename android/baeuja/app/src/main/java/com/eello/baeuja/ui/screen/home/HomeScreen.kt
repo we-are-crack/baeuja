@@ -21,25 +21,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.eello.baeuja.ui.component.ItemSeparator
 import com.eello.baeuja.ui.component.RetryComponent
+import com.eello.baeuja.ui.navigation.navigateToContentUnits
 import com.eello.baeuja.ui.screen.home.component.HomeNewContentList
 import com.eello.baeuja.ui.screen.home.component.HomeWordContentList
 import com.eello.baeuja.ui.theme.BaujaTheme
 import timber.log.Timber
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
     val homeViewModel: HomeViewModel = hiltViewModel()
-    HomeRoute(homeViewModel)
+    HomeRoute(navController = navController, homeViewModel = homeViewModel)
 }
 
 @Composable
-fun HomeRoute(homeViewModel: HomeViewModel) {
+fun HomeRoute(
+    navController: NavController,
+    homeViewModel: HomeViewModel
+) {
     val initLoadFailed by homeViewModel.initLoadFailed.collectAsState()
     val newContents = homeViewModel.newContents
     val homeLearningContents by homeViewModel.homeLearningContents.collectAsState()
     val isLoading by homeViewModel.isLoading.collectAsState()
+
+    val onNavigateToContentUnits: (Long) -> Unit = { contentId ->
+        navController.navigateToContentUnits(contentId = contentId)
+    }
 
     LaunchedEffect(Unit) {
         if (initLoadFailed) {
@@ -55,7 +64,8 @@ fun HomeRoute(homeViewModel: HomeViewModel) {
             newContents = newContents,
             homeLearningContents = homeLearningContents,
             isLoading = isLoading,
-            onEndOfContents = homeViewModel::fetchMoreLearningContents
+            onEndOfContents = homeViewModel::fetchMoreLearningContents,
+            onNavigateToContentUnits = onNavigateToContentUnits
         )
     }
 }
@@ -65,7 +75,8 @@ fun HomeContent(
     newContents: List<HomeNewContentUiModel> = emptyList(),
     homeLearningContents: List<HomeWordContentUiModel> = emptyList(),
     isLoading: Boolean = false,
-    onEndOfContents: () -> Unit = {}
+    onEndOfContents: () -> Unit = {},
+    onNavigateToContentUnits: (Long) -> Unit = {}
 ) {
     val listState = rememberLazyListState()
     val shouldLoadMore = remember {
@@ -93,7 +104,10 @@ fun HomeContent(
         ) {
             if (newContents.isNotEmpty()) {
                 item {
-                    HomeNewContentList(newContents)
+                    HomeNewContentList(
+                        items = newContents,
+                        onNavigateToContentUnits = onNavigateToContentUnits
+                    )
                     ItemSeparator(4.dp)
                 }
             }

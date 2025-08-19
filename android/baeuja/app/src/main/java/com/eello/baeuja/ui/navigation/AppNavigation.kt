@@ -20,6 +20,7 @@ import com.eello.baeuja.ui.screen.home.HomeScreen
 import com.eello.baeuja.ui.screen.learning.detail.LearningContentDetailScreen
 import com.eello.baeuja.ui.screen.learning.main.LearningMainScreen
 import com.eello.baeuja.ui.screen.learning.more.LearningContentMoreScreen
+import com.eello.baeuja.ui.screen.learning.unit.ContentUnitOverviewScreen
 
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
@@ -44,7 +45,7 @@ fun NavGraphBuilder.authGraph(navController: NavHostController) {
 
 fun NavGraphBuilder.mainGraph(navController: NavHostController) {
     navigation(startDestination = Screen.Home.route, route = NavGraph.Main.route) {
-        composable(Screen.Home.route) { HomeScreen() }
+        composable(Screen.Home.route) { HomeScreen(navController) }
         composable(Screen.Review.route) { ReviewScreen() }
         composable(Screen.Bookmark.route) { BookmarkScreen() }
         composable(Screen.MyPage.route) { MyPageScreen() }
@@ -82,6 +83,17 @@ fun NavGraphBuilder.learnGraph(navController: NavHostController) {
             LearningContentMoreScreen(
                 navController = navController,
                 classification = Classification.valueOf(classification)
+            )
+        }
+
+        composable(
+            route = Screen.LearningContentUnitOverview.route,
+            arguments = listOf(navArgument("contentId") { type = NavType.LongType })
+        ) {
+            val contentId = it.arguments?.getLong("contentId") ?: -1
+            ContentUnitOverviewScreen(
+                navController = navController,
+                contentId = contentId
             )
         }
     }

@@ -32,6 +32,7 @@ import com.eello.baeuja.ui.component.BACK_BUTTON_START_MARGIN
 import com.eello.baeuja.ui.component.BACK_BUTTON_TOP_MARGIN
 import com.eello.baeuja.ui.component.BackButton
 import com.eello.baeuja.ui.navigation.Screen
+import com.eello.baeuja.ui.navigation.navigateToContentUnits
 import com.eello.baeuja.ui.screen.learning.common.component.LearningContentPagerCard
 import com.eello.baeuja.ui.screen.learning.main.LearningContentUiModel
 import com.eello.baeuja.ui.theme.BaujaTheme
@@ -186,12 +187,17 @@ fun LearningContentMoreRoute(
         contentMoreViewModel.loadMoreItems(classification)
     }
 
+    val onNavigateToContentUnits: (Long) -> Unit = { contentId ->
+        navController?.navigateToContentUnits(contentId = contentId)
+    }
+
     LearningContentMoreUi(
         navController = navController,
         classification = classification,
         items = items,
         isLoading = isLoading,
-        onEndOfContents = onEndOfContents
+        onEndOfContents = onEndOfContents,
+        onNavigateToContentUnits = onNavigateToContentUnits
     )
 }
 
@@ -202,6 +208,7 @@ fun LearningContentMoreUi(
     items: List<LearningContentUiModel>,
     isLoading: Boolean = false,
     onEndOfContents: () -> Unit = {},
+    onNavigateToContentUnits: (Long) -> Unit = {},
     isPreview: Boolean = false
 ) {
     val listState = rememberLazyListState()
@@ -263,6 +270,7 @@ fun LearningContentMoreUi(
                     onNavigateToDetail = { itemId ->
                         navController?.navigate(Screen.LearningContentDetail.createRoute(-1))
                     },
+                    onNavigateToUnitOverview = onNavigateToContentUnits,
                     isPreview = isPreview
                 )
             }

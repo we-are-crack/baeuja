@@ -1,5 +1,6 @@
 package com.eello.baeuja.ui.screen.home.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +19,10 @@ import com.eello.baeuja.ui.theme.BaujaTheme
 
 
 @Composable
-fun HomeNewContentList(items: List<HomeNewContentUiModel> = emptyList()) {
+fun HomeNewContentList(
+    items: List<HomeNewContentUiModel> = emptyList(),
+    onNavigateToContentUnits: (Long) -> Unit = {}
+) {
 
     Column(
         modifier = Modifier
@@ -34,7 +38,10 @@ fun HomeNewContentList(items: List<HomeNewContentUiModel> = emptyList()) {
 
         LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             items(items = items) { item ->
-                HomeNewContentCard(item)
+                HomeNewContentCard(
+                    modifier = Modifier.clickable { onNavigateToContentUnits(item.id) },
+                    item = item
+                )
             }
         }
     }

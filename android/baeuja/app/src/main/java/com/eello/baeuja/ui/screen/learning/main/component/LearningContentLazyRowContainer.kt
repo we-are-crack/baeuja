@@ -12,6 +12,7 @@ fun LearningContentLazyRowContainer(
     modifier: Modifier = Modifier,
     contents: List<LearningContentUiModel>,
     onNavigateToDetail: (Long) -> Unit = {},
+    onNavigateToUnitOverview: (Long) -> Unit = {},
     isPreview: Boolean = false
 ) {
 
@@ -23,6 +24,7 @@ fun LearningContentLazyRowContainer(
             LearningContentLazyRowCard(
                 content = contents[index],
                 onNavigateToDetail = onNavigateToDetail,
+                onNavigateToUnitOverview = onNavigateToUnitOverview,
                 isPreview = isPreview
             )
         }

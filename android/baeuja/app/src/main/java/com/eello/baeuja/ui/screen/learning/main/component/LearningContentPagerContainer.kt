@@ -27,6 +27,7 @@ fun LearningContentPagerContainer(
     modifier: Modifier = Modifier,
     contents: List<LearningContentUiModel>,
     onNavigateToDetail: (Long) -> Unit = {},
+    onNavigateToUnitOverview: (Long) -> Unit = {},
     isPreview: Boolean = false
 ) {
     val pagerState = rememberPagerState { (contents.size / 2) + (contents.size % 2) }
@@ -44,17 +45,20 @@ fun LearningContentPagerContainer(
             LearningContentPagerCard(
                 content = contents[index],
                 onNavigateToDetail = onNavigateToDetail,
+                onNavigateToUnitOverview = onNavigateToUnitOverview,
                 isPreview = isPreview
             )
             if (index + 1 < contents.size) {
                 LearningContentPagerCard(
                     content = contents[index + 1],
                     onNavigateToDetail = onNavigateToDetail,
+                    onNavigateToUnitOverview = onNavigateToUnitOverview,
                     isPreview = isPreview
                 )
             } else LearningContentPagerCard(
                 content = null,
                 onNavigateToDetail = onNavigateToDetail,
+                onNavigateToUnitOverview = onNavigateToUnitOverview,
                 isPreview = isPreview
             )
         }

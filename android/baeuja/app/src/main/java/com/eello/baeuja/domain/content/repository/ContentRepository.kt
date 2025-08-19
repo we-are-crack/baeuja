@@ -3,6 +3,7 @@ package com.eello.baeuja.domain.content.repository
 import com.eello.baeuja.domain.common.pagination.model.Pagination
 import com.eello.baeuja.domain.content.model.Classification
 import com.eello.baeuja.domain.content.model.ContentMeta
+import com.eello.baeuja.domain.content.model.ContentUnit
 import com.eello.baeuja.domain.content.model.WordContent
 
 interface ContentRepository {
@@ -18,4 +19,5 @@ interface ContentRepository {
 
     suspend fun getContentDetail(id: Long): ContentMeta
 
+    suspend fun getContentUnits(contentId: Long, classification: Classification): List<ContentUnit>
 }

@@ -27,10 +27,14 @@ import com.eello.baeuja.ui.theme.BaujaTheme
 import com.eello.baeuja.ui.theme.RobotoFamily
 
 @Composable
-fun HomeNewContentCard(item: HomeNewContentUiModel, isPreview: Boolean = false) {
+fun HomeNewContentCard(
+    modifier: Modifier = Modifier,
+    item: HomeNewContentUiModel,
+    isPreview: Boolean = false
+) {
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .width(170.dp)
     ) {
         if (isPreview) {
@@ -96,6 +100,6 @@ fun PreviewNewContentCard() {
         wordCount = 123
     )
     BaujaTheme {
-        HomeNewContentCard(item, isPreview = true)
+        HomeNewContentCard(item = item, isPreview = true)
     }
 }

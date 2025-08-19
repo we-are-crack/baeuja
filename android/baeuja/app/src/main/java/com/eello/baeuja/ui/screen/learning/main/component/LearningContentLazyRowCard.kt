@@ -40,10 +40,13 @@ private val IMAGE_HEIGHT = 200.dp
 fun LearningContentLazyRowCard(
     content: LearningContentUiModel,
     onNavigateToDetail: (Long) -> Unit = {},
+    onNavigateToUnitOverview: (Long) -> Unit = {},
     isPreview: Boolean = false
 ) {
     Column(
-        modifier = Modifier.width(IMAGE_WIDTH),
+        modifier = Modifier
+            .width(IMAGE_WIDTH)
+            .clickable { onNavigateToUnitOverview(content.id) },
     ) {
 
         if (isPreview) {

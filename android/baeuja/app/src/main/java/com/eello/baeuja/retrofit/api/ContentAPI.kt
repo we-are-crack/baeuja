@@ -3,6 +3,7 @@ package com.eello.baeuja.retrofit.api
 import com.eello.baeuja.data.common.pagination.PaginationResponse
 import com.eello.baeuja.data.content.dto.response.ContentDetailResponse
 import com.eello.baeuja.data.content.dto.response.ContentResponse
+import com.eello.baeuja.data.content.dto.response.ContentUnitResponse
 import com.eello.baeuja.data.content.dto.response.NewContentResponse
 import com.eello.baeuja.data.content.dto.response.WordContentResponse
 import com.eello.baeuja.domain.content.model.Classification
@@ -44,4 +45,10 @@ interface ContentAPI {
     suspend fun fetchContentDetail(
         @Path("contentId") contentId: Long
     ): Response<ApiResponse<ContentDetailResponse>>
+
+    @GET("learning/contents/{contentId}/units")
+    suspend fun fetContentUnits(
+        @Path("contentId") contentId: Long,
+        @Query("classification") classification: Classification
+    ): Response<ApiResponse<List<ContentUnitResponse>>>
 }

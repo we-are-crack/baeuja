@@ -12,6 +12,7 @@ fun LearningContentContainer(
     modifier: Modifier = Modifier,
     items: List<LearningContentUiModel>,
     onNavigateToDetail: (Long) -> Unit = {},
+    onNavigateToUnitOverview: (Long) -> Unit = {},
     isPreview: Boolean = false
 ) {
     when (layoutType) {
@@ -19,6 +20,7 @@ fun LearningContentContainer(
             modifier = modifier,
             contents = items,
             onNavigateToDetail = onNavigateToDetail,
+            onNavigateToUnitOverview = onNavigateToUnitOverview,
             isPreview = isPreview
         )
 
@@ -26,6 +28,7 @@ fun LearningContentContainer(
             modifier = modifier,
             contents = items,
             onNavigateToDetail = onNavigateToDetail,
+            onNavigateToUnitOverview = onNavigateToUnitOverview,
             isPreview = isPreview
         )
     }

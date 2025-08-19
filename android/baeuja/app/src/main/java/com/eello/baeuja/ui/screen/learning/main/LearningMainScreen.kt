@@ -148,6 +148,10 @@ fun LearningMainRoute(
         navController.navigate(Screen.LearningContentMore.createRoute(classification))
     }
 
+    val onNavigateToUnitOverview: (Long) -> Unit = { contentId ->
+        navController.navigate(Screen.LearningContentUnitOverview.createRoute(contentId))
+    }
+
     if (isLoading) {
         LoadingComponent()
     } else {
@@ -158,6 +162,7 @@ fun LearningMainRoute(
                 contents = items,
                 onNavigateToDetail = onNavigateToDetail,
                 onMoreClick = onMoreClick,
+                onNavigateToUnitOverview = onNavigateToUnitOverview
             )
         }
     }
@@ -168,6 +173,7 @@ fun LearningMainUi(
     contents: Map<Classification, List<LearningContentUiModel>>,
     onNavigateToDetail: (Long) -> Unit = {},
     onMoreClick: (Classification) -> Unit = {},
+    onNavigateToUnitOverview: (Long) -> Unit = {},
     isPreview: Boolean = false
 ) {
     Column(
@@ -194,6 +200,7 @@ fun LearningMainUi(
             contents = contents[Classification.POP] ?: emptyList(),
             onNavigateToDetail = onNavigateToDetail,
             onMoreClick = onMoreClick,
+            onNavigateToUnitOverview = onNavigateToUnitOverview,
             isPreview = isPreview
         )
 
@@ -205,6 +212,7 @@ fun LearningMainUi(
             contents = contents[Classification.MOVIE] ?: emptyList(),
             onNavigateToDetail = onNavigateToDetail,
             onMoreClick = onMoreClick,
+            onNavigateToUnitOverview = onNavigateToUnitOverview,
             isPreview = isPreview
         )
 
@@ -216,6 +224,7 @@ fun LearningMainUi(
             contents = contents[Classification.DRAMA] ?: emptyList(),
             onNavigateToDetail = onNavigateToDetail,
             onMoreClick = onMoreClick,
+            onNavigateToUnitOverview = onNavigateToUnitOverview,
             isPreview = isPreview
         )
     }

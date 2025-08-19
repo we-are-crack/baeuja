@@ -25,6 +25,12 @@ sealed class Screen(val route: String) {
             "${NavGraph.Learn.route}/more?classification=${classification.name}"
     }
 
+    object LearningContentUnitOverview :
+        Screen("${NavGraph.Learn.route}/{contentId}/units") {
+        fun createRoute(contentId: Long) =
+            "${NavGraph.Learn.route}/$contentId/units"
+    }
+
     object Review : Screen("${NavGraph.Main.route}/review")
     object Bookmark : Screen("${NavGraph.Main.route}/bookmark")
     object MyPage : Screen("${NavGraph.Main.route}/my_page")

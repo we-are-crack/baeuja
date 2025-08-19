@@ -8,6 +8,7 @@ import com.eello.baeuja.data.network.callApi
 import com.eello.baeuja.domain.common.pagination.model.Pagination
 import com.eello.baeuja.domain.content.model.Classification
 import com.eello.baeuja.domain.content.model.ContentMeta
+import com.eello.baeuja.domain.content.model.ContentUnit
 import com.eello.baeuja.domain.content.model.WordContent
 import com.eello.baeuja.domain.content.repository.ContentRepository
 import com.eello.baeuja.exception.AppError
@@ -71,7 +72,7 @@ class ContentRepositoryImpl @Inject constructor(
         page: Int,
         size: Int
     ): Pagination<ContentMeta> {
-        val apiResult = apiCaller.call {
+        val apiResult = callApi {
             contentAPI.fetchContentsByClassification(classification, page, size)
         }
 
@@ -87,10 +88,28 @@ class ContentRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getContentDetail(id: Long): ContentMeta {
-        val apiResult = apiCaller.call { contentAPI.fetchContentDetail(id) }
+        val apiResult = callApi { contentAPI.fetchContentDetail(id) }
+
         return apiResult.handle(
             onSuccess = { body ->
                 body.data?.toDomainModel()
+                    ?: throw AppException(AppError.Api.EmptyResponse())
+            },
+            onFailure = { reason ->
+                throw AppException(reason)
+            }
+        )
+    }
+
+    override suspend fun getContentUnits(
+        contentId: Long,
+        classification: Classification
+    ): List<ContentUnit> {
+        val apiResult = callApi { contentAPI.fetContentUnits(contentId, classification) }
+
+        return apiResult.handle(
+            onSuccess = { body ->
+                body.data?.map { it.toDomainModel() }
                     ?: throw AppException(AppError.Api.EmptyResponse())
             },
             onFailure = { reason ->

@@ -26,6 +26,7 @@ fun LearningClassificationSection(
     contents: List<LearningContentUiModel>,
     onNavigateToDetail: (Long) -> Unit = {},
     onMoreClick: (Classification) -> Unit = {},
+    onNavigateToUnitOverview: (Long) -> Unit = {},
     isPreview: Boolean = false
 ) {
     Column(
@@ -74,6 +75,7 @@ fun LearningClassificationSection(
                 .padding(vertical = 12.dp),
             items = contents,
             onNavigateToDetail = onNavigateToDetail,
+            onNavigateToUnitOverview = onNavigateToUnitOverview,
             isPreview = isPreview
         )
     }

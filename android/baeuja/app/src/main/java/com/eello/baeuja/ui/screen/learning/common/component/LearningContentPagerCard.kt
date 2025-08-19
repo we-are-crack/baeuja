@@ -37,12 +37,14 @@ import com.eello.baeuja.ui.theme.RobotoFamily
 fun LearningContentPagerCard(
     content: LearningContentUiModel?,
     onNavigateToDetail: (Long) -> Unit = {},
+    onNavigateToUnitOverview: (Long) -> Unit = {},
     isPreview: Boolean = false
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(84.dp),
+            .height(84.dp)
+            .clickable { onNavigateToUnitOverview(content?.id ?: -1) },
     ) {
         if (content == null) {
             Box(modifier = Modifier.fillMaxSize())
