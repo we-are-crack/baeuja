@@ -6,16 +6,11 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.restdocs.RestDocumentationContextProvider;
-import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.restassured.RestAssuredRestDocumentation;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import xyz.baeuja.api.content.domain.Classification;
 import xyz.baeuja.api.global.exception.ErrorCode;
 import xyz.baeuja.api.global.exception.InvalidQueryParameterException;
@@ -281,23 +276,20 @@ class LearningApiControllerTest {
     //===============================units api test===============================//
 
     @Test
-    @DisplayName("학습 유닛 리스트 조회 성공 - POP")
-    void units_pop_success() {
-        Long contentId = 1L;
-        Classification classification = Classification.POP;
+    @DisplayName("학습 유닛 리스트 조회 성공 - 대표 문장 x")
+    void units_null_sentence_success() {
+        Long contentId = 1L;  // 강남스타일
 
-        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathAndQueryParamAndResponseSnippet(
-                "learning-units-pop-success",
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathParamAndResponseSnippet(
+                "learning-null_sentence-success",
                 authorizationHeader(),
                 learningContentPathParam(),
-                learningContentsQueryParam("classification = POP"),
-                buildListResultResponseFields(learningUnitsResponse(classification))
+                buildListResultResponseFields(learningUnitsResponse(false))
         ));
 
         Response response = RestAssured
                 .given(spec)
                 .header("Authorization", "Bearer " + accessToken)
-                .queryParam("classification", classification)
                 .when()
                 .get("/api/learning/contents/{id}/units", contentId);
 
@@ -308,23 +300,20 @@ class LearningApiControllerTest {
     }
 
     @Test
-    @DisplayName("학습 유닛 리스트 조회 성공 - DRAMA")
-    void units_drama_success() {
-        Long contentId = 11L;
-        Classification classification = Classification.DRAMA;
+    @DisplayName("학습 유닛 리스트 조회 성공 - 대표 문장 o")
+    void units_contain_sentence_success() {
+        Long contentId = 11L;  // 사랑의 불시착
 
-        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathAndQueryParamAndResponseSnippet(
-                "learning-units-drama-success",
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathParamAndResponseSnippet(
+                "learning-contain_sentence-success",
                 authorizationHeader(),
                 learningContentPathParam(),
-                learningContentsQueryParam("classification = DRAMA"),
-                buildListResultResponseFields(learningUnitsResponse(classification))
+                buildListResultResponseFields(learningUnitsResponse(true))
         ));
 
         Response response = RestAssured
                 .given(spec)
                 .header("Authorization", "Bearer " + accessToken)
-                .queryParam("classification", classification)
                 .when()
                 .get("/api/learning/contents/{id}/units", contentId);
 
@@ -336,51 +325,45 @@ class LearningApiControllerTest {
     }
 
     @Test
+    @DisplayName("학습 유닛 리스트 조회 성공 - 대표 문장이 섞여 있음")
+    void units_mix_sentence_success() {
+        Long contentId = 16L;  // 기생충
+
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathParamAndResponseSnippet(
+                "learning-mix_sentence-success",
+                authorizationHeader(),
+                learningContentPathParam(),
+                buildListResultResponseFields(learningUnitsResponse(true))
+        ));
+
+        Response response = RestAssured
+                .given(spec)
+                .header("Authorization", "Bearer " + accessToken)
+                .when()
+                .get("/api/learning/contents/{id}/units", contentId);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.jsonPath().getList("data")).isNotEmpty();
+    }
+
+    @Test
     @DisplayName("학습 유닛 리스트 조회 실패 - NotFound")
     void units_fail_not_found() {
         Long contentId = 0L;
-        Classification classification = Classification.DRAMA;
 
-        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathAndQueryParamAndResponseSnippet(
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathParamAndResponseSnippet(
                 "learning-units-fail-not-found",
                 authorizationHeader(),
                 learningContentPathParam(),
-                learningContentsQueryParam("classification = DRAMA"),
                 defaultResponse())
         );
 
         Response response = RestAssured
                 .given(spec)
                 .header("Authorization", "Bearer " + accessToken)
-                .queryParam("classification", classification)
                 .when()
                 .get("/api/learning/contents/{id}/units", contentId);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
-    }
-
-    @Test
-    @DisplayName("학습 유닛 리스트 조회 실패 - 잘못된 classification")
-    void units_fail_invalid_classification() {
-        Long contentId = 1L;
-        String classification = "invalid";
-
-        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathAndQueryParamAndResponseSnippet(
-                "learning-units-fail-invalid-classification",
-                authorizationHeader(),
-                learningContentPathParam(),
-                learningContentsQueryParam("classification = invalid"),
-                defaultResponse())
-        );
-
-        Response response = RestAssured
-                .given(spec)
-                .header("Authorization", "Bearer " + accessToken)
-                .queryParam("classification", classification)
-                .when()
-                .get("/api/learning/contents/{id}/units", contentId);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(response.jsonPath().getString("code")).isEqualTo(ErrorCode.INVALID_PATH_PARAMETER.name());
     }
 }

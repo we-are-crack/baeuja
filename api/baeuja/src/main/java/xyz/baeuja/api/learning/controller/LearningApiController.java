@@ -77,17 +77,15 @@ public class LearningApiController {
      *
      * @param userDetails    인증된 사용자 정보. user id 조회.
      * @param contentId      content id
-     * @param classification content classification
      * @return LearningUnitResponse list
      */
     @GetMapping("/contents/{id}/units")
     public ResponseEntity<ResultResponse<List<LearningUnitResponse>>> units(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @PathVariable(name = "id") Long contentId,
-            @RequestParam Classification classification
+            @PathVariable(name = "id") Long contentId
     ) {
         List<LearningUnitResponse> learningUnitResponses
-                = learningService.findUnits(userDetails.getUserId(), contentId, classification);
+                = learningService.findUnits(userDetails.getUserId(), contentId);
         return ResponseEntity.ok(ResultResponse.success(learningUnitResponses));
     }
 }

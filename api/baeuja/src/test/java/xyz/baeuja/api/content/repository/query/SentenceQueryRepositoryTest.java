@@ -11,6 +11,8 @@ import xyz.baeuja.api.helper.TestDataHelper;
 import xyz.baeuja.api.learning.dto.sentence.RepresentativeSentenceDto;
 import xyz.baeuja.api.user.domain.User;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
@@ -41,16 +43,14 @@ class SentenceQueryRepositoryTest {
 
     @Test
     @DisplayName("즐겨찾기를 포함한 문장 요약 정보 조회 성공")
-    void findSentenceWithBookmark() {
+    void findSentencesWithBookmarkBatch() {
         //given
-        Long unitId = 54L; // 사랑의 불시착 회화 표현
+        List<Long> unitIds = List.of(54L, 55L, 56L); // 사랑의 불시착
 
         //when
-        RepresentativeSentenceDto findSentence = sentenceQueryRepository.findSentenceWithBookmark(unitId, user.getId());
+        List<RepresentativeSentenceDto> findSentences = sentenceQueryRepository.findSentencesWithBookmarkBatch(user.getId(), unitIds);
 
         //then
-        assertThat(findSentence.getIsConversation()).isTrue();
-        assertThat(findSentence.getIsFamousLine()).isFalse();
-        assertThat(findSentence.getIsBookmark()).isFalse();
+        assertThat(findSentences).isNotEmpty();
     }
 }

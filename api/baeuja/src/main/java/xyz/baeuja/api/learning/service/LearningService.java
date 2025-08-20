@@ -19,11 +19,14 @@ import xyz.baeuja.api.global.response.page.PageInfo;
 import xyz.baeuja.api.global.response.page.PagedResponse;
 import xyz.baeuja.api.learning.dto.content.LearningContentDto;
 import xyz.baeuja.api.learning.dto.content.LearningAllContentsResponse;
+import xyz.baeuja.api.learning.dto.sentence.RepresentativeSentenceDto;
 import xyz.baeuja.api.learning.dto.unit.LearningUnitResponse;
 
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -83,10 +86,9 @@ public class LearningService {
      *
      * @param userId         user id
      * @param contentId      content id
-     * @param classification content classification
      * @return LearningUnitResponse list
      */
-    public List<LearningUnitResponse> findUnits(Long userId, Long contentId, Classification classification)
+    public List<LearningUnitResponse> findUnits(Long userId, Long contentId)
             throws NotFoundException {
         List<LearningUnitResponse> learningUnits = unitQueryRepository.findLearningUnit(contentId, userId);
 
@@ -94,13 +96,18 @@ public class LearningService {
             throw new NotFoundException("Learning content not found.");
         }
 
-        if (classification != Classification.POP) {
-            learningUnits.forEach(
-                    unit -> unit.setSentence(
-                            sentenceQueryRepository.findSentenceWithBookmark(unit.getId(), userId)
-                    )
-            );
-        }
+        List<Long> unitIds = getUnitIds(learningUnits);
+
+        Map<Long, List<RepresentativeSentenceDto>> representativeSentenceDtoMap = getRepresentativeSentenceDtoMap(userId, unitIds);
+
+        learningUnits.forEach(
+                learningUnit -> {
+                    List<RepresentativeSentenceDto> representativeSentenceDtoList = representativeSentenceDtoMap.get(learningUnit.getId());
+                    if (representativeSentenceDtoList != null && !representativeSentenceDtoList.isEmpty()) {
+                        learningUnit.setSentence(representativeSentenceDtoList.get(0));
+                    }
+                }
+        );
 
         return learningUnits;
     }
@@ -126,5 +133,19 @@ public class LearningService {
         } catch (IllegalArgumentException e) {
             throw new InvalidQueryParameterException(e.getMessage());
         }
+    }
+
+    private static List<Long> getUnitIds(List<LearningUnitResponse> learningUnits) {
+        return learningUnits.stream()
+                .map(LearningUnitResponse::getId)
+                .toList();
+    }
+
+    public Map<Long, List<RepresentativeSentenceDto>> getRepresentativeSentenceDtoMap(Long userId, List<Long> unitIds) {
+        return sentenceQueryRepository.findSentencesWithBookmarkBatch(userId, unitIds)
+                .stream()
+                .collect(Collectors.groupingBy(
+                        RepresentativeSentenceDto::getUnitId
+                ));
     }
 }

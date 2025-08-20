@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class LearningUnitResponse {
 
     private final Long id;
-    private final String thumbnail;
+    private final String thumbnailUrl;
 
     private final Long sentencesCount;
     private final Long wordsCount;
@@ -24,9 +24,9 @@ public class LearningUnitResponse {
     @Setter
     private RepresentativeSentenceDto sentence;
 
-    public LearningUnitResponse(Long id, String thumbnail, Long sentencesCount, Long wordsCount, Integer progressRate, LocalDateTime lastLearned) {
+    public LearningUnitResponse(Long id, String thumbnailUrl, Long sentencesCount, Long wordsCount, Integer progressRate, LocalDateTime lastLearned) {
         this.id = id;
-        this.thumbnail = thumbnail;
+        this.thumbnailUrl = thumbnailUrl;
         this.sentencesCount = sentencesCount;
         this.wordsCount = wordsCount;
         this.progressRate = progressRate != null ? progressRate : 0;

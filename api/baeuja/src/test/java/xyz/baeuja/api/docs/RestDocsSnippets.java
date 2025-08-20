@@ -251,10 +251,10 @@ public class RestDocsSnippets {
         };
     }
 
-    public static FieldDescriptor[] learningUnitsResponse(Classification classification) {
+    public static FieldDescriptor[] learningUnitsResponse(boolean containsSentence) {
         FieldDescriptor[] unitDescriptor = {
                 fieldWithPath("id").description("unit id"),
-                fieldWithPath("thumbnail").description("유닛 썸네일 url"),
+                fieldWithPath("thumbnailUrl").description("유닛 썸네일 url"),
                 fieldWithPath("sentencesCount").description("유닛에서 학습할 수 있는 문장 개수"),
                 fieldWithPath("wordsCount").description("유닛에서 학습할 수 있는 단어 개수"),
                 fieldWithPath("progressRate").description("진행률(0 ~ 100)"),
@@ -271,7 +271,7 @@ public class RestDocsSnippets {
                 fieldWithPath("sentence.isBookmark").description("즐겨찾기 여부"),
         };
 
-        if (classification == Classification.POP) {
+        if (!containsSentence) {
             return unitDescriptor;
         }
 

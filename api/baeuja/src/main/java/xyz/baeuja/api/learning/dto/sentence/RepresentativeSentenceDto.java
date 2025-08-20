@@ -1,11 +1,15 @@
 package xyz.baeuja.api.learning.dto.sentence;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 public class RepresentativeSentenceDto {
+
+    @JsonIgnore
+    private final Long unitId;
 
     private final Long id;
     private final String korean;
@@ -14,7 +18,8 @@ public class RepresentativeSentenceDto {
     private final Boolean isFamousLine;
     private final Boolean isBookmark;
 
-    public RepresentativeSentenceDto(Long id, String korean, String english, boolean isConversation, boolean isFamousLine, Boolean isBookmark) {
+    public RepresentativeSentenceDto(Long unitId, Long id, String korean, String english, boolean isConversation, boolean isFamousLine, Boolean isBookmark) {
+        this.unitId = unitId;
         this.id = id;
         this.korean = korean;
         this.english = english;
