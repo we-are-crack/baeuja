@@ -4,6 +4,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import xyz.baeuja.api.home.dto.HomeContentsResponse;
@@ -30,7 +32,7 @@ class ContentQueryRepositoryTest {
     @DisplayName("최근에 추가된 10개 content 정보 조회")
     void findTop10ByOrderByCreatedAtDesc_success() {
         // when
-        List<HomeContentsResponse> latestContents = contentRepository.findTop10ByOrderByCreatedAtDesc();
+        List<HomeContentsResponse> latestContents = contentRepository.findHomeContents(PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "updatedAt")));
 
         // then
         assertThat(latestContents).hasSize(10);

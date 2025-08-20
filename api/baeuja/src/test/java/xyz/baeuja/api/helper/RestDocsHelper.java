@@ -141,6 +141,12 @@ public class RestDocsHelper {
                 .toArray(FieldDescriptor[]::new);
     }
 
+    public static ParameterDescriptor[] mergeParameters(ParameterDescriptor[]... arrays) {
+        return Arrays.stream(arrays)
+                .flatMap(Arrays::stream)
+                .toArray(ParameterDescriptor[]::new);
+    }
+
     private static RestDocumentationFilter buildSnippet(String identifier, Snippet... snippets) {
         return document(identifier,
                 preprocessRequest(prettyPrint()),

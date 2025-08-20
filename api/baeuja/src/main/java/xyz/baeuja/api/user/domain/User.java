@@ -5,6 +5,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import xyz.baeuja.api.global.entity.BaseEntity;
+import xyz.baeuja.api.learning.domain.UserContentActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -16,6 +20,9 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserContentActivity> userContentActivities = new ArrayList<>();
 
     @Column(length = 100, unique = true)
     private String email;

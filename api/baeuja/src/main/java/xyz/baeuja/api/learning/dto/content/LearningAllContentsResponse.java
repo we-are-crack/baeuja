@@ -1,4 +1,4 @@
-package xyz.baeuja.api.learning.dto;
+package xyz.baeuja.api.learning.dto.content;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

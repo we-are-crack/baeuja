@@ -1,31 +1,46 @@
 package xyz.baeuja.api.content.repository.query;
 
-import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import xyz.baeuja.api.content.domain.Classification;
+import xyz.baeuja.api.content.domain.Content;
 import xyz.baeuja.api.home.dto.HomeContentsResponse;
+import xyz.baeuja.api.learning.dto.content.LearningContentDto;
 
 import java.util.List;
 
-@Repository
-@RequiredArgsConstructor
-public class ContentQueryRepository {
-
-    private final EntityManager em;
+public interface ContentQueryRepository extends JpaRepository<Content, Long> {
 
     /**
-     * home 에서 가장 최근에 추가된 content 를 조회. JPQL 로 SentenceWord 까지 조인
+     * home 화면에서 최신 콘텐츠 10개 조회
      *
-     * @return content 정보와 unit 개수, 단어 개수를 포함한 HomeContentResponse 리스트
+     * @param pageable 페이징 정보 (page = 0, size = 10, sort = updatedAt DESC)
+     * @return HomeContentsResponse list
      */
-    public List<HomeContentsResponse> findTop10ByOrderByCreatedAtDesc() {
-        return em.createQuery("select new xyz.baeuja.api.home.dto.HomeContentsResponse(" +
-                        "c.classification, c.title, c.artist, c.director, c.thumbnailUrl, " +
-                        "(select count(u) from Unit u where u.content.id = c.id), " +
-                        "(select count(sw.word) from SentenceWord sw where sw.sentence.unit.content.id = c.id))" +
-                        "from Content c " +
-                        "order by c.createdAt desc", HomeContentsResponse.class)
-                .setMaxResults(10)
-                .getResultList();
-    }
+    @Query("""
+            select new xyz.baeuja.api.home.dto.HomeContentsResponse(
+                c.id, c.classification, c.title, c.artist, c.director, c.thumbnailUrl,
+                (select count(u) from Unit u where u.content.id = c.id),
+                (select count(sw.word) from SentenceWord sw where sw.sentence.unit.content.id = c.id)
+            ) from Content c
+            """)
+    List<HomeContentsResponse> findHomeContents(Pageable pageable);
+
+    @Query("""
+            select new xyz.baeuja.api.learning.dto.content.LearningContentDto(
+                c.id, c.classification, c.title, c.thumbnailUrl, c.artist, c.director, uca.progressRate
+            )
+            from Content c
+            left join UserContentActivity uca
+            on c.id = uca.content.id and uca.user.id = :userId
+            where c.classification = :classification
+            """)
+    Slice<LearningContentDto> findLearningContents(
+            @Param("userId") Long userId,
+            @Param("classification") Classification classification,
+            Pageable pageable);
+
 }

@@ -1,14 +1,16 @@
-package xyz.baeuja.api.content.repository.jpa;
+package xyz.baeuja.api.global.util.annotation;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
+@Retention(RetentionPolicy.RUNTIME)
 @ActiveProfiles("test")
 @Sql(scripts = {
+        "/sql/truncate_all.sql",
         "/sql/content.sql",
         "/sql/unit.sql",
         "/sql/sentence.sql",
@@ -16,8 +18,5 @@ import static org.assertj.core.api.Assertions.assertThat;
         "/sql/sentence_word.sql"},
         executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @SpringBootTest
-class ContentJpaRepositoryTest {
-
-    @Autowired
-    ContentJpaRepository contentJpaRepository;
+public @interface RepositoryTest {
 }

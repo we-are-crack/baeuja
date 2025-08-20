@@ -6,23 +6,20 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.restdocs.RestDocumentationContextProvider;
-import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.restassured.RestAssuredRestDocumentation;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import xyz.baeuja.api.content.domain.Classification;
 import xyz.baeuja.api.global.exception.ErrorCode;
 import xyz.baeuja.api.global.exception.InvalidQueryParameterException;
+import xyz.baeuja.api.global.util.annotation.ApiControllerTest;
 import xyz.baeuja.api.global.util.jwt.JwtProvider;
 import xyz.baeuja.api.global.util.jwt.JwtUserInfo;
 import xyz.baeuja.api.helper.RestDocsHelper;
 import xyz.baeuja.api.helper.TestDataHelper;
+import xyz.baeuja.api.learning.dto.sentence.RepresentativeSentenceDto;
 import xyz.baeuja.api.user.domain.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,17 +28,7 @@ import static xyz.baeuja.api.helper.RestDocsHelper.*;
 import static xyz.baeuja.api.helper.RestDocsHelper.buildSingleResultResponseFields;
 import static xyz.baeuja.api.helper.RestDocsHelper.mergeFields;
 
-@ActiveProfiles("test")
-@Sql(scripts = {
-        "/sql/truncate_all.sql",
-        "/sql/content.sql",
-        "/sql/unit.sql",
-        "/sql/sentence.sql",
-        "/sql/word.sql",
-        "/sql/sentence_word.sql"},
-        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ExtendWith(RestDocumentationExtension.class)
+@ApiControllerTest
 class LearningApiControllerTest {
 
     @LocalServerPort
@@ -67,21 +54,23 @@ class LearningApiControllerTest {
                 RestAssuredRestDocumentation.documentationConfiguration(provider));
     }
 
+    //===============================contentsAll api test===============================//
+
     @Test
     @DisplayName("학습 콘텐츠 리스트 조회 성공")
-    void contents_success() {
+    void contentsAll_success() {
         RequestSpecification spec = docsHelper.createSpecWithDocs(createQueryParamAndResponseSnippet(
-                "learning-contents-success",
+                "learning-contents-all-success",
                 authorizationHeader(),
-                learningContentsQueryParam("default size = 5"),
-                buildSingleResultResponseFields(learningContentsResponse())
+                learningContentsAllQueryParam("default size = 5"),
+                buildSingleResultResponseFields(learningContentsAllResponse())
         ));
 
         Response response = RestAssured
                 .given(spec)
                 .header("Authorization", "Bearer " + accessToken)
                 .when()
-                .get("/api/learning/contents");
+                .get("/api/learning/contents/all");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getList("data.pop")).isNotEmpty();
@@ -92,12 +81,12 @@ class LearningApiControllerTest {
 
     @Test
     @DisplayName("학습 콘텐츠 리스트 조회 성공 - size = 10")
-    void contents_success_size_10() {
+    void contentsAll_success_size_10() {
         RequestSpecification spec = docsHelper.createSpecWithDocs(createQueryParamAndResponseSnippet(
-                "learning-contents-success-size-10",
+                "learning-contents-all-success-size-10",
                 authorizationHeader(),
-                learningContentsQueryParam("size = 10(최소 1개 이상)"),
-                buildSingleResultResponseFields(learningContentsResponse())
+                learningContentsAllQueryParam("size = 10(최소 1개 이상)"),
+                buildSingleResultResponseFields(learningContentsAllResponse())
         ));
 
         Response response = RestAssured
@@ -105,7 +94,7 @@ class LearningApiControllerTest {
                 .queryParam("size", 10)
                 .header("Authorization", "Bearer " + accessToken)
                 .when()
-                .get("/api/learning/contents");
+                .get("/api/learning/contents/all");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getList("data.pop")).isNotEmpty();
@@ -116,11 +105,11 @@ class LearningApiControllerTest {
 
     @Test
     @DisplayName("학습 콘텐츠 리스트 조회 실패 - size = 0")
-    void contents_success_size_0() {
+    void contentsAll_success_size_0() {
         RequestSpecification spec = docsHelper.createSpecWithDocs(createQueryParamAndResponseSnippet(
-                "learning-contents-success-size-0",
+                "learning-contents-all-success-size-0",
                 authorizationHeader(),
-                learningContentsQueryParam("size = 0"),
+                learningContentsAllQueryParam("size = 0"),
                 defaultResponse()
         ));
 
@@ -129,29 +118,32 @@ class LearningApiControllerTest {
                 .queryParam("size", 0)
                 .header("Authorization", "Bearer " + accessToken)
                 .when()
-                .get("/api/learning/contents");
+                .get("/api/learning/contents/all");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(response.jsonPath().getString("code")).isEqualTo(InvalidQueryParameterException.CODE);
     }
 
+    //===============================contents api test===============================//
+
     @Test
     @DisplayName("특정 분류 학습 콘텐츠 리스트 조회 성공")
-    void contentsByClassification_success() {
+    void contents_success() {
         Classification classification = Classification.POP;
 
-        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathParamAndResponseSnippet(
-                "learning-contents-by-classification-success",
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createQueryParamAndResponseSnippet(
+                "learning-contents-success",
                 authorizationHeader(),
-                learningContentsByClassificationPathParam("classification = pop"),
-                buildSingleResultResponseFields(mergeFields(learningContentsByClassificationResponse(classification), pageInfoResponse())))
+                learningContentsQueryParam("classification = pop"),
+                buildSingleResultResponseFields(mergeFields(learningContentsResponse(classification), pageInfoResponse())))
         );
 
         Response response = RestAssured
                 .given(spec)
                 .header("Authorization", "Bearer " + accessToken)
+                .queryParam("classification", classification)
                 .when()
-                .get("/api/learning/contents/classification/{classification}", classification);
+                .get("/api/learning/contents");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getList("data.content")).isNotEmpty().hasSize(5);
@@ -161,25 +153,25 @@ class LearningApiControllerTest {
 
     @Test
     @DisplayName("특정 분류 학습 콘텐츠 리스트 조회 성공 - 페이지 번호 지정")
-    void contentsByClassification_success_page_1() {
+    void contents_success_page_1() {
         Classification classification = Classification.POP;
         int page = 1;
 
-        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathAndQueryParamAndResponseSnippet(
-                "learning-contents-by-classification-page-1",
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createQueryParamAndResponseSnippet(
+                "learning-contents-page-1",
                 authorizationHeader(),
-                learningContentsByClassificationPathParam("classification = pop"),
-                pagingQueryParam(),
-                buildSingleResultResponseFields(mergeFields(learningContentsByClassificationResponse(classification), pageInfoResponse())))
+                mergeParameters(learningContentsQueryParam("classification = pop"), pagingQueryParam()),
+                buildSingleResultResponseFields(mergeFields(learningContentsResponse(classification), pageInfoResponse())))
         );
 
         Response response = RestAssured
                 .given(spec)
                 .header("Authorization", "Bearer " + accessToken)
+                .queryParam("classification", classification)
                 .queryParam("page", page)
                 .queryParam("size", 5)
                 .when()
-                .get("/api/learning/contents/classification/{classification}", classification);
+                .get("/api/learning/contents");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getList("data.content")).isNotEmpty().hasSize(5);
@@ -189,25 +181,25 @@ class LearningApiControllerTest {
 
     @Test
     @DisplayName("특정 분류 학습 콘텐츠 리스트 조회 성공 - 초괴 페이지 지정 시 빈 리스트 반환")
-    void contentsByClassification_success_page_10000() {
+    void contents_success_page_10000() {
         Classification classification = Classification.POP;
         int page = 10000;
 
-        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathAndQueryParamAndResponseSnippet(
-                "learning-contents-by-classification-page-10000",
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createQueryParamAndResponseSnippet(
+                "learning-contents-page-10000",
                 authorizationHeader(),
-                learningContentsByClassificationPathParam("classification = pop"),
-                pagingQueryParam(),
-                buildSingleResultResponseFields(mergeFields(learningContentsByClassificationResponse(), pageInfoResponse())))
+                mergeParameters(learningContentsQueryParam("classification = pop"), pagingQueryParam()),
+                buildSingleResultResponseFields(mergeFields(learningContentsResponse(), pageInfoResponse())))
         );
 
         Response response = RestAssured
                 .given(spec)
                 .header("Authorization", "Bearer " + accessToken)
+                .queryParam("classification", classification)
                 .queryParam("page", page)
                 .queryParam("size", 5)
                 .when()
-                .get("/api/learning/contents/classification/{classification}", classification);
+                .get("/api/learning/contents");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getList("data.content")).isEmpty();
@@ -215,25 +207,28 @@ class LearningApiControllerTest {
 
     @Test
     @DisplayName("특정 분류 학습 콘텐츠 리스트 조회 실패 - 잘못된 classification")
-    void contentsByClassification_fail_invalid_path_param() {
+    void contents_fail_invalid_path_param() {
         String classification = "invalid";
 
-        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathParamAndResponseSnippet(
-                "learning-contents-by-classification-fail-invalid-path-param",
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createQueryParamAndResponseSnippet(
+                "learning-contents-fail-invalid-path-param",
                 authorizationHeader(),
-                learningContentsByClassificationPathParam("classification = invalid"),
+                learningContentsQueryParam("classification = invalid"),
                 defaultResponse())
         );
 
         Response response = RestAssured
                 .given(spec)
                 .header("Authorization", "Bearer " + accessToken)
+                .queryParam("classification", classification)
                 .when()
-                .get("/api/learning/contents/classification/{classification}", classification);
+                .get("/api/learning/contents");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(response.jsonPath().getString("code")).isEqualTo(ErrorCode.INVALID_PATH_PARAMETER.name());
     }
+
+    //===============================content api test===============================//
 
     @Test
     @DisplayName("콘텐츠 상세 조회 성공")
@@ -263,7 +258,7 @@ class LearningApiControllerTest {
         Long contentId = 0L;
 
         RequestSpecification spec = docsHelper.createSpecWithDocs(createPathParamAndResponseSnippet(
-                "learning-content-success",
+                "learning-content-fail",
                 authorizationHeader(),
                 learningContentPathParam(),
                 defaultResponse())
@@ -274,6 +269,100 @@ class LearningApiControllerTest {
                 .header("Authorization", "Bearer " + accessToken)
                 .when()
                 .get("/api/learning/contents/{id}", contentId);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    //===============================units api test===============================//
+
+    @Test
+    @DisplayName("학습 유닛 리스트 조회 성공 - 대표 문장 x")
+    void units_null_sentence_success() {
+        Long contentId = 1L;  // 강남스타일
+
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathParamAndResponseSnippet(
+                "learning-null_sentence-success",
+                authorizationHeader(),
+                learningContentPathParam(),
+                buildListResultResponseFields(learningUnitsResponse(false))
+        ));
+
+        Response response = RestAssured
+                .given(spec)
+                .header("Authorization", "Bearer " + accessToken)
+                .when()
+                .get("/api/learning/contents/{id}/units", contentId);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.jsonPath().getList("data")).isNotEmpty();
+        assertThat(response.jsonPath().getString("data[0].lastLearned")).isEmpty();
+        assertThat(response.jsonPath().getObject("data[0].sentence", RepresentativeSentenceDto.class)).isNull();
+    }
+
+    @Test
+    @DisplayName("학습 유닛 리스트 조회 성공 - 대표 문장 o")
+    void units_contain_sentence_success() {
+        Long contentId = 11L;  // 사랑의 불시착
+
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathParamAndResponseSnippet(
+                "learning-contain_sentence-success",
+                authorizationHeader(),
+                learningContentPathParam(),
+                buildListResultResponseFields(learningUnitsResponse(true))
+        ));
+
+        Response response = RestAssured
+                .given(spec)
+                .header("Authorization", "Bearer " + accessToken)
+                .when()
+                .get("/api/learning/contents/{id}/units", contentId);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.jsonPath().getList("data")).isNotEmpty();
+        assertThat(response.jsonPath().getString("data[0].lastLearned")).isEmpty();
+        assertThat(response.jsonPath().getObject("data[0].sentence", RepresentativeSentenceDto.class)).isNotNull();
+        assertThat(response.jsonPath().getBoolean("data[0].sentence.isBookmark")).isFalse();
+    }
+
+    @Test
+    @DisplayName("학습 유닛 리스트 조회 성공 - 대표 문장이 섞여 있음")
+    void units_mix_sentence_success() {
+        Long contentId = 16L;  // 기생충
+
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathParamAndResponseSnippet(
+                "learning-mix_sentence-success",
+                authorizationHeader(),
+                learningContentPathParam(),
+                buildListResultResponseFields(learningUnitsResponse(true))
+        ));
+
+        Response response = RestAssured
+                .given(spec)
+                .header("Authorization", "Bearer " + accessToken)
+                .when()
+                .get("/api/learning/contents/{id}/units", contentId);
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.jsonPath().getList("data")).isNotEmpty();
+    }
+
+    @Test
+    @DisplayName("학습 유닛 리스트 조회 실패 - NotFound")
+    void units_fail_not_found() {
+        Long contentId = 0L;
+
+        RequestSpecification spec = docsHelper.createSpecWithDocs(createPathParamAndResponseSnippet(
+                "learning-units-fail-not-found",
+                authorizationHeader(),
+                learningContentPathParam(),
+                defaultResponse())
+        );
+
+        Response response = RestAssured
+                .given(spec)
+                .header("Authorization", "Bearer " + accessToken)
+                .when()
+                .get("/api/learning/contents/{id}/units", contentId);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }

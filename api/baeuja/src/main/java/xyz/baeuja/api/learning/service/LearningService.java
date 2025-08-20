@@ -10,16 +10,23 @@ import xyz.baeuja.api.content.domain.Classification;
 import xyz.baeuja.api.content.domain.Content;
 import xyz.baeuja.api.content.dto.ContentDto;
 import xyz.baeuja.api.content.repository.ContentRepository;
+import xyz.baeuja.api.content.repository.query.ContentQueryRepository;
+import xyz.baeuja.api.content.repository.query.SentenceQueryRepository;
+import xyz.baeuja.api.content.repository.query.UnitQueryRepository;
 import xyz.baeuja.api.global.exception.InvalidQueryParameterException;
 import xyz.baeuja.api.global.exception.NotFoundException;
 import xyz.baeuja.api.global.response.page.PageInfo;
 import xyz.baeuja.api.global.response.page.PagedResponse;
-import xyz.baeuja.api.learning.dto.LearningContentDto;
-import xyz.baeuja.api.learning.dto.LearningAllContentsResponse;
+import xyz.baeuja.api.learning.dto.content.LearningContentDto;
+import xyz.baeuja.api.learning.dto.content.LearningAllContentsResponse;
+import xyz.baeuja.api.learning.dto.sentence.RepresentativeSentenceDto;
+import xyz.baeuja.api.learning.dto.unit.LearningUnitResponse;
 
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,6 +34,9 @@ import java.util.Map;
 public class LearningService {
 
     private final ContentRepository contentRepository;
+    private final ContentQueryRepository contentQueryRepository;
+    private final UnitQueryRepository unitQueryRepository;
+    private final SentenceQueryRepository sentenceQueryRepository;
 
     /**
      * 학습 컨텐츠 리스트를 분류 별로 조회
@@ -34,12 +44,12 @@ public class LearningService {
      * @param pageSize 각 분류별 콘텐츠 개수
      * @return LearningContentsResponse
      */
-    public LearningAllContentsResponse findAllLearningContents(int pageSize) {
+    public LearningAllContentsResponse findAllLearningContents(Long userId, int pageSize) {
         Map<Classification, List<LearningContentDto>> map = new EnumMap<>(Classification.class);
 
         for (Classification classification : Classification.values()) {
-            Slice<Content> contentSlice = getContentSlice(classification, 0, pageSize);
-            map.put(classification, getLearningContentDtoList(contentSlice));
+            Slice<LearningContentDto> learningContentDtoSlice = getLearningContentDtoSlice(userId, classification, 0, pageSize);
+            map.put(classification, learningContentDtoSlice.getContent());
         }
 
         return new LearningAllContentsResponse(map.get(Classification.POP), map.get(Classification.MOVIE), map.get(Classification.DRAMA));
@@ -53,13 +63,13 @@ public class LearningService {
      * @param pageSize       페이지 크기
      * @return PagedResponse
      */
-    public PagedResponse<LearningContentDto> findLearningContents(Classification classification, int pageNumber, int pageSize) {
-        Slice<Content> contentSlice = getContentSlice(classification, pageNumber, pageSize);
-        return new PagedResponse<>(getLearningContentDtoList(contentSlice), PageInfo.of(contentSlice));
+    public PagedResponse<LearningContentDto> findLearningContents(Long userId, Classification classification, int pageNumber, int pageSize) {
+        Slice<LearningContentDto> learningContentDtoSlice = getLearningContentDtoSlice(userId, classification, pageNumber, pageSize);
+        return new PagedResponse<>(learningContentDtoSlice.getContent(), PageInfo.of(learningContentDtoSlice));
     }
 
     /**
-     * * 콘텐츠 상세 조회
+     * 콘텐츠 상세 조회
      *
      * @param contentId 조회하고자 하는 content id
      * @return ContentDto
@@ -72,37 +82,70 @@ public class LearningService {
     }
 
     /**
-     * Content 분류(classification)에 해당하는 content를 Slice 타입으로 반환하는 <br>
-     * (contentRepository.findAllByClassification() 메서드를 호출해서 Content slice 반환.
+     * 학습 유닛 리스트 조회
      *
+     * @param userId         user id
+     * @param contentId      content id
+     * @return LearningUnitResponse list
+     */
+    public List<LearningUnitResponse> findUnits(Long userId, Long contentId)
+            throws NotFoundException {
+        List<LearningUnitResponse> learningUnits = unitQueryRepository.findLearningUnit(contentId, userId);
+
+        if (learningUnits.isEmpty()) {
+            throw new NotFoundException("Learning content not found.");
+        }
+
+        List<Long> unitIds = getUnitIds(learningUnits);
+
+        Map<Long, List<RepresentativeSentenceDto>> representativeSentenceDtoMap = getRepresentativeSentenceDtoMap(userId, unitIds);
+
+        learningUnits.forEach(
+                learningUnit -> {
+                    List<RepresentativeSentenceDto> representativeSentenceDtoList = representativeSentenceDtoMap.get(learningUnit.getId());
+                    if (representativeSentenceDtoList != null && !representativeSentenceDtoList.isEmpty()) {
+                        learningUnit.setSentence(representativeSentenceDtoList.get(0));
+                    }
+                }
+        );
+
+        return learningUnits;
+    }
+
+    /**
+     * Content 분류(classification)에 해당하는 LearningContentDto를 Slice에 담아서 반환
+     *
+     * @param userId         user id
      * @param classification content 분류
      * @param pageNumber     시작 페이지 번호
      * @param pageSize       페이지 크기
-     * @return Content slice
+     * @return LearningContentDto slice
      * @throws InvalidQueryParameterException 유효하지 않은 pageNumber 또는 pageSize 값이 넘어올 때
      */
-    private Slice<Content> getContentSlice(Classification classification, int pageNumber, int pageSize)
+    private Slice<LearningContentDto> getLearningContentDtoSlice(Long userId, Classification classification, int pageNumber, int pageSize)
             throws InvalidQueryParameterException {
         try {
-            return contentRepository.findAllByClassification(
+            return contentQueryRepository.findLearningContents(
+                    userId,
                     classification,
-                    PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "updatedAt"))
-            );
+                    PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "updatedAt")
+                    ));
         } catch (IllegalArgumentException e) {
             throw new InvalidQueryParameterException(e.getMessage());
         }
     }
 
-    /**
-     * Content slice -> LearningContentDto list 로 변환
-     *
-     * @param contentSlice Content slice
-     * @return LearningContentDto list
-     */
-    private List<LearningContentDto> getLearningContentDtoList(Slice<Content> contentSlice) {
-        return contentSlice.getContent()
-                .stream()
-                .map(content -> LearningContentDto.of(content, 0))
+    private static List<Long> getUnitIds(List<LearningUnitResponse> learningUnits) {
+        return learningUnits.stream()
+                .map(LearningUnitResponse::getId)
                 .toList();
+    }
+
+    public Map<Long, List<RepresentativeSentenceDto>> getRepresentativeSentenceDtoMap(Long userId, List<Long> unitIds) {
+        return sentenceQueryRepository.findSentencesWithBookmarkBatch(userId, unitIds)
+                .stream()
+                .collect(Collectors.groupingBy(
+                        RepresentativeSentenceDto::getUnitId
+                ));
     }
 }

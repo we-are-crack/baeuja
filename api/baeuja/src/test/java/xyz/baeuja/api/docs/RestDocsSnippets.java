@@ -9,6 +9,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static xyz.baeuja.api.helper.RestDocsHelper.mergeFields;
 
 public class RestDocsSnippets {
 
@@ -124,6 +125,7 @@ public class RestDocsSnippets {
      */
     public static FieldDescriptor[] homeContentsResponse() {
         return new FieldDescriptor[]{
+                fieldWithPath("id").description("content id"),
                 fieldWithPath("classification").description("content 분류 ex)POP, DRAMA, MOVIE"),
                 fieldWithPath("title").description("제목"),
                 fieldWithPath("artist").description("가수").optional(),
@@ -158,13 +160,13 @@ public class RestDocsSnippets {
 
     // ========================learning======================== //
 
-    public static ParameterDescriptor[] learningContentsQueryParam(String description) {
+    public static ParameterDescriptor[] learningContentsAllQueryParam(String description) {
         return new ParameterDescriptor[]{
                 parameterWithName("size").description("콘텐츠 분류 별 개수. \n" + description).optional(),
         };
     }
 
-    public static FieldDescriptor[] learningContentsResponse() {
+    public static FieldDescriptor[] learningContentsAllResponse() {
         return new FieldDescriptor[]{
                 fieldWithPath("pop[]").description("POP 콘텐츠 리스트"),
                 fieldWithPath("movie[]").description("MOVIE 콘텐츠 리스트"),
@@ -191,19 +193,19 @@ public class RestDocsSnippets {
         };
     }
 
-    public static ParameterDescriptor[] learningContentsByClassificationPathParam(String description) {
+    public static ParameterDescriptor[] learningContentsQueryParam(String description) {
         return new ParameterDescriptor[]{
                 parameterWithName("classification").description("콘텐츠 분류 (POP or MOVIE or DRAMA). \n" + description)
         };
     }
 
-    public static FieldDescriptor[] learningContentsByClassificationResponse() {
+    public static FieldDescriptor[] learningContentsResponse() {
         return new FieldDescriptor[]{
                 fieldWithPath("content[]").description("페이징 된 콘텐츠 리스트")
         };
     }
 
-    public static FieldDescriptor[] learningContentsByClassificationResponse(Classification classification) {
+    public static FieldDescriptor[] learningContentsResponse(Classification classification) {
         FieldDescriptor optionalfieldDescriptor;
 
         if (classification == Classification.POP) {
@@ -247,6 +249,33 @@ public class RestDocsSnippets {
                 fieldWithPath("youtubeId").description("유튜브 id"),
                 fieldWithPath("description").description("간단 설명"),
         };
+    }
+
+    public static FieldDescriptor[] learningUnitsResponse(boolean containsSentence) {
+        FieldDescriptor[] unitDescriptor = {
+                fieldWithPath("id").description("unit id"),
+                fieldWithPath("thumbnailUrl").description("유닛 썸네일 url"),
+                fieldWithPath("sentencesCount").description("유닛에서 학습할 수 있는 문장 개수"),
+                fieldWithPath("wordsCount").description("유닛에서 학습할 수 있는 단어 개수"),
+                fieldWithPath("progressRate").description("진행률(0 ~ 100)"),
+                fieldWithPath("lastLearned").description("최근 학습 날짜"),
+        };
+
+        FieldDescriptor[] sentenceDescriptor = {
+                fieldWithPath("sentence").description("대표 문장 정보(POP 제외)").optional(),
+                fieldWithPath("sentence.id").description("sentence id"),
+                fieldWithPath("sentence.korean").description("한국어 문장"),
+                fieldWithPath("sentence.english").description("영어 문장"),
+                fieldWithPath("sentence.isConversation").description("회화 표현 여부"),
+                fieldWithPath("sentence.isFamousLine").description("면대사 여부"),
+                fieldWithPath("sentence.isBookmark").description("즐겨찾기 여부"),
+        };
+
+        if (!containsSentence) {
+            return unitDescriptor;
+        }
+
+        return mergeFields(unitDescriptor, sentenceDescriptor);
     }
 
     // ========================paging======================== //
